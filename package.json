@@ -1,0 +1,22 @@
+{
+  "name": "degree-audit-planner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pkanGitHub/degree-audit-planner.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pkanGitHub/degree-audit-planner/issues"
+  },
+  "homepage": "https://github.com/pkanGitHub/degree-audit-planner#readme",
+  "dependencies": {
+    "puppeteer": "^21.3.6"
+  }
+}
