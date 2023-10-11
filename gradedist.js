@@ -2,7 +2,7 @@ const puppeteer = require("puppeteer");
 
 (async () => {
     const courses = {};
-    const browser = await puppeteer.launch({headless: false}); // Starts virtual browser
+    const browser = await puppeteer.launch(); // Starts virtual browser
     const page = await browser.newPage(); // Opens a tab in the browser
     await page.goto("https://musis1.missouri.edu/gradedist/mu_grade_dist_intro.cfm?search=true"); // Navigates to grade distribution page
     
