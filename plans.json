@@ -1,0 +1,170 @@
+{
+  "Accountancy": [
+    {
+      "title": "BSAcc in Accountancy",
+      "type": "BSAcc",
+      "url": "https://catalog.missouri.edu/collegeofbusiness/accountancy/bsacc-accountancy/",
+      "course_requirements": {
+        "Accountancy Foundation Courses": [
+          { "id": ["COMMUN_1200"] },
+          {
+            "info": "International Component (See your academic advisor about completion of this requirement.)"
+          }
+        ],
+        "Pre-Accountancy Courses": [
+          { "id": ["ACCTCY_2036"], "or": ["ACCTCY_2136H", "ACCTCY_2026"] },
+          { "id": ["ACCTCY_2037"], "or": ["ACCTCY_2137H", "ACCTCY_2027"] },
+          { "id": ["ACCTCY_2258"] },
+          { "id": ["BUS_AD_1500"] },
+          { "id": ["ECONOM_1014"] },
+          { "id": ["ECONOM_1015"] },
+          { "id": ["ENGLSH_1000"] },
+          { "id": ["MATH_1100"] },
+          { "id": ["MATH_1300"] },
+          { "id": ["MATH_1400"] },
+          { "id": ["STAT_2500"] }
+        ],
+        "Required Business Core Courses": [
+          { "id": ["ECONOM_3229"] },
+          { "id": ["ECONOM_3251"], "or": ["ECONOM_4351"] },
+          { "id": ["FINANC_3000"] },
+          { "id": ["MANGMT_3000"], "or": ["MANGMT_3000W"] },
+          { "id": ["MANGMT_3300"] },
+          { "id": ["MANGMT_3540"] },
+          { "id": ["MRKTNG_3000"] },
+          { "id": ["STAT_3500"] }
+        ],
+        "Required Accountancy Courses": [
+          { "id": ["ACCTCY_3326"] },
+          { "id": ["ACCTCY_3328"] },
+          { "id": ["ACCTCY_3346"] },
+          { "id": ["ACCTCY_3347"] },
+          { "id": ["ACCTCY_4353"] },
+          { "id": ["ACCTCY 4384/7384"] },
+          { "info": "Accountancy/Business Elective" }
+        ],
+        "Professional Electives": [
+          {
+            "info": "Six credits must be taken as 2000-level or higher University non-business electives or 3000-level business electives"
+          }
+        ],
+        "Senior Capstone": [{ "id": ["MANGMT_4970"] }],
+        "Graduate Level Coursework": [{}]
+      },
+      "credit_requirements": {
+        "General Education": "18",
+        "Free Elective": "12",
+        "Pre-Accountancy Courses": "33",
+        "Accountancy Foundation Courses": "3",
+        "Required Business Core Courses": "24",
+        "Required Accountancy Courses": "21",
+        "Professional Electives": "6",
+        "Senior Capstone": "3",
+        "Graduate Level Coursework": "30",
+        "Total Minimum": "150"
+      },
+      "plan": {
+        "First Year": {
+          "Fall": [
+            "BUS_AD_1500",
+            "COMMUN_1200",
+            "MATH_1100*",
+            "State Requirement",
+            "Humanities"
+          ],
+          "Spring": [
+            "ENGLSH_1000**",
+            "MATH_1300*",
+            "Humanities  ",
+            "Physical/Biological Science with a Lab",
+            "Free Elective"
+          ]
+        },
+        "Second Year": {
+          "Fall": [
+            "ACCTCY_2036 or  2136H",
+            "ECONOM_1014",
+            "MANGMT_3300",
+            "MATH_1400*",
+            "STAT_2500"
+          ],
+          "Spring": [
+            "ACCTCY_2037 or  2137H",
+            "ACCTCY_2258",
+            "ECONOM_1015",
+            "MANGMT_3000W**",
+            "Free Elective"
+          ]
+        },
+        "Third Year": {
+          "Fall": [
+            "ACCTCY_3326 (FS Only)**",
+            "ACCTCY_3328 (FS Only)**",
+            "ECONOM_3229",
+            "STAT_3500",
+            "Free Elective"
+          ],
+          "Spring": [
+            "ACCTCY_3346 (SP Only)**",
+            "ACCTCY_4353 (SP Only)**",
+            "FINANC_3000",
+            "MRKTNG_3000",
+            "Free Elective"
+          ]
+        },
+        "Fourth Year": {
+          "Fall": [
+            " ",
+            "ACCTCY_3347 (FS Only)**",
+            "ACCTCY_4384 (FS Only)",
+            "ECONOM_3251 or  4351",
+            "MANGMT_3540",
+            "Free Elective"
+          ],
+          "Spring": [
+            "Non Internship (for Internship plan-see below)#",
+            "MANGMT_4970",
+            "ACCTCY/BUS Elective",
+            "Professional Elective",
+            "Professional Elective",
+            "Free Elective"
+          ]
+        },
+        "Fifth Year": {
+          "Fall": [
+            "Accountancy Elective",
+            "Accountancy Elective",
+            "Accountancy Elective",
+            "Accountancy/Business Elective",
+            "Accountancy/Business Elective"
+          ],
+          "Spring": [
+            "ACCTCY_8450",
+            "MANGMT_7010",
+            "Accountancy Elective",
+            "Accountancy Elective",
+            "Accountancy/Business Elective"
+          ]
+        }
+      }
+    },
+    {
+      "title": "Minor in Accountancy",
+      "type": "Minor",
+      "url": "https://catalog.missouri.edu/collegeofbusiness/accountancy/minor-accountancy/",
+      "requirements": {
+        "Required Courses": [
+          { "id": ["ACCTCY_2036"], "or": ["ACCTCY_2026", "ACCTCY_2136H"] },
+          { "id": ["ACCTCY_2037"], "or": ["ACCTCY_2027", "ACCTCY_2137H"] },
+          { "id": ["ACCTCY_2258"] },
+          { "id": ["ACCTCY_4356"], "or": ["ACCTCY_3326", "ACCTCY_3346"] }
+        ],
+        "Electives (choose one)": [
+          { "id": ["ACCTCY_3328"] },
+          { "id": ["ACCTCY_3347"] },
+          { "id": ["ACCTCY_4353"] }
+        ]
+      }
+    }
+  ]
+}
