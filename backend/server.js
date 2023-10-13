@@ -14,7 +14,7 @@ app.use((req, res, next) => {
 app.use('/api/home', plannerRoute)
 
 // connect to db
-mongoose.connect('mongodb+srv://'+process.env.NAME+':'+process.env.PASSWORD+'@mernapp.9jdlshy.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     //listen for request
     app.listen(process.env.PORT, () => {
