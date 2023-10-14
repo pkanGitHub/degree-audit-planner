@@ -17,6 +17,9 @@
   },
   "homepage": "https://github.com/pkanGitHub/degree-audit-planner#readme",
   "dependencies": {
+    "csv-parser": "^3.0.0",
+    "pdf-to-text": "^0.0.7",
+    "pdfinfo": "^0.0.3",
     "puppeteer": "^21.3.6"
   }
 }

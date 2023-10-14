@@ -21,6 +21,7 @@ for (let [key, vals] of Object.entries(courses)) {
         nc["description"] = course.title;
         nc["category"] = geneds[course.number]?.category;
         nc["properties"] = geneds[course.number]?.properties;
+        nc["available_next_semester"] = course.available_next_semester;
         nc["past_terms_offered"] = years[course.number];
         new_vals.push(nc);
 

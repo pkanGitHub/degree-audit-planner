@@ -1,8 +1,8 @@
 const puppeteer = require("puppeteer");
-
+const courses = {};
 (async () => {
-    const courses = {};
-    const browser = await puppeteer.launch(); // Starts virtual browser
+    const pages = [];
+    const browser = await puppeteer.launch({devtools: true}); // Starts virtual browser
     const page = await browser.newPage(); // Opens a tab in the browser
     await page.goto("https://musis1.missouri.edu/gradedist/mu_grade_dist_intro.cfm?search=true"); // Navigates to grade distribution page
     
@@ -20,7 +20,7 @@ const puppeteer = require("puppeteer");
         return year_array.splice(1);                //  gets rid of the empty option
     });
 
-    // years.splice(1) // for testing
+    // years.splice(5) // for testing
 
     // loop through each term and find courses offered.
     for (var year of years) {
@@ -29,7 +29,8 @@ const puppeteer = require("puppeteer");
             await page.waitForSelector("#term option")                                                      // waits for the options to load again
             await page.select("#term", year.id);                                                            // selects the desired term
             await page.click("#submit");                                                                    // submits form
-            await page.waitForSelector("#content-well > table")                                             // wait for table to load
+            await page.waitForSelector("#content-well > table tr:last-child")                               // wait for table to load
+            await delay(20000);                                                                             // Delay to ensure table is fully loaded (20 is probably overkill hihi huhu)
             var rows = await page.evaluate( () => {
                 const rows = document.querySelectorAll("#content-well > table tbody tr");                   // Grab the row for each course
                 const id_array = [];
@@ -41,17 +42,20 @@ const puppeteer = require("puppeteer");
                 return id_array;
             });
 
+            console.log(rows.length);
+
             rows.forEach((course) => {
-                if (course in courses && !courses[course].includes(year.year)) {    // Check if the course has already been added to the dict and prevent dupe years (caused by multiple teachers teaching one class)
-                    courses[course].push(year.year);                                // Add the term
-                }
-                else {
-                    courses[course] = [year.year];                                  // if the course has not been added yet, add it
-                }
+                if (!(course in courses)) courses[course] = [year.year];                                    // if the course has not been added yet, add it
+                
+                if (!courses[course].includes(year.year)) courses[course].push(year.year);                  // Check if the course has already been added to the dict and prevent dupe years (caused by multiple teachers teaching one class)
             });
+            pages.push({...courses});
+            // console.log(courses);
         }
         catch (e) {
-            if (e instanceof puppeteer.TimeoutError) {                              // prevent timing out
+            if (e instanceof puppeteer.TimeoutError) {          
+                debugger                    // prevent timing out
+                console.log("error thrown");
                 continue;
             }
         }
@@ -59,7 +63,9 @@ const puppeteer = require("puppeteer");
 
     await browser.close();  // Closes browser, womp womp
 
-  //  Turn to json and put into document
+    // console.log(courses);
+
+//   //  Turn to json and put into document
   var jsonData = JSON.stringify(courses);
   var fs = require('fs');
   fs.writeFile("years.json", jsonData, function(err) {
@@ -68,3 +74,10 @@ const puppeteer = require("puppeteer");
       }
   });
 })();
+
+
+function delay(time) {
+    return new Promise(function(resolve) { 
+        setTimeout(resolve, time)
+    });
+ }
