@@ -4,6 +4,12 @@ const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
 const plannerRoute = require('./routes/planner')
+const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate']
+const models = {}
+modelNames.forEach(modelName => {
+    const Model = require(`./Models/${modelName}`)
+    models[modelName] = Model
+})
 
 //middleware
 app.use((req, res, next) => {
