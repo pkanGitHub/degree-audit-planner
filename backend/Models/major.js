@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const majorSchema = mongoose.Schema({
-    _id: { type: String, unique: true },
     title: { type: String, required: true},
     totalCredit: { type: Number },
     creditArea: [
