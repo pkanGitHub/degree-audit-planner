@@ -7,7 +7,7 @@ import SignUp from "./pages/signUp"
 import Tutorial from "./pages/tutorial"
 import UserProfile from "./pages/userProfile"
 
-import './App.css';
+import './styles/App.css';
 
 function App() {
   return (
