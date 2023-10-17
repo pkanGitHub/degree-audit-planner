@@ -5,12 +5,18 @@ import ForgotPassword from "./pages/forgotPassword"
 import Login from "./pages/login"
 import SignUp from "./pages/signUp"
 import Tutorial from "./pages/tutorial"
-import UserProfile from "./pages/userProfile"
+import NavBar from "./components/navbar"
 
 import './styles/App.css';
 
+
+// to run app, type: npm run start
+// if this is first time, have to download dependencies so run npm install
+
 function App() {
   return (
+    <>
+    <NavBar/>
     <Routes>
       <Route path="/" element={<Home />}/>
       <Route path="audit" element={<Audit />}/>
@@ -18,8 +24,8 @@ function App() {
       <Route path="login" element={<Login />}/>
       <Route path="signup" element={<SignUp />}/>
       <Route path="tutorial" element={<Tutorial />}/>
-      <Route path="userProfile" element={<UserProfile />}/>
     </Routes>
+    </>
   );
 }
 

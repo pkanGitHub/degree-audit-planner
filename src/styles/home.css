@@ -1,0 +1,45 @@
+.muphoto {
+    height: 300px;
+    width: 300px; 
+    float:right;
+}
+
+.intro
+{
+    background-color: #E4F1FA;
+    padding: 20px;
+}
+
+.getstarted {
+    background-color: #F1B82D; /* Green */
+    border: none;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+}
+.transcript 
+{
+    float: left;
+    text-align: center;
+    padding: 10px;
+    background-color: #E4F1FA;
+}
+
+.noTranscript 
+{
+    float: right;
+    text-align: center;
+    padding: 10px;
+    background-color: #E4F1FA;
+}
+
+
+#startingTitle{
+    text-align: center;
+}
