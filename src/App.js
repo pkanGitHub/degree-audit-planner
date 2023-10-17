@@ -6,6 +6,7 @@ import Login from "./pages/login"
 import SignUp from "./pages/signUp"
 import Tutorial from "./pages/tutorial"
 import NavBar from "./components/navbar"
+import ResetPassword from './pages/resetPassword';
 
 import './styles/App.css';
 
@@ -24,6 +25,7 @@ function App() {
       <Route path="login" element={<Login />}/>
       <Route path="signup" element={<SignUp />}/>
       <Route path="tutorial" element={<Tutorial />}/>
+      <Route path="resetpassword" element={<ResetPassword />}/>
     </Routes>
     </>
   );

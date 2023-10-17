@@ -1,3 +1,7 @@
+.navbar
+{
+    font-size: larger;
+}
 ul {
     list-style-type: none;
     margin: 0;

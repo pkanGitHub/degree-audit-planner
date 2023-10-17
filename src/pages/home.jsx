@@ -6,11 +6,11 @@ const Home = () => {
         <div>
             <div className="intro">
                 <img src={image} alt="mulogo" className="muphoto"></img>
-                <h1>PLANNING YOUR DEGREE, <br/>MADE EASY</h1>
+                <h1>PLANNING YOUR DEGREE, MADE EASY</h1>
                 <p>The Mizzou Engineering Degree Audit is a website made by students for students. We wanted to create a usable, understandable, and flexible website to ensure student success.</p>
                 <button className="getstarted">Get Started</button>
                 <br/>
-                <a href="/">Need help?</a>
+                <a href="/tutorial">Need help?</a>
             </div>
 
             <div className="miniTutorial">
@@ -25,6 +25,10 @@ const Home = () => {
                 </div>
 
             </div>
+            <div className="terms">
+                <a href="/">Terms and Conditions</a>
+            </div>
+            
         </div>
     )
 };

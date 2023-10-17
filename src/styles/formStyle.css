@@ -1,0 +1,34 @@
+.formSection
+{
+    padding-top: 10px;
+    display: block;
+    text-align: center;
+}
+#formDesign
+{
+
+    background-color: white;
+    padding: 50px;
+    width: 50%;
+    height: 50%;
+    box-shadow: 5px 10px 8px #c3c3c3;
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+}
+
+.submitButton {
+    border: none;
+    background-color: black;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+}
