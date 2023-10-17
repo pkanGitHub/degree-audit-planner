@@ -24,7 +24,7 @@ mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     //listen for request
     app.listen(process.env.PORT, () => {
-        console.log('start server on port', process.env.PORT)
+        console.log('Mongo connection successful on port', process.env.PORT)
     })
 })
 .catch((error) => {
@@ -72,12 +72,225 @@ app.post("/signup", (req, res) => {
 })
 
 
-app.post("/courses", (req, res) => {
-    models['Courses'].find().then((courses) => {
-        if (!courses) return;
-        res.status(200).json({
-          message: "Course List",
-          courses: courses
-        })
+// app.post("/courses", (req, res) => {
+//     models['Courses'].find().then((courses) => {
+//         if (!courses) return;
+//         res.status(200).json({
+//           message: "Course List",
+//           courses: courses
+//         })
+//     })
+// })
+
+// Get from all schemes
+app.get("/certificates", (req, res) => {
+  retrieveCertificateData().then((certificates) => {
+    res.status(200).json({
+      message: "Certificate List",
+      certificates: certificates
     })
+  })
 })
+
+app.get("/majors", (req, res) => {
+  retrieveMajorData().then((majors) => {
+    res.status(200).json({
+      message: "Major List",
+      majors: majors
+    })
+  })
+})
+
+app.get("/minors", (req, res) => {
+  retrieveMinorData().then((minors) => {
+    res.status(200).json({
+      message: "Minor List",
+      minors: minors
+    })
+  })
+})
+
+app.get("/users", (req, res) => {
+  retrieveUserData().then((users) => {
+    res.status(200).json({
+      message: "User List",
+      users: users
+    })
+  })
+})
+
+app.get("/courses", (req, res) => {
+  retrieveCourseData().then((courses) => {
+    res.status(200).json({
+      message: "Course List",
+      courses: courses
+    })
+  })
+})
+
+//Add data to schemes
+app.post("/addCertificate", (req, res) => {
+  const certificate = new models['Certificate']({
+    title: req.body.title,
+    totalCredit: req.body.totalCredit,
+    courses: req.body.courses,
+  })
+
+  certificate
+    .save()
+    .then(result => {
+      res.status(201).json({
+        message: "Certificate created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+})
+
+app.post("/addMajor", (req, res) => {
+  const major = new models['Major']({
+    title: req.body.title,
+    totalCredit: req.body.totalCredit,
+    creditArea: req.body.creditArea,
+    semester: req.body.semester,
+  })
+
+  major
+    .save()
+    .then(result => {
+      res.status(201).json({
+        message: "Major created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+})
+
+app.post("/addMinor", (req, res) => {
+  const minor = new models['Minor']({
+    title: req.body.title,
+    totalCredit: req.body.totalCredit,
+    courses: req.body.courses,
+  })
+
+  minor
+    .save()
+    .then(result => {
+      res.status(201).json({
+        message: "Minor created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+})
+
+app.post("/addUser", (req, res) => {
+  const user = new models['User']({
+    email: req.body.email,
+    password: req.body.password,
+    major: req.body.major,
+    coursePlan: req.body.coursePlan,
+  })
+
+  user
+    .save()
+    .then(result => {
+      res.status(201).json({
+        message: "User created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+})
+
+app.post("/addCourse", (req, res) => {
+  const course = new models['Course']({
+    courseID: req.body.courseID,
+    name: req.body.name,
+    credit: req.body.credit,
+    category: req.body.category,
+    prerequisites: req.body.prerequisites,
+    description: req.body.description,
+    available: req.body.available
+  })
+
+  course
+    .save()
+    .then(result => {
+      res.status(201).json({
+        message: "Course created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+})
+
+//Retrieve data functions
+async function retrieveCertificateData() {
+  try {
+    const certificates = await models['Certificate'].find({}); 
+    return certificates;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveMajorData() {
+  try {
+    const majors = await models['Major'].find({}); 
+    return majors;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveMinorData() {
+  try {
+    const minors = await models['Minor'].find({}); 
+    return minors;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveUserData() {
+  try {
+    const users = await models['User'].find({}); 
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveCourseData() {
+  try {
+    const courses = await models['Course'].find({}); 
+    return courses;
+  } catch (error) {
+    throw error;
+  }
+}
+//-------------------------------------------------------------
+
+
+
