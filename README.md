@@ -1,3 +1,5 @@
-# degree-audit-planner
+# Degree Audit / Planner
+## By team DevOn/DevOff
 
-this branch just has code for using the webscraper!
+
+.env must be placed on same level as package.json

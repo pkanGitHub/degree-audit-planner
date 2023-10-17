@@ -1,7 +1,7 @@
 const courses = require('./courses.json');
 const years = require('./years.json');
 const geneds = require('./geneds.json');
-const reqs = require('./geneds-reqs.json');
+// const reqs = require('./geneds-reqs.json');
 
 // This file is just to combine info from several pages into something closer to what the database will be.
 
