@@ -18,6 +18,7 @@ for (let [key, vals] of Object.entries(courses)) {
         nc["title"] = course.title;
         nc["credit_hours"] = course.credit_hours;
         nc["prerequisites"] = course.prerequisites;
+        nc["recommended"] = course.recommended
         nc["description"] = course.title;
         nc["category"] = geneds[course.number]?.category;
         nc["properties"] = geneds[course.number]?.properties;

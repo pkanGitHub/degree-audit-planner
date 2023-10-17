@@ -16,7 +16,9 @@ const puppeteer = require("puppeteer");
     return links_array;
   });
 
-  // links.splice(1); // used in testing for faster running
+  // links.splice(0,17); // used in testing for faster running
+  // links.splice(1);
+
 
   for (var link of links) {                                                                         // Go through every course list
     await page.goto(link);                                                                          // Navigate to the page
@@ -32,22 +34,26 @@ const puppeteer = require("puppeteer");
         const title = title_line[1];                                                                // Removes non-breaking spaces which are used in ALL course ids
 
         const text = row.querySelector(".courseblockdesc").textContent?.replace(/\u00a0/g, " ");    // Non-breaking spaces again
-        const regex = /Credit Hour(?:s)?: ((?:\d+-\d+|\d+))(?:.*?Prerequisites: (.*?))?\n/;         // Splits the body of the courseblock into 3 parts, the description, the credit hours, and the prereqs
+        // const regex = /Credit Hour(?:s)?: ((?:\d+-\d+|\d+))(?:.*?Prerequisites: (.*?))?\n/;         // Splits the body of the courseblock into 3 parts, the description, the credit hours, and the prereqs
+        const regex = /Credit Hour(?:s)?: ((?:\d+-\d+|\d+))(?:.*?Prerequisites: (.*?))?(?:.*?Recommended: (.*?))?\n/;
+
         const matches = text.match(regex);
 
         //  Prevent emptys
         var creditHours = "";
         var prerequisites = "";
+        var recommended = "";
         var textBeforeMatch = "";
 
         if (matches) {
           creditHours = matches[1];
           prerequisites = matches[2];
+          recommended = matches[3];
   
           textBeforeMatch = text.slice(0, text.indexOf(matches[0])).trim();
         }
         // Creates an object for each course
-        course_array.push({ number: number, title: title, credit_hours: creditHours, prerequisites: prerequisites, description: textBeforeMatch });
+        course_array.push({ number: number, title: title, credit_hours: creditHours, prerequisites: prerequisites, recommended: recommended, description: textBeforeMatch });
       });      
 
       return { courses: course_array, program: h1 };
