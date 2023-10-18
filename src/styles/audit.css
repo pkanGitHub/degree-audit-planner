@@ -24,7 +24,6 @@
 #requiredCourse
 {
     background-color: white;
-    border: 1px solid black;
     display: block;
 
 }
@@ -42,4 +41,22 @@
 table {
     border: 1px solid gray;
     border-collapse: collapse;
+    padding: 10px;
+}
+th{
+    text-align: left;
+}
+
+th, td 
+{
+    padding: 5px;
+}
+
+#removeButton {
+    border: none;
+    background-color: transparent;
+}
+
+#removeItem {
+    text-align: right;
 }
