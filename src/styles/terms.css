@@ -1,0 +1,19 @@
+.termsInfo
+{
+    background-color: white;
+    padding: 20px;
+}
+#termsButton {
+    border: none;
+    background-color: #F1EEF0;
+    text-decoration: underline;
+    color: #1C5E90;
+}
+
+#close {
+    border: none;
+    color: black;
+    background-color: transparent;
+    float: right;
+    font-size: larger;
+}

@@ -1,3 +1,5 @@
+import TermsCondition from "../components/termsConditions";
+
 const SignUp = () => {
     return (
         <div className="formSection">
@@ -16,7 +18,8 @@ const SignUp = () => {
                 </label>
                 <br/>
                 <input type="checkbox" name="terms" value="terms"/>
-                <label for="terms"> I have read the <a href="/">Terms and Conditions</a></label>
+                {/* need to work on this integration */}
+                <label for="terms"> I have read the <TermsCondition/></label>
                 <br/>
                 <button className="submitButton">Register</button>
 
