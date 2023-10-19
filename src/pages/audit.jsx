@@ -2,9 +2,9 @@ import "../styles/audit.css"
 import RequiredChoice from "../components/requiredChoice"
 import RequiredCourse from "../components/requiredCourse"
 import ClassInfo from "../components/classInfoPopup";
-import { useState } from "react";
 
 const Audit = () => {
+
     return (
         <body id="fullpage">
             <div>
@@ -78,6 +78,18 @@ const Audit = () => {
                         Choose from INFOTC courses below:
                     </p>
                     <div id="popupDiv">
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
                         <ClassInfo/>
                         <ClassInfo/>
                         <ClassInfo/>
