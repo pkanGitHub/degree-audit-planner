@@ -2,9 +2,33 @@ import "../styles/audit.css"
 import RequiredChoice from "../components/requiredChoice"
 import RequiredCourse from "../components/requiredCourse"
 import ClassInfo from "../components/classInfoPopup";
+import { useState } from "react";
+import { type } from "@testing-library/user-event/dist/type";
 
 const Audit = () => {
+    const [selectCourseType, setCourseType] = useState('');
+    const handleSelect=(e)=>{
+        setCourseType(e.target.value)
+    }
 
+    // this makes the selection dynamic and allows other options to be passed through, used specifically for database data and flexibility
+    const [selectType, setType] = useState('');
+    const typeOptions = ['Major', 'Minor', 'Certificate']
+    const handleTypeChange = (e) => {
+        setType(e.target.value)
+    }
+    const [selectCategory, setCategory] = useState('');
+    const category = {INFOTC: "Information Technology - BS", BIOMED: "Biomedical Engineering - BMEBS", COMPS: "Computer Science - BS"}
+    const handleCategoryChange = (e) => {
+        setCategory(e.target.value)
+    }
+
+    const [selectTerm, setTerm] = useState('');
+    const term = {FS21: "Fall 2021", SP22: "Spring 2022", SM22: "Summer 2022"}
+    const handleTermChange = (e) => {
+        setTerm(e.target.value)
+    }
+  
     return (
         <body id="fullpage">
             <div>
@@ -17,28 +41,25 @@ const Audit = () => {
                     {/* https://www.youtube.com/watch?v=XtS14dXwvwE */}
                     <label>
                         Type:
-                        <select name="type">
-                            <option value="major">Major</option>
-                            <option value="minor">Minor</option>
-                            <option value="certificate">Certificate</option>
+                        <select name="type" onChange={handleTypeChange}>
+                            {typeOptions.map((typeOptions) => (
+                                <option value={typeOptions}>{typeOptions}</option>))}
                         </select>
                     </label>
 
                     <label>
                         Category:
-                        <select name="type">
-                            <option value="IT">Information Technology - BS</option>
-                            <option value="BIOMED">Biomedical Engineering - BMEBS</option>
-                            <option value="CS">Computer Science - BS</option>
+                        <select name="type" onChange={handleCategoryChange}>
+                            {Object.keys(category).map((key, index) => 
+                            <option value={key}>{category[key]}</option>)}
                         </select>
                     </label>
 
                     <label>
                         Catalog Year:
-                        <select name="type">
-                            <option value="FS2023">Fall 2023</option>
-                            <option value="SP2024">Spring 2024</option>
-                            <option value="SM2024">Summer 2024</option>
+                        <select name="type" onChange={handleTermChange}>
+                            {Object.keys(term).map((key, index) => 
+                            <option value={key}>{term[key]}</option>)}
                         </select>
                     </label>
                     <hr/>
@@ -66,16 +87,16 @@ const Audit = () => {
                 <div id='largeClassSelect'>
                     <label>
                         Course type:
-                        <select id='chooseCourseType'>
+                        <select id='chooseCourseType' onChange={handleSelect}>
                             <option value='BIO'>Biology</option>
                             <option value='AGR'>Agriculture</option>
                             <option value='INT'>International Studies</option>
                             <option value='MCE'>Mechanical Engineering</option>
                         </select>
                     </label>
-                    {/* will want to find a way to pass information through to the pop up */}
+                    {/* will want to find a way to pass information through to the pop up, will have to use query based on selection above*/}
                     <p>
-                        Choose from INFOTC courses below:
+                        Choose from {selectCourseType} courses below:
                     </p>
                     <div id="popupDiv">
                         <ClassInfo/>
