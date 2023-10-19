@@ -1,8 +1,12 @@
 import "../styles/audit.css"
+import RequiredChoice from "../components/requiredChoice"
+import RequiredCourse from "../components/requiredCourse"
+import ClassInfo from "../components/classInfoPopup";
+import { useState } from "react";
 
 const Audit = () => {
     return (
-        <div>
+        <body id="fullpage">
             <div>
                 <button className="transcriptButton">Upload Unoffical Transcript</button>
                 <br/>
@@ -37,87 +41,52 @@ const Audit = () => {
                             <option value="SM2024">Summer 2024</option>
                         </select>
                     </label>
+                    <hr/>
                 </div>
-                <div id='degree requirements'>
-                    {/* need to make this dynamic for what is chosen above */}
-                    <h2>Degree Requirements</h2>
-                    {/* https://www.robinwieruch.de/react-dropdown/ */}
+
+                <div id="requiredCourses">
                     <h4>General Requirements</h4>
                     <p>Math (5/5)</p>
-                    {/* https://www.pluralsight.com/guides/how-to-show-and-hide-reactjs-components */}
+                    <RequiredCourse/>
+                    <RequiredCourse/>
+                    <p>English (3/6)</p>
+                    <RequiredCourse/>
 
-                    <div id="requiredCourse">
-                        <table>
-                            <tr>
-                                <th colSpan={2}>Math 1500</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Credits: 5
-                                </td>
-                                <td>
-                                <select className="requiredCourseSelect">
-                                    <option value='taken'>Taken</option>
-                                    <option value='IP'>In Progress</option>
-                                    <option value='planned'>Planned</option>
-                                </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Prerequisites: N/A
-                                </td>
-                                <td>
-                                    <select className="requiredCourseSelect">
-                                        <option value='FS2021'>FS2021</option>
-                                        <option value='SP2022'>SP2022</option>
-                                        <option value='SM2022'>SM2022</option>
-                                        <option value='FS2022'>FS2022</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                       
-                    </div>
+                </div>
+                <hr/>
+                <div id='chooseCourse'>
+                    <h4>General Electives</h4>
+                    <RequiredChoice/>
+                    <RequiredChoice/>
+                    <RequiredChoice/>
+                    <RequiredChoice/>
 
-                    <div id="choiceCourse">
-                        <table>
-                            <tr>
-                                <th>BIOME 1500</th>
-                                <th id="removeItem"><button id="removeButton">X</button></th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Credits: 5
-                                </td>
-                                <td>
-                                <select className="requiredCourseSelect">
-                                    <option value='taken'>Taken</option>
-                                    <option value='IP'>In Progress</option>
-                                    <option value='planned'>Planned</option>
-                                </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Prerequisites: N/A
-                                </td>
-                                <td>
-                                    <select className="requiredCourseSelect">
-                                        <option value='FS2021'>FS2021</option>
-                                        <option value='SP2022'>SP2022</option>
-                                        <option value='SM2022'>SM2022</option>
-                                        <option value='FS2022'>FS2022</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                       
+                </div>
+
+                <div id='largeClassSelect'>
+                    <label>
+                        Course type:
+                        <select id='chooseCourseType'>
+                            <option value='BIO'>Biology</option>
+                            <option value='AGR'>Agriculture</option>
+                            <option value='INT'>International Studies</option>
+                            <option value='MCE'>Mechanical Engineering</option>
+                        </select>
+                    </label>
+                    {/* will want to find a way to pass information through to the pop up */}
+                    <p>
+                        Choose from INFOTC courses below:
+                    </p>
+                    <div id="popupDiv">
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
+                        <ClassInfo/>
                     </div>
 
                 </div>
             </div>
-        </div>
+        </body>
        
     )
 };
