@@ -1,17 +1,23 @@
 // this is for courses that are like major electives where you get to choose from a very select set of courses
 import "../styles/audit.css"
 
-const RequiredChoice = () => {
+
+const RequiredChoice = ({key, classId, creditHours, preReq, removeClass}) => {
+
     return (
         <div id="choiceCourse">
             <table>
+                
                 <tr>
-                    <th>BIOME 1500</th>
+                    <th>{classId}</th>
                     <th id="removeItem"><button id="removeButton">X</button></th>
                 </tr>
+
+             
+                
                 <tr>
                     <td>
-                        Credits: 5
+                        Credits: {creditHours}
                     </td>
                     <td>
                     <select className="requiredCourseSelect">
@@ -21,9 +27,11 @@ const RequiredChoice = () => {
                     </select>
                     </td>
                 </tr>
+            
+                
                 <tr>
                     <td>
-                        Prerequisites: N/A
+                        Prerequisites: {preReq}
                     </td>
                     <td>
                         <select className="requiredCourseSelect">

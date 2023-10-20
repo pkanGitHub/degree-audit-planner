@@ -28,6 +28,24 @@ const Audit = () => {
     const handleTermChange = (e) => {
         setTerm(e.target.value)
     }
+
+    //dynamic categories
+    const categories = {MATH: "Math", ENG: "English"}
+
+    //dynamic required courses
+    const requiredCourseData = [{classId: "MATH1500", creditHours: 5, preReq: "N/A"}, {classId: "MATH2500", creditHours: 5, preReq: "MATH2500"}, {classId: "ENG3000", creditHours: 3, preReq: "ENG2000"}]
+
+    //dynamic course choice
+    const classData = [{classId: "MATH1500", creditHours: 5, preReq: "N/A"}, {classId: "BME1000", creditHours: 3, preReq: "PHYSICS1000"}]
+
+    //delete entry
+    //https://stackoverflow.com/questions/61661526/react-delete-one-children-without-rendering-the-parent-again
+
+    //class type select dynamic
+
+    const classSelect = {BIO: "Biology", AGR: "Agriculture", INT: "International Studies", MECHE: "Mechanical Engineering"}
+
+    const popupClasses = [{className: "INFOTC 1000", classTitle: " Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "ENGINR 2011", classTitle: "Engineering Leadership and Strategic Communication", classDescript: "This course is inspired by the experience and writings of CEO and world-renowned leader David Novak. It is designed to introduce engineering students to the concepts, theory, and practice of engineering leadership. Topics include; effective written and oral communications, presentations, engineering leadership characteristics, individual differences and self-awareness, and developing and building teams. Graded on A-F basis only.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}];
   
     return (
         <body id="fullpage">
@@ -67,20 +85,19 @@ const Audit = () => {
 
                 <div id="requiredCourses">
                     <h4>General Requirements</h4>
-                    <p>Math (5/5)</p>
-                    <RequiredCourse/>
-                    <RequiredCourse/>
-                    <p>English (3/6)</p>
-                    <RequiredCourse/>
+                    {Object.keys(categories).map((key, index)=> (
+                        <div>
+                            <p>{categories[key]}</p>
+                            {requiredCourseData.map((key, index) => <RequiredCourse key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
+                        </div>
+                        
+                    ))}
 
                 </div>
                 <hr/>
                 <div id='chooseCourse'>
                     <h4>General Electives</h4>
-                    <RequiredChoice/>
-                    <RequiredChoice/>
-                    <RequiredChoice/>
-                    <RequiredChoice/>
+                    {classData.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
 
                 </div>
 
@@ -88,10 +105,8 @@ const Audit = () => {
                     <label>
                         Course type:
                         <select id='chooseCourseType' onChange={handleSelect}>
-                            <option value='BIO'>Biology</option>
-                            <option value='AGR'>Agriculture</option>
-                            <option value='INT'>International Studies</option>
-                            <option value='MCE'>Mechanical Engineering</option>
+                            {Object.keys(classSelect).map((key, index) => 
+                            <option value={key}>{classSelect[key]}</option>)}
                         </select>
                     </label>
                     {/* will want to find a way to pass information through to the pop up, will have to use query based on selection above*/}
@@ -99,22 +114,7 @@ const Audit = () => {
                         Choose from {selectCourseType} courses below:
                     </p>
                     <div id="popupDiv">
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
-                        <ClassInfo/>
+                        {popupClasses.map((key, index) => <ClassInfo key={index} className={key.className} classTitle={key.classTitle} classDescript={key.classDescript} creditHours={key.creditHours} preReq={key.preReq} lastOffered={key.lastOffered}/>)}
                     </div>
 
                 </div>
