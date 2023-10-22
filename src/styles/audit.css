@@ -27,13 +27,14 @@
     align-items: center;
 }
 
-#requiredCourse, #choiceCourse
-{
-    background-color: white;
+#choiceCourse {
     display: inline-block;
-    padding: 5px;
+    padding: 10px;
+}
 
-
+#requiredCourse {
+    display: inline-block;
+    padding: 10px;
 }
 
 table {
@@ -60,7 +61,6 @@ th, td
     text-align: right;
 }
 
-
 body{
     width: 100%;
 }
@@ -71,3 +71,51 @@ body{
     text-align: left;
 
 }
+
+.accordion{
+    overflow: hidden;
+}
+
+.accordion li{
+    list-style: none;
+    width: 100%;
+}
+
+.accordion li label{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 500px;
+    cursor: pointer;
+}
+
+#genReqLabel::before{
+    content: '+';
+    margin-right: 10px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+input[type="checkbox"]{
+    display: none;
+}
+
+.accordion .classHistory{
+    color: black;
+    line-height: 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s, padding 0.5s;
+}
+
+.accordion input[type="checkbox"]:checked + #genReqLabel + .classHistory{
+    max-height: 400px;
+    padding: 10px 10px 20px;
+}
+
+.accordion input[type="checkbox"]:checked + #genReqLabel::before{
+    content: '-';
+}
+
+
