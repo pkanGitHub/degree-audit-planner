@@ -1,5 +1,19 @@
+import "../styles/password.css"
+
 const ForgotPassword = () => {
-    return <h1>ForgotPassword</h1>
+    return (
+        <div className="formSection">
+            <form id="formDesign">
+                <h1>Forgot Password?</h1>
+                <label>Email:
+                    <input type="text"/>
+                </label>
+                <br/>
+                <a href="/resetpassword" className="nextButton">Next</a>
+
+            </form>
+        </div>
+    )
 };
 
 export default ForgotPassword;

@@ -1,0 +1,49 @@
+.muphoto {
+    height: 300px;
+    width: 300px; 
+    float:right;
+    align-items: center;
+}
+
+.intro
+{
+    background-color: black;
+    border-radius: 0px 0px 0px 60px;
+    padding: 30px; 
+    padding-bottom: 50px;
+    color: white;
+}
+
+.getstarted {
+    color: white;
+    padding: 10px;
+    text-align: center;
+    text-decoration: solid underline #F1B82D 4px;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    padding-bottom: 20px;
+}
+.transcript 
+{
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+    padding-bottom: 20px;
+    background-color: black;
+    color: white;
+    border-radius: 5px 5px 5px 60px;
+}
+
+
+#startingTitle{
+    text-align: center;
+}
+
+.miniTutorial
+{
+    padding: 50px;
+}
