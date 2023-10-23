@@ -4,7 +4,7 @@ import '../styles/navbar.css';
 const NavBar = () => {
     return (
     <nav className='navbar'>
-      <ul>
+      <ul class = "navBarUL">
          <li className='title'>
             <Link to="/">Mizzou Engineering Degree Audit</Link>
          </li>
