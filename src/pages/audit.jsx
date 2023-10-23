@@ -93,41 +93,41 @@ const Audit = () => {
                         ))}
                         </select>
                     </label>
-          <hr />
-        </div>
+                </div>
+                <hr/>
 
                 
-        <ul className="accordion">
-            <li>
-                <input type="checkbox" name="accordion" id="first" />
-                <label id="genReqLabel" htmlFor="first">General Requirements</label>
-                <div className="classHistory">
-                    <div id="requiredCourses">
-                        {Object.keys(categories).map((key, index)=> (
-                            <div>
-                                <p>{categories[key]}</p>
-                                {requiredCourseData.map((key, index) => <RequiredCourse key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
+                <ul className="accordion">
+                    <li>
+                        <input type="checkbox" name="accordion" id="first" />
+                        <label id="genReqLabel" htmlFor="first">General Requirements</label>
+                        <div className="classHistory">
+                            <div id="requiredCourses">
+                                {Object.keys(categories).map((key, index)=> (
+                                    <div>
+                                        <p>{categories[key]}</p>
+                                        {requiredCourseData.map((key, index) => <RequiredCourse key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
+                                    </div>
+                                    
+                                ))}
                             </div>
-                            
-                        ))}
+
+                        </div>
+                    </li>
+                </ul>
+                <ul className="accordion">
+                <li>
+                    <input type="checkbox" name="accordion" id="second" />
+                    <label id="genReqLabel" htmlFor="second">General Electives</label>
+                    <div className="classHistory">
+                        <div id='chooseCourse'>
+                            {classData.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
+
+                        </div>
                     </div>
-
-                </div>
-            </li>
-        </ul>
-        <ul className="accordion">
-          <li>
-            <input type="checkbox" name="accordion" id="second" />
-            <label id="genReqLabel" htmlFor="second">General Electives</label>
-            <div className="classHistory">
-                <div id='chooseCourse'>
-                    {classData.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
-
-                </div>
-            </div>
-          </li>
-        </ul>
-        <hr/>
+                </li>
+                </ul>
+                <hr/>
                 
 
                 <div id='largeClassSelect'>
