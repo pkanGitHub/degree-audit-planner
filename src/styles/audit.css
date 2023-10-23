@@ -1,20 +1,28 @@
-#audit
+#contents
 {
     background-color: white;
     padding: 20px;
-    margin: 10px;
     box-shadow: 5px 10px 8px #c3c3c3;
+    width: 80%;
+    align-items: center;
+    margin: auto;
+}
+
+#header{
+    text-align: center;
 }
 
 #enrollmentSelection {
     text-align: center;
+    margin: auto;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
 }
 
 
-.transcriptButton {
+button{
     border: none;
-    background-color: black;
-    color: white;
     padding: 10px;
     text-align: center;
     text-decoration: none;
@@ -26,6 +34,18 @@
     font-weight: bold;
     align-items: center;
 }
+#transcriptButton {
+
+    background-color: black;
+    color: white;
+}
+
+#addCourseButton {
+    
+    background-color: #F1B82D;
+    color: black;
+
+}
 
 #requiredCourse, #choiceCourse
 {
@@ -33,27 +53,26 @@
     display: inline-block;
     padding: 5px;
 
-
 }
 
-table {
+.courseTable {
     border: 1px solid gray;
     border-collapse: collapse;
     padding: 10px;
 }
-th{
-    text-align: left;
-}
-
-th, td 
+.courseTable th, td
 {
     padding: 5px;
     background-color: lightgray;
+}
+.courseTable th{
+    text-align: left;
 }
 
 #removeButton {
     border: none;
     background-color: transparent;
+    font-weight: normal;
 }
 
 #removeItem {
@@ -69,5 +88,76 @@ body{
     width: 100%;
     height: 100%;
     text-align: left;
+}
+
+#optionButtons{
+    display: flex;
+    justify-content: space-between;
+}
+
+#exportButton{
+    background-color: #F1B82D;
+    color: white;
+    width: 15%;
+}
+
+#saveButton{
+    background-color: #009E60;
+    color: white;
+    width: 15%;
+}
+
+#deleteButton{
+    background-color: #D53126;
+    color: white;
+    width: 15%;
+}
+
+#twoSemesterPlan, #threeSemesterPlan{
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 90%;
+    margin-bottom: 10px;
+}
+#twoSemesterPlan th, #threeSemesterPlan th{
+    text-align: center;
+    background-color: #F1B82D;
+    border-bottom: 1px solid black;
+    padding: 10px;
+}
+
+.semesterHeading{
+    background-color: lightgray;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
 
 }
+.courseTableInfo td{
+    background-color: white;
+}
+
+.courseTableInfo td:nth-child(2), .courseTableInfo td:nth-child(4){
+    border-right: 1px solid black;
+}
+
+#tableDataHeading td{
+    font-weight: bold;
+}
+
+#tableSummary td{
+    border-top: 1px solid black;
+    background-color: #F1B82D;
+}
+
+#tableSummary td:nth-child(2), #tableSummary td:nth-child(4){
+    border-right: 1px solid black;
+}
+
+#userPlanner{
+    text-align: center;
+}
+

@@ -3,7 +3,7 @@ import "../styles/audit.css"
 const RequiredCourse = ({key, classId, creditHours, preReq}) => {
     return(
         <div id="requiredCourse">
-            <table>
+            <table className="courseTable">
                 <tr>
                     <th colSpan={2}>{classId}</th>
                 </tr>
@@ -21,7 +21,7 @@ const RequiredCourse = ({key, classId, creditHours, preReq}) => {
                 </tr>
                 <tr>
                     <td>
-                        Prerequisites:{preReq}
+                        Prerequisites: {preReq}
                     </td>
                     <td>
                         <select className="requiredCourseSelect">
