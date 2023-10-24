@@ -16,8 +16,15 @@
     text-align: center;
     margin: auto;
     align-items: center;
+}
+
+#addedSectionEnroll{
     display: flex;
     justify-content: space-between;
+}
+
+#addedSectionEnroll label{
+    font-weight: bold;
 }
 
 
@@ -54,8 +61,6 @@ button{
     padding: 5px;
 
 }
-
-
 
 
 .courseTable {
@@ -163,7 +168,7 @@ body{
     text-align: center;
 }
 
-
+/* for drop down menu selection */
 
 .accordion{
     overflow: hidden;
