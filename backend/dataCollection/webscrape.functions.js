@@ -41,24 +41,21 @@ async function GetCatalogSource(page) {
 
             const text = row.querySelector(".courseblockdesc").textContent?.replace(/\u00a0/g, " ");        // Non-breaking spaces again
 
-            // Splits the body of the courseblock into 4 parts, the description, the credit hours, the prereqs, and recommended courses
-            const regex = /Credit Hour(?:s)?: ((?:\d+-\d+|\d+))(?:.*?Prerequisites: (.*?))?(?:.*?Recommended: (.*?))?\n/;
+            const creditHoursRegex = /Credit Hour(?:s)?: ((?:\d+-\d+|\d+))/;
+            const prerequisitesRegex = /Prerequisites: (.*?)(?=\n|Recommended:|$)/;
+            const recommendedRegex = /Recommended: (.*?)\n/;
+    
+            const creditHoursMatch = text.match(creditHoursRegex);
+            const prerequisitesMatch = text.match(prerequisitesRegex);
+            const recommendedMatch = text.match(recommendedRegex);
+    
+            const creditHours = creditHoursMatch ? creditHoursMatch[1] : "";
+            const prerequisites = prerequisitesMatch ? prerequisitesMatch[1] : "";
+            const recommended = recommendedMatch ? recommendedMatch[1] : "";
+    
+            const textBeforeMatch = text.slice(0, text.indexOf(creditHoursMatch[0])).trim();
 
-            const matches = text.match(regex);
-
-            //  Prevent emptys
-            var creditHours = "";
-            var prerequisites = "";
-            var recommended = "";
-            var textBeforeMatch = "";
-
-            if (matches) {
-            creditHours = matches[1];
-            prerequisites = matches[2];
-            recommended = matches[3];
-
-            textBeforeMatch = text.slice(0, text.indexOf(matches[0])).trim();
-            }
+            
             // Creates an object for each course
             course_array.push({ 
                 number: number, 

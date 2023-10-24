@@ -3,7 +3,7 @@ const ws = require("./webscrape.functions");
 const fs = require('fs');
 
 
-async function RunWebscrape() {
+async function CourseDataWebscrape() {
     const browser = await puppeteer.launch({devtools: true});           // Starts virtual browser
     const page = await browser.newPage();                               // Opens a tab in the browser
 
@@ -54,4 +54,21 @@ async function RunWebscrape() {
     // });
 }
 
-RunWebscrape();
+async function DegreePlanWebscrape() {
+    const browser = await puppeteer.launch();           // Starts virtual browser
+    const page = await browser.newPage();  
+    const plans = await ws.GetDegreePlans(page);
+    await browser.close();
+
+    var jsonData = JSON.stringify(plans);
+    fs.writeFile("json/plans.json", jsonData, function(err) {
+        if (err) {
+            console.log(err);
+        }
+    });
+
+
+}
+
+// CourseDataWebscrape();
+DegreePlanWebscrape();
