@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-degreeauditplanner-dev-140505-authRole",
+      "UnauthRoleArn": "arn:aws:iam::953145373171:role/amplify-degreeauditplanner-dev-140505-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::953145373171:role/amplify-degreeauditplanner-dev-140505-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
+      "UnauthRoleName": "amplify-degreeauditplanner-dev-140505-unauthRole",
+      "StackName": "amplify-degreeauditplanner-dev-140505",
+      "StackId": "arn:aws:cloudformation:us-east-1:953145373171:stack/amplify-degreeauditplanner-dev-140505/3f148fb0-72a0-11ee-8e11-0e7f89a006e1",
+      "AmplifyAppId": "d1vlixywzyk5l"
+    }
+  }
+}
