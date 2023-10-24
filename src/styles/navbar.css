@@ -1,42 +1,54 @@
 .navbar
 {
     font-size: larger;
-}
-
-.navBarUL {
-    list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     background-color: #F1B82D;
+    display: flex;
+    justify-content: space-between;
 }
 
-.title{
+#userprofile{
+    width: 30px;
+}
+
+
+
+#title{
     float: left;
     padding-left: 2%;
     font-weight: bold;
 }
   
-li {
-    float: right;
+
+.rightItems{
+    display: flex;
 }
 
-li a {
-    display: block;
+#imagespace{
+    height:auto;
+    width:auto;
+    padding-left: 2%;
+    margin: 0 auto; 
+    padding: 15px 15px 0px 15px;
+}
+
+.navbarlink {
     color: black;
     text-align: center;
-    padding: 14px 16px;
     text-decoration: none;
+    padding: 15px;
 }
 
-li a:hover:not(.active) {
+.navbarlink:hover:not(.active) {
     background-color: #ffd670;
 }
 
-.title:hover:not(.active) {
+#title:hover:not(.active) {
     background-color: #F1B82D;
 }
 
-.active {
+.navbarlink.active {
     background-color: #04AA6D;
 }
