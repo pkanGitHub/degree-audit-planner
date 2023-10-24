@@ -3,10 +3,9 @@ import "../styles/audit.css"
 
 
 const RequiredChoice = ({key, classId, creditHours, preReq, removeClass}) => {
-
     return (
         <div id="choiceCourse">
-            <table>
+            <table className="courseTable">
                 
                 <tr>
                     <th>{classId}</th>
@@ -20,7 +19,7 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeClass}) => {
                         Credits: {creditHours}
                     </td>
                     <td>
-                    <select className="requiredCourseSelect">
+                    <select className="requiredCourseSelect" name="progressSelect">
                         <option value='taken'>Taken</option>
                         <option value='IP'>In Progress</option>
                         <option value='planned'>Planned</option>
@@ -34,7 +33,7 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeClass}) => {
                         Prerequisites: {preReq}
                     </td>
                     <td>
-                        <select className="requiredCourseSelect">
+                        <select className="requiredCourseSelect" name="semesterSelect" >
                             <option value='FS2021'>FS2021</option>
                             <option value='SP2022'>SP2022</option>
                             <option value='SM2022'>SM2022</option>
