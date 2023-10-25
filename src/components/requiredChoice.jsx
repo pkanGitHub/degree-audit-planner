@@ -2,7 +2,7 @@
 import "../styles/audit.css"
 
 
-const RequiredChoice = ({key, classId, creditHours, preReq, removeClass}) => {
+const RequiredChoice = ({key, classId, creditHours, preReq}) => {
     return (
         <div id="choiceCourse">
             <table className="courseTable">

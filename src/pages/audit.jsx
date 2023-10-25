@@ -2,7 +2,7 @@ import "../styles/audit.css";
 import RequiredChoice from "../components/requiredChoice";
 import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
-import { useEffect, useState, useTransition } from "react";
+import { useState } from "react";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -14,7 +14,7 @@ const Audit = () => {
     const handleNumberSelect=(e)=>{
         setNumber(e.target.value)
     }
-    const courseNumber = [1400, 1500, 2000, 2050]
+    const courseNumber = [1000, 2011, 2270, 2271, 2200, 2000, 2201]
 
 
     const [selectType, setType] = useState("");
@@ -47,10 +47,10 @@ const Audit = () => {
     const categories = {MATH: "Math", ENG: "English"}
 
     //dynamic required courses
-    const requiredCourseData = [{classId: "MATH1500", creditHours: 5, preReq: "N/A"}, {classId: "MATH2500", creditHours: 5, preReq: "MATH2500"}, {classId: "ENG3000", creditHours: 3, preReq: "ENG2000"}]
+    const requiredCourseData = [{classId: "MATH 1500", creditHours: 5, preReq: "N/A"}, {classId: "MATH 2500", creditHours: 5, preReq: "MATH 2500"}, {classId: "ENG 3000", creditHours: 3, preReq: "ENG 2000"}]
 
     //dynamic course choice
-    const classData = [{classId: "MATH1500", creditHours: 5, preReq: "N/A"}, {classId: "BME1000", creditHours: 3, preReq: "PHYSICS1000"}]
+    const classData = [{classId: "MATH 1500", creditHours: 5, preReq: "N/A"}, {classId: "BME 1000", creditHours: 3, preReq: "PHYSICS 1000"}]
 
     //delete entry
     //https://stackoverflow.com/questions/61661526/react-delete-one-children-without-rendering-the-parent-again
@@ -59,17 +59,10 @@ const Audit = () => {
 
     const classSelect = {"INFOTC": "Information Technology", "ENGINR": "Engineering", "CMP_SC": "Computer Science", "MAE": "Mechanical Engineering"}
 
-    const popupClasses = [{className: "INFOTC 1000", classTitle: "Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "ENGINR 2011", classTitle: "Engineering Leadership and Strategic Communication", classDescript: "This course is inspired by the experience and writings of CEO and world-renowned leader David Novak. It is designed to introduce engineering students to the concepts, theory, and practice of engineering leadership. Topics include; effective written and oral communications, presentations, engineering leadership characteristics, individual differences and self-awareness, and developing and building teams. Graded on A-F basis only.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "CMP_SC 2270", classTitle: "Introduction to Logic Systems", classDescript: "(same as ECE 2210). Basic tools, methods and procedures to design combinational and sequential digital circuits and systems, including number systems, boolean algebra, logic minimization, circuit design, memory elements, and finite state machine design.", creditHours: "3", preReq: "C or higher in CMP_SC 1050 or INFOTC 1040", lastOffered: "Summer 2021"}, {className: "MAE 2200", classTitle: "Engineering Materials", classDescript: "The nature of the structure of engineering materials. The relationship of material structure to physical properties. Mechanical behavior of engineering materials. Graded on A-F basis only.", creditHours: "3", preReq: "Grade of C- or better in ENGINR 1200 and CHEM 1320. Restricted to Mechanical and Aerospace Engineering students only", lastOffered: "Spring 2022"}];
+    const popupClasses = [{className: "INFOTC 1000", classTitle: "Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "ENGINR 2011", classTitle: "Engineering Leadership and Strategic Communication", classDescript: "This course is inspired by the experience and writings of CEO and world-renowned leader David Novak. It is designed to introduce engineering students to the concepts, theory, and practice of engineering leadership. Topics include; effective written and oral communications, presentations, engineering leadership characteristics, individual differences and self-awareness, and developing and building teams. Graded on A-F basis only.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "CMP_SC 2270", classTitle: "Introduction to Logic Systems", classDescript: "(same as ECE 2210). Basic tools, methods and procedures to design combinational and sequential digital circuits and systems, including number systems, boolean algebra, logic minimization, circuit design, memory elements, and finite state machine design.", creditHours: "3", preReq: "C or higher in CMP_SC 1050 or INFOTC 1040", lastOffered: "Summer 2021"}, {className: "MAE 2200", classTitle: "Engineering Materials", classDescript: "The nature of the structure of engineering materials. The relationship of material structure to physical properties. Mechanical behavior of engineering materials. Graded on A-F basis only.", creditHours: "3", preReq: "Grade of C- or better in ENGINR 1200 and CHEM 1320.", lastOffered: "Spring 2022"}, {className: "CMP_SC 2271", classTitle: "Introduction to Logic Systems", classDescript: "(same as ECE 2210). Basic tools, methods and procedures to design combinational and sequential digital circuits and systems, including number systems, boolean algebra, logic minimization, circuit design, memory elements, and finite state machine design.", creditHours: "3", preReq: "C or higher in CMP_SC 1050 or INFOTC 1040", lastOffered: "Summer 2021"}, {className: "MAE 2201", classTitle: "Engineering Materials", classDescript: "The nature of the structure of engineering materials. The relationship of material structure to physical properties. Mechanical behavior of engineering materials. Graded on A-F basis only.", creditHours: "3", preReq: "Grade of C- or better in ENGINR 1200 and CHEM 1320.", lastOffered: "Spring 2022"}, {className: "INFOTC 2000", classTitle: "Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}];
 
 
     // testing add function! this is applied to the mass select, will need to get this to work on the top and other select course
-
-    const [largeClassSelectFields, setLargeFields] = useState([{courseType: "", courseNumber: ""}]) // declares use state that is multiple dictionaries in an array
-    const addLargeClassSelectField = () => {
-        let newField = {courseType: "", courseNumber: ""} // declares new field as a course type
-        setLargeFields([...largeClassSelectFields, newField]) // appends new dictionary field to the array
-    }
-
     const [enrollFields, setEnrollFields] = useState([{type: "", category: "", year: ""}])
     const addEnrollFields = () => {
         let newField = {type: "", category: "", year: ""}
@@ -80,6 +73,24 @@ const Audit = () => {
         let data = [...enrollFields]
         data.splice(index, 1)
         setEnrollFields(data)
+    }
+
+    // need to research this more, this should ideally get information upon click from add course, find the values of added classtype and number, and then use this information to find the course in the pop up(ideally the database eventually) and populate the course name, credit hours, and preq and add this into div new large class
+
+
+    const [courseInfo, setCourseInfo] = useState('N/A')
+
+    
+    const [selectedCourses, setSelectedCourses] = useState([])
+    const handleLargeCourseClick = () => {
+        setCourseInfo(selectCourseType + " " + selectNumber)
+        {popupClasses.filter(singleClass => singleClass.className.includes(courseInfo)).map(filteredClass => (
+            
+            setSelectedCourses([...selectedCourses, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
+            
+            ))}
+        
+
     }
 
 
@@ -169,51 +180,52 @@ const Audit = () => {
                             <div className="classHistory">
                                 <div id='largeClassSelect'>
                                     
-                                    {/* Need to make this where you get the information from thee choose course type and course number and then you submit this to the requiredChoice component */}
+                                    {/* This still has delay, it registers click, but will not show until second click */}
+                                    { selectedCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq}/>) }
+
+                                   
                                     
-                                    {largeClassSelectFields.map((input, index) => {
-                                        return(
-                                            <div key={index} id="addedLargeSelection">
-                                                <label>
-                                                    Course type:
-                                                    <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
-                                                        {Object.keys(classSelect).map((key, index) => 
-                                                        <option value={key}>{classSelect[key]}</option>)}
-                                                    </select>
-                                                </label>
+                                    <label>
+                                        Course type:
+                                        <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
+                                            {Object.keys(classSelect).map((key, index) => 
+                                            <option value={key}>{classSelect[key]}</option>)}
+                                        </select>
+                                    </label>
 
-                                                {/* will want to find a way to pass information through to the pop up, will have to use query based on selection above*/}
-                                                {/* https://www.telerik.com/blogs/how-to-programmatically-add-input-fields-react-forms might want this later*/}
-                                                <p>
-                                                    Choose from {selectCourseType} courses below:
-                                                </p>
+                                    {/* will want to find a way to pass information through to the pop up, will have to use query based on selection above*/}
+                                    {/* https://www.telerik.com/blogs/how-to-programmatically-add-input-fields-react-forms might want this later*/}
+                                    <p>
+                                        Choose from {selectCourseType} courses below:
+                                    </p>
+                                    <div id="popupDiv">
 
-                                                {popupClasses.filter(item => {
-                                                    if (!selectCourseType) return false
-                                                    if (item.className.includes(selectCourseType)) {
-                                                        return true
-                                                    }
-                                                }).map(item => (
-                                                    <div id="popupDiv">
-                                                        <ClassInfo key={item} className={item.className} classTitle={item.classTitle} classDescript={item.classDescript} creditHours={item.creditHours} preReq={item.preReq} lastOffered={item.lastOffered}/>
-                                                    </div>
-                                                ))
-                                                }
-
-                                                
-                                
-
-                                                <label>
-                                                    Course Number: 
-                                                    <select name="courseNumber">
-                                                        {courseNumber.map((courseNumber) => (
-                                                        <option value={courseNumber}>{courseNumber}</option>))}
-                                                    </select>
-                                                </label>
+                                        {popupClasses.filter(item => {
+                                            if (!selectCourseType) return false
+                                            if (item.className.includes(selectCourseType)) {
+                                                return true
+                                            }
+                                        }).map(item => (
+                                            <div>
+                                                <ClassInfo key={item} className={item.className} classTitle={item.classTitle} classDescript={item.classDescript} creditHours={item.creditHours} preReq={item.preReq} lastOffered={item.lastOffered}/>
                                             </div>
-                                        )
-                                    })}
-                                    <button onClick={addLargeClassSelectField} id='addCourseButton'>Add Course</button>
+                                        ))
+                                        }
+                                    </div>
+
+
+                                    <label>
+                                        Course Number: 
+                                        <select name="courseNumber" onChange={handleNumberSelect}>
+                                            {courseNumber.map((courseNumber) => (
+                                            <option value={courseNumber}>{courseNumber}</option>))}
+                                        </select>
+                                    </label>
+                                        
+                                  
+                                    <button onClick={handleLargeCourseClick} id='addCourseButton'>Add Course</button>
+
+                                    
                                     
                                 </div>
                             </div>
