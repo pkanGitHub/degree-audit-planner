@@ -3,6 +3,7 @@ import RequiredChoice from "../components/requiredChoice";
 import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
 import { useState } from "react";
+import { get } from "mongoose";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -77,16 +78,32 @@ const Audit = () => {
 
     // need to research this more, this should ideally get information upon click from add course, find the values of added classtype and number, and then use this information to find the course in the pop up(ideally the database eventually) and populate the course name, credit hours, and preq and add this into div new large class
 
-
-    const [courseInfo, setCourseInfo] = useState('N/A')
-
     
     const [selectedCourses, setSelectedCourses] = useState([])
     const handleLargeCourseClick = () => {
-        setCourseInfo(selectCourseType + " " + selectNumber)
-        {popupClasses.filter(singleClass => singleClass.className.includes(courseInfo)).map(filteredClass => (
+        const courseInfo = selectCourseType + " " + selectNumber
+        {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
             
             setSelectedCourses([...selectedCourses, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
+            
+            ))}
+        
+
+    }
+
+    const [majorElectCourse, setMajorElectCourse] = useState([])
+    const [selectMajorNumber, setMajorNumber] = useState('');
+    const handleMajorNumberSelect=(e)=>{
+        setMajorNumber(e.target.value)
+    }
+    const majorCourseNumber = [1000, 2011, 2270, 2271, 2200, 2000, 2201]
+
+
+    const handleAddMajorElective = () => {
+        const courseInfo = "INFOTC " + selectMajorNumber
+        {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
+            
+            setMajorElectCourse([...majorElectCourse, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
             
             ))}
         
@@ -234,19 +251,31 @@ const Audit = () => {
 
                 
                     <hr/>
-                    <div id='specifcElective'>
+                    <ul className="accordion">
+                        <li>
+                            <input type="checkbox" name="accordion" id="fourth" />
+                            <label id="genReqLabel" htmlFor="fourth">Major Electives</label>
+                            <div className="classHistory">
+                                <div id='specifcElective'>
 
-                        <label>
-                            Course number:
-                            <select id='chooseNumber' name='course'>
-                                {courseNumber.map((courseNumber) => (
-                                <option value={courseNumber}>{courseNumber}</option>))}
-                            </select>
-                        </label>
+                                    { majorElectCourse.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq}/>) }
+                                    <p>Information Technology electives</p>
+                                    <label>
+                                        Course number:
+                                        <select id='chooseNumber' name='course' onChange={handleMajorNumberSelect}>
+                                            {majorCourseNumber.map((majorCourseNumber) => (
+                                            <option value={majorCourseNumber}>{majorCourseNumber}</option>))}
+                                        </select>
+                                    </label>
 
-                        <button id='addCourseButton'>Add Course</button>
-                        
-                    </div>
+                                    <button id='addCourseButton' onClick={handleAddMajorElective}>Add Course</button>
+                                    
+                                </div>
+                            </div>
+
+                        </li>
+                    </ul>
+                    
 
                     <div id='optionButtons'>
                         <button id='saveButton'>Save</button>
