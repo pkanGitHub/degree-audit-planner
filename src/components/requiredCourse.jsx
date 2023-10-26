@@ -13,6 +13,7 @@ const RequiredCourse = ({key, classId, creditHours, preReq}) => {
                     </td>
                     <td>
                     <select className="requiredCourseSelect">
+                        <option value=""></option>
                         <option value='taken'>Taken</option>
                         <option value='IP'>In Progress</option>
                         <option value='planned'>Planned</option>
@@ -25,6 +26,7 @@ const RequiredCourse = ({key, classId, creditHours, preReq}) => {
                     </td>
                     <td>
                         <select className="requiredCourseSelect">
+                            <option value=""></option>
                             <option value='FS2021'>FS2021</option>
                             <option value='SP2022'>SP2022</option>
                             <option value='SM2022'>SM2022</option>

@@ -1,8 +1,10 @@
 .formSection
 {
-    padding-top: 10px;
+    padding-top: 5%;
     display: block;
     text-align: center;
+    width: 100%;
+    height: 100%;
 }
 #formDesign
 {
@@ -18,6 +20,42 @@
     border-radius: 15px;
 }
 
+#formContent{
+    width: 50%;
+    height: 100%;
+    margin: auto;
+    text-align: left;
+}
+#formContent label, input[type=text]{
+    display: block;
+    font-weight: bold;
+    font-size:large;
+}
+
+#formContent label{
+    text-align: left;
+}
+
+#formContent input[type=text]{
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    box-sizing: border-box;
+    font-weight: normal;
+}
+
+#formContent input[type=checkbox]{
+    border: 1px solid gray;
+    display: inline-block;
+}
+
+
+#checkboxlabel{
+    display: inline-block;
+}
+
 .submitButton {
     border: none;
     background-color: black;
@@ -31,4 +69,55 @@
     cursor: pointer;
     border-radius: 8px;
     font-weight: bold;
+    width: 50%;
+}
+
+#buttons{
+    display: flex;
+    width: 50%;
+    margin: auto;
+    justify-content: space-between;
+}
+
+#backButton
+{
+    border: 1px solid black;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    flex: .25;
+
+}
+
+#confirm {
+    border: none;
+    background-color: #F1B82D;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    width: 50%;
+    flex: .65;
+}
+
+.mfa h2{
+    font-weight: normal;
+    color: #69901D;
+}
+
+.mfa button{
+    background-color: #69901D;
 }

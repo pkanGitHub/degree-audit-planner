@@ -3,7 +3,6 @@ import RequiredChoice from "../components/requiredChoice";
 import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
 import { useState } from "react";
-import { get } from "mongoose";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -55,6 +54,11 @@ const Audit = () => {
 
     //delete entry
     //https://stackoverflow.com/questions/61661526/react-delete-one-children-without-rendering-the-parent-again
+    const removeClass = (index) => {
+        let data = [...classData]
+        data.splice(index, 1)
+
+    }
 
     //class type select dynamic
 
@@ -114,8 +118,9 @@ const Audit = () => {
     return (
         <body id="fullpage">
             <div id="header">
+                {/* https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 */}
                 <button id="transcriptButton">Upload Unoffical Transcript</button>
-                <input type="file"/>
+                <input type="file" id="uploadFile"/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
@@ -131,6 +136,7 @@ const Audit = () => {
                                     <label>
                                         Type:
                                         <select name='type' onChange={handleTypeChange}>
+                                            <option value=""></option>
                                             {typeOptions.map((typeOptions) => (
                                             <option value={typeOptions}>{typeOptions}</option>))}
                                         </select>
@@ -138,6 +144,7 @@ const Audit = () => {
                                     <label>
                                         Category:
                                         <select name='category' onChange={handleCategoryChange}>
+                                            <option value=""></option>
                                             {Object.keys(category).map((key, index) => 
                                             <option value={key}>{category[key]}</option>)}
                                         </select>
@@ -146,6 +153,7 @@ const Audit = () => {
                                     <label>
                                         Year:
                                         <select name='year' onChange={handleTermChange}>
+                                            <option value=""></option>
                                             {Object.keys(term).map((key, index) => 
                                             <option value={key}>{term[key]}</option>)}
                                         </select>
@@ -205,6 +213,7 @@ const Audit = () => {
                                     <label>
                                         Course type:
                                         <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
+                                            <option value=""></option>
                                             {Object.keys(classSelect).map((key, index) => 
                                             <option value={key}>{classSelect[key]}</option>)}
                                         </select>
@@ -234,6 +243,7 @@ const Audit = () => {
                                     <label>
                                         Course Number: 
                                         <select name="courseNumber" onChange={handleNumberSelect}>
+                                            <option value=""></option>
                                             {courseNumber.map((courseNumber) => (
                                             <option value={courseNumber}>{courseNumber}</option>))}
                                         </select>
@@ -263,6 +273,7 @@ const Audit = () => {
                                     <label>
                                         Course number:
                                         <select id='chooseNumber' name='course' onChange={handleMajorNumberSelect}>
+                                            <option value=""></option>
                                             {majorCourseNumber.map((majorCourseNumber) => (
                                             <option value={majorCourseNumber}>{majorCourseNumber}</option>))}
                                         </select>
