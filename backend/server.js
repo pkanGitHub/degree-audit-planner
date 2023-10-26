@@ -132,72 +132,73 @@ app.get("/courses", (req, res) => {
   })
 })
 
-//Add data to schemes
-app.post("/addCertificate", (req, res) => {
-  const certificate = new models['Certificate']({
-    title: req.body.title,
-    totalCredit: req.body.totalCredit,
-    courses: req.body.courses,
-  })
+// //Add data to schemes
+// app.post("/addCertificate", (req, res) => {
+//   const certificate = new models['Certificate']({
+//     title: req.body.title,
+//     totalCredit: req.body.totalCredit,
+//     courses: req.body.courses,
+//   })
 
-  certificate
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Certificate created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-})
+//   certificate
+//     .save()
+//     .then(result => {
+//       res.status(201).json({
+//         message: "Certificate created!",
+//         result: result
+//       });
+//     })
+//     .catch(err => {
+//       res.status(500).json({
+//         error: err
+//       });
+//     });
+// })
 
-app.post("/addMajor", (req, res) => {
-  const major = new models['Major']({
-    title: req.body.title,
-    totalCredit: req.body.totalCredit,
-    creditArea: req.body.creditArea,
-    semester: req.body.semester,
-  })
+// app.post("/addMajor", (req, res) => {
+//   const major = new models['Major']({
+//     title: req.body.title,
+//     totalCredit: req.body.totalCredit,
+//     creditArea: req.body.creditArea,
+//     semester: req.body.semester,
+//   })
 
-  major
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Major created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-})
+//   major
+//     .save()
+//     .then(result => {
+//       res.status(201).json({
+//         message: "Major created!",
+//         result: result
+//       });
+//     })
+//     .catch(err => {
+//       res.status(500).json({
+//         error: err
+//       });
+//     });
+// })
 
 app.post("/addMinor", (req, res) => {
-  const minor = new models['Minor']({
-    title: req.body.title,
-    totalCredit: req.body.totalCredit,
-    courses: req.body.courses,
-  })
-
-  minor
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Minor created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
+  models['Minor'].findOneAndUpdate(
+    { title: req.body.title },
+    { $set: {
+      title: req.body.title,
+      courses: req.body.courses,
+      url: req.body.url
+    }},
+    { upsert: true }
+    )
+  .then(result => {
+    res.status(201).json({
+      message: "Minor created!",
+      result: result
     });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err
+    });
+  });
 })
 
 app.post("/addUser", (req, res) => {
@@ -206,6 +207,7 @@ app.post("/addUser", (req, res) => {
     password: req.body.password,
     major: req.body.major,
     coursePlan: req.body.coursePlan,
+    url: req.body.url
   })
 
   user
@@ -306,6 +308,56 @@ app.post("/addCourseArea", (req, res) => {
         });
       });
   })
+
+
+
+app.post("/addMajor", (req, res) => {
+  models['Major'].findOneAndUpdate(
+    { title: req.body.title },
+    { $set: {
+      courses: req.body.courses,
+      semesters: req.body.semesters,
+      credits: req.body.credits
+    }},
+    { upsert: true }
+  )
+  .then(result => {
+    res.status(201).json({
+      message: "Major created!",
+      result: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err
+    });
+  });
+})
+
+app.post("/addCert", (req, res) => {
+
+  // console.log(req.body);
+
+  models['Certificate'].findOneAndUpdate(
+    { title: req.body.title },
+    { $set: {
+      url: req.body.url,
+      courses: req.body.courses,
+      credits: req.body.credits
+    }},{ upsert: true }
+  )
+  .then(result => {
+    res.status(201).json({
+      message: "Major created!",
+      result: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err.message
+    });
+  });
+})
 
 //Retrieve data functions
 async function retrieveCertificateData() {
