@@ -5,13 +5,13 @@ const certificateSchema = mongoose.Schema({
     url: String,
     courses: {
         label: String,
-        list: [{ id: String, or: [ String ]}],
-        info: [{ index: Number, comment: String }]
+        list: { type: [{ id: String, or: { type: [ String ], default: undefined }}], default: undefined },
+        info: { type: [{ index: Number, comment: String }], default: undefined }
     },
-    credits: [{
+    credits: { type: [{
         area: { type: String, required: true },
         hours: { type: Number, required: true }
-    }]
+    }], default: undefined }
 })
 
 module.exports = mongoose.model('Certificate', certificateSchema)

@@ -4,17 +4,17 @@ const majorSchema = mongoose.Schema({
     title: { type: String, required: true, unique: true},
     courses: { type: [{
         label: String,
-        list: [{ id: String, or: [ String ]}],
-        info: [{ index: Number, comment: String }]
-    }]},
-    semesters: [{ 
+        list: { type: [{ id: String, or: { type: [String], default: undefined }}], default: undefined },
+        info: { type: [{ index: Number, comment: String }], default: undefined }
+    }], default: undefined },
+    semesters: { type: [{ 
         label: { type: String, required: true },
-        courses: [ String ]
-    }],
-    credits: [{
+        courses: { type: [ String ], default: undefined }
+    }], default: undefined },
+    credits: { type: [{
         area: { type: String, required: true },
         hours: { type: Number, required: true }
-    }],
+    }], default: undefined },
     url: String
 })
 
