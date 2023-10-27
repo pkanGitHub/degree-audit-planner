@@ -116,9 +116,6 @@ function getCourses(program) {
             courseList.push({ id: c.id[0], or: c.or || undefined})
         }
         courses.push({label: k, list: courseList, info: info.length < 1 ? undefined : info})
-
-        console.log(courses);
-        break;
     }
 
     // console.log(courses);
