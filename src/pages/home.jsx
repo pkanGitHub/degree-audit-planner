@@ -1,6 +1,7 @@
 import image from "../MU-StackedMU-4C.png";
 import '../styles/home.css';
 import TermsCondition  from '../components/termsConditions';
+import CookiePopup from "../components/cookiepopup";
 
 const Home = () => {
     return (
@@ -30,6 +31,9 @@ const Home = () => {
             </div>
             <div className="terms">
                 <TermsCondition/>
+            </div>
+            <div id="testcookie">
+                <CookiePopup/>
             </div>
             
         </div>
