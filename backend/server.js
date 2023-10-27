@@ -2,14 +2,18 @@ require('dotenv').config()
 
 const express = require('express')
 const app = express()
+const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const plannerRoute = require('./routes/planner')
-const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate']
+const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
 const models = {}
 modelNames.forEach(modelName => {
     const Model = require(`./Models/${modelName}`)
     models[modelName] = Model
 })
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
 //middleware
 app.use((req, res, next) => {
@@ -71,17 +75,6 @@ app.post("/signup", (req, res) => {
       });
 })
 
-
-// app.post("/courses", (req, res) => {
-//     models['Courses'].find().then((courses) => {
-//         if (!courses) return;
-//         res.status(200).json({
-//           message: "Course List",
-//           courses: courses
-//         })
-//     })
-// })
-
 // Get from all schemes
 app.get("/certificates", (req, res) => {
   retrieveCertificateData().then((certificates) => {
@@ -128,72 +121,28 @@ app.get("/courses", (req, res) => {
   })
 })
 
-//Add data to schemes
-app.post("/addCertificate", (req, res) => {
-  const certificate = new models['Certificate']({
-    title: req.body.title,
-    totalCredit: req.body.totalCredit,
-    courses: req.body.courses,
-  })
-
-  certificate
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Certificate created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-})
-
-app.post("/addMajor", (req, res) => {
-  const major = new models['Major']({
-    title: req.body.title,
-    totalCredit: req.body.totalCredit,
-    creditArea: req.body.creditArea,
-    semester: req.body.semester,
-  })
-
-  major
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Major created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-})
 
 app.post("/addMinor", (req, res) => {
-  const minor = new models['Minor']({
-    title: req.body.title,
-    totalCredit: req.body.totalCredit,
-    courses: req.body.courses,
-  })
-
-  minor
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Minor created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
+  models['Minor'].findOneAndUpdate(
+    { title: req.body.title },
+    { $set: {
+      title: req.body.title,
+      courses: req.body.courses,
+      url: req.body.url
+    }},
+    { upsert: true }
+    )
+  .then(result => {
+    res.status(201).json({
+      message: "Minor created!",
+      result: result
     });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err
+    });
+  });
 })
 
 app.post("/addUser", (req, res) => {
@@ -202,6 +151,7 @@ app.post("/addUser", (req, res) => {
     password: req.body.password,
     major: req.body.major,
     coursePlan: req.body.coursePlan,
+    url: req.body.url
   })
 
   user
@@ -219,30 +169,108 @@ app.post("/addUser", (req, res) => {
     });
 })
 
-app.post("/addCourse", (req, res) => {
-  const course = new models['Course']({
-    courseID: req.body.courseID,
-    name: req.body.name,
-    credit: req.body.credit,
-    category: req.body.category,
-    prerequisites: req.body.prerequisites,
-    description: req.body.description,
-    available: req.body.available
+app.post("/addCourseArea", (req, res) => {
+    models['Courses'].findOneAndUpdate(
+        { area: req.body.area },
+        { $set: { courses: req.body.courses }},
+        { upsert: true }
+    )
+    .then(result => {
+        res.status(201).json({
+          message: "Course added!",
+          result: result
+        });
+      })
+      .catch(err => {
+        res.status(500).json({
+          error: err.message
+        });
+      });
   })
 
-  course
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "Course created!",
-        result: result
+  app.post("/addCourse", (req, res) => {
+    models['Courses'].findOneAndUpdate(
+        { area: req.body.area },
+        { $set: { courses: req.body.courses }})
+      .then(result => {
+        res.status(201).json({
+          message: "Course added!",
+          result: result
+        });
+      })
+      .catch(err => {
+        res.status(500).json({
+          error: err
+        });
       });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
+  })
+
+
+
+app.post("/addMajor", (req, res) => {
+  models['Major'].findOneAndUpdate(
+    { title: req.body.title },
+    { $set: {
+      courses: req.body.courses,
+      semesters: req.body.semesters,
+      credits: req.body.credits
+    }},
+    { upsert: true }
+  )
+  .then(result => {
+    res.status(201).json({
+      message: "Major created!",
+      result: result
     });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err
+    });
+  });
+})
+
+app.post("/addCert", (req, res) => {
+  models['Certificate'].findOneAndUpdate(
+    { title: req.body.title },
+    { $set: {
+      url: req.body.url,
+      courses: req.body.courses,
+      credits: req.body.credits
+    }},{ upsert: true }
+  )
+  .then(result => {
+    res.status(201).json({
+      message: "Major created!",
+      result: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err.message
+    });
+  });
+})
+
+
+app.post('/addGenEds', (req, res) => {
+  models['GenEds'].findOneAndUpdate(
+    { year: req.body.year },
+    { $set: {
+      requirements: req.body.reqs
+    }},{ upsert: true }
+  )
+  .then(result => {
+    res.status(201).json({
+      message: "GenEds added!",
+      result: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err.message
+    });
+  });
 })
 
 //Retrieve data functions
