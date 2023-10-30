@@ -1,5 +1,5 @@
 import "../styles/password.css"
-import image from "../Cookie.png"
+import image from "../password.png"
 
 const ForgotPassword = () => {
     return (
@@ -16,8 +16,7 @@ const ForgotPassword = () => {
                     <input type="text" placeholder="Enter email address here..."/>
                     <br/>
                     {/* this does not exactly make sense, will need to figure out how to route these */}
-                    <a href="/mfa">Try another way</a>
-                    <a href="/resetpassword" id="forgotNextButton">Next</a>
+                    <a href="/mfa" id="forgotNextButton">Next</a>
 
                 </form>
             </div>

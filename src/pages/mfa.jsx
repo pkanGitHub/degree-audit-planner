@@ -12,7 +12,7 @@ const MFA = () => {
                         <input type="text" name="code"/>
                     </div>
                     <br/>
-                    <button className="submitButton">Submit</button>
+                    <a href="/resetpassword" className="submitButton" id="mfabutton">Submit</a>
                     <br/>
                     <a href="/forgotpassword">Cancel</a>
                 </form>

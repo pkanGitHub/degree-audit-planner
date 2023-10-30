@@ -118,6 +118,7 @@
     color: #69901D;
 }
 
-.mfa button{
+#mfabutton{
     background-color: #69901D;
+    width: 25%;
 }

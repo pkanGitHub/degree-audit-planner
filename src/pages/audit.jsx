@@ -80,12 +80,12 @@ const Audit = () => {
         setEnrollFields(data)
     }
 
-    // need to research this more, this should ideally get information upon click from add course, find the values of added classtype and number, and then use this information to find the course in the pop up(ideally the database eventually) and populate the course name, credit hours, and preq and add this into div new large class
-
+    // on click, add course to top of section to show you have added it
     
     const [selectedCourses, setSelectedCourses] = useState([])
     const handleLargeCourseClick = () => {
         const courseInfo = selectCourseType + " " + selectNumber
+        // find course info for selected course type and number in the pop up classes information. this will have to be chanegd when the data base is working, but this is the idea of it all
         {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
             
             setSelectedCourses([...selectedCourses, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
@@ -93,6 +93,12 @@ const Audit = () => {
             ))}
         
 
+    }
+
+    const removeCourse = (index) =>{
+        let data = [...selectedCourses]
+        data.splice(index, 1)
+        setSelectedCourses(data)
     }
 
     const [majorElectCourse, setMajorElectCourse] = useState([])
@@ -112,6 +118,12 @@ const Audit = () => {
             ))}
         
 
+    }
+
+    const removeMajorCourse = (index) =>{
+        let data = [...majorElectCourse]
+        data.splice(index, 1)
+        setMajorElectCourse(data)
     }
 
 
@@ -191,7 +203,7 @@ const Audit = () => {
                             <label id="genReqLabel" htmlFor="second">General Electives</label>
                             <div className="classHistory">
                                 <div id='chooseCourse'>
-                                    {classData.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
+                                    {classData.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq}/>)}
 
                                 </div>
                             </div>
@@ -205,8 +217,8 @@ const Audit = () => {
                             <div className="classHistory">
                                 <div id='largeClassSelect'>
                                     
-                                    {/* This still has delay, it registers click, but will not show until second click */}
-                                    { selectedCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq}/>) }
+                              
+                                    { selectedCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeCourse}/>) }
 
                                    
                                     
@@ -268,7 +280,7 @@ const Audit = () => {
                             <div className="classHistory">
                                 <div id='specifcElective'>
 
-                                    { majorElectCourse.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq}/>) }
+                                    { majorElectCourse.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeMajorCourse}/>) }
                                     <p>Information Technology electives</p>
                                     <label>
                                         Course number:

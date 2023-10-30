@@ -2,14 +2,14 @@
 import "../styles/audit.css"
 
 
-const RequiredChoice = ({key, classId, creditHours, preReq}) => {
+const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse}) => {
     return (
         <div id="choiceCourse">
-            <table className="courseTable">
+            <table className="courseTable" value={key}>
                 
                 <tr>
                     <th>{classId}</th>
-                    <th id="removeItem"><button id="removeButton">X</button></th>
+                    <th id="removeItem" onClick={removeCourse}><button id="removeButton">X</button></th>
                 </tr>
 
              
