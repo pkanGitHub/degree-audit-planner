@@ -126,6 +126,15 @@ const Audit = () => {
         setMajorElectCourse(data)
     }
 
+    // working on data transfer
+
+    const [courseStatus, setCourseStatus] = useState([{classId: "", creditHours: "", progressSelect: "", semesterSelect: ""}])
+    const handleClassCallback = (classData) => {
+        let newStatus = {classId: classData.classId, creditHours: classData.creditHours, progressSelect: classData.progressSelect, semesterSelect: classData.semesterSelect}
+        setCourseStatus([...courseStatus, newStatus])
+
+    }
+
 
     return (
         <body id="fullpage">

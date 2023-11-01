@@ -1,6 +1,11 @@
 import "../styles/audit.css"
 
 const RequiredCourse = ({key, classId, creditHours, preReq}) => {
+    const [allCourses, setAllCourses] = useState([])
+    //setAllCourses([...allCourses, requiredCourseData])
+    // get values here
+    // https://www.geeksforgeeks.org/how-to-pass-data-from-child-component-to-its-parent-in-reactjs/
+
     return(
         <div id="requiredCourse">
             <table className="courseTable">
