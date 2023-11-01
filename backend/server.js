@@ -76,50 +76,65 @@ app.post("/signup", (req, res) => {
 })
 
 // Get from all schemes
-app.get("/certificates", (req, res) => {
+app.get("/api/certificates", (req, res) => {
   retrieveCertificateData().then((certificates) => {
     res.status(200).json({
       message: "Certificate List",
       certificates: certificates
-    })
+    });
   })
-})
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Certificates" });
+  });
+});
 
-app.get("/majors", (req, res) => {
+app.get("/api/majors", (req, res) => {
   retrieveMajorData().then((majors) => {
     res.status(200).json({
       message: "Major List",
       majors: majors
-    })
+    });
   })
-})
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Majors" });
+  });
+});
 
-app.get("/minors", (req, res) => {
+app.get("/api/minors", (req, res) => {
   retrieveMinorData().then((minors) => {
     res.status(200).json({
       message: "Minor List",
       minors: minors
-    })
+    });
   })
-})
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Minors" });
+  });
+});
 
-app.get("/users", (req, res) => {
+app.get("/api/users", (req, res) => {
   retrieveUserData().then((users) => {
     res.status(200).json({
       message: "User List",
       users: users
-    })
+    });
   })
-})
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Users" });
+  });
+});
 
-app.get("/courses", (req, res) => {
+app.get("/api/courses", (req, res) => {
   retrieveCourseData().then((courses) => {
     res.status(200).json({
       message: "Course List",
       courses: courses
-    })
+    });
   })
-})
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve courses" });
+  });
+});
 
 
 app.post("/addMinor", (req, res) => {
