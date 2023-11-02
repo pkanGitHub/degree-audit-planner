@@ -10,6 +10,14 @@
       "StackName": "amplify-degreeauditplanner-dev-140505",
       "StackId": "arn:aws:cloudformation:us-east-1:953145373171:stack/amplify-degreeauditplanner-dev-140505/3f148fb0-72a0-11ee-8e11-0e7f89a006e1",
       "AmplifyAppId": "d1vlixywzyk5l"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d1vlixywzyk5l",
+          "type": "manual"
+        }
+      }
     }
   }
 }

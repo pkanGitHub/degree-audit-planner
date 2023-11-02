@@ -6,6 +6,3 @@ Helpful resources:
 - Amplify CLI documentation: https://docs.amplify.aws/cli
 - More details on this folder & generated files: https://docs.amplify.aws/cli/reference/files
 - Join Amplify's community: https://amplify.aws/community/
-
-
-I could meet later today after 3:30, tomorrow at 11 or thursday before 2.

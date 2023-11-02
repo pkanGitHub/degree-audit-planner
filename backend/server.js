@@ -27,8 +27,8 @@ app.use('/api/home', plannerRoute)
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     //listen for request
-    app.listen(process.env.PORT, () => {
-        console.log('Mongo connection successful on port', process.env.PORT)
+    app.listen(process.env.SERVER_PORT, () => {
+        console.log('Mongo connection successful on port', process.env.SERVER_PORT)
     })
 })
 .catch((error) => {
