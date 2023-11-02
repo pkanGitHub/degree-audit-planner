@@ -1,4 +1,5 @@
 import "../styles/audit.css"
+import React, { useState } from 'react';
 
 const RequiredCourse = ({key, classId, creditHours, preReq}) => {
     const [allCourses, setAllCourses] = useState([])
