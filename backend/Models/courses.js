@@ -5,12 +5,11 @@ const courseListSchema = mongoose.Schema({
     courses: {type: [{
         courseID: { type: String, required: true },
         name: { type: String, required: true },
-        credit: { type: String },
-        category: { type: String },
-        prerequisites: { type: String },
-        recommended: { type: String },
-        description: { type: String },
-        available: { type: Boolean },
+        credit: String,
+        category: String,
+        prerequisites: String,
+        description: String,
+        available: Boolean,
         pastTerms: {type: [{type: String}]}
     }],
     required: true}

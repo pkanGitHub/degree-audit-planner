@@ -7,6 +7,7 @@ import SignUp from "./pages/signUp"
 import Tutorial from "./pages/tutorial"
 import NavBar from "./components/navbar"
 import ResetPassword from './pages/resetPassword';
+import MFA from './pages/mfa';
 
 import './styles/App.css';
 
@@ -26,6 +27,7 @@ function App() {
       <Route path="signup" element={<SignUp />}/>
       <Route path="tutorial" element={<Tutorial />}/>
       <Route path="resetpassword" element={<ResetPassword />}/>
+      <Route path="mfa" element={<MFA/>}/>
     </Routes>
     </>
   );

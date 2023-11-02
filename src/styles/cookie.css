@@ -1,0 +1,21 @@
+#cookieImage{
+    width: 40%;
+    height: 40%;
+    float: right;
+}
+
+#cookieInfo{
+    padding: 15px;
+}
+
+#cookieTitle{
+    font-size: xx-large;
+    color: #1C5E90;
+}
+#cookieData{
+    font-size: large;
+}
+
+#cookieclose{
+    background-color: #F1B82D;
+}
