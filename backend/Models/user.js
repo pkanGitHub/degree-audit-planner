@@ -6,14 +6,21 @@ const userSchema = mongoose.Schema({
     major: { type: String, required: true },
     coursePlan: {
         semester: [{
-            date: { type: Date, required: true },
+            date: { type: Date },
             courses: [{
                 inProgress: { type: Boolean, default: false },
                 completed: { type: Boolean, required: true },
                 completion_date: { type: Date }
             }]
         }]
-    }
+    },
+    generalEducationCompleted: { type: Boolean, required: true, default: false },
+    programRequirements: [{
+        description: String,
+        completed: { type: Boolean, default: false },
+        courses: [String],
+        creditHours: Number
+    }]
 })
 
 module.exports = mongoose.model('User', userSchema)
