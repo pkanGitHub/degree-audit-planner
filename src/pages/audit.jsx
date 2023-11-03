@@ -2,7 +2,7 @@ import "../styles/audit.css";
 import RequiredChoice from "../components/requiredChoice";
 import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -18,17 +18,16 @@ const Audit = () => {
 
 
     const [selectType, setType] = useState("");
-    const typeOptions = ["Major", "Minor", "Certificate"];
     const handleTypeChange = (e) => {
         setType(e.target.value);
     };
 
     const [selectCategory, setCategory] = useState("");
-    const category = {
-        INFOTC: "Information Technology - BS",
-        BIOMED: "Biomedical Engineering - BMEBS",
-        COMPS: "Computer Science - BS",
-    };
+    // const category = {
+    //     INFOTC: "Information Technology - BS",
+    //     BIOMED: "Biomedical Engineering - BMEBS",
+    //     COMPS: "Computer Science - BS",
+    // };
     const handleCategoryChange = (e) => {
         setCategory(e.target.value);
     };
@@ -101,6 +100,8 @@ const Audit = () => {
         setSelectedCourses(data)
     }
 
+    // code for specific category you need to choose from 
+
     const [majorElectCourse, setMajorElectCourse] = useState([])
     const [selectMajorNumber, setMajorNumber] = useState('');
     const handleMajorNumberSelect=(e)=>{
@@ -135,7 +136,127 @@ const Audit = () => {
 
     }
 
+    // database work
 
+    const [minors, setMinors] = useState([]);
+    const [majors, setMajors] = useState([]);
+    const [certificates, setCertificates] = useState([]);
+    const [coursesList, setCourses] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:4001/api/majors')
+            .then((response) => response.json())
+            .then((data) => {
+                setMajors(data.majors); 
+            })
+            .catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+    }, []);
+    useEffect(() => {
+        fetch('http://localhost:4001/api/minors') 
+            .then((response) => response.json())
+            .then((data) => {
+                setMinors(data.minors); 
+            })
+            .catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+    }
+    , []);
+    useEffect(() => {
+        fetch('http://localhost:4001/api/certificates')
+            .then((response) => response.json())
+            .then((data) => {
+                setCertificates(data.certificates); 
+            })
+            .catch((error) => {
+                console.error('Error fetching user data:', error);
+            });
+    }, []);
+
+    //Courses
+    useEffect(() => {
+        fetch('http://localhost:4001/api/courses') 
+            .then((response) => response.json())
+            .then((data) => {
+                setCourses(data.courses);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
+    let type = null;
+    let options = null;
+    let typeCourses = null;
+
+    if (selectType === "majors"){
+        type = majors
+    }
+    else if (selectType === "minors"){
+        type = minors
+    }
+    else if (selectType === "certs"){
+        type = certificates
+    }
+
+
+
+
+    if (type) { 
+        options = type.map((option) => <option key={option?.title}>{option?.title}</option>); 
+        typeCourses = type.filter(option => option.title.match(selectCategory)).map((selectedOption)=> (
+            
+            <div key={selectedOption?._id}>
+                <h2>{selectedOption?.title}</h2>
+                {selectedOption?.courses && selectedOption.courses.map((course)=> (
+                    <div key={course?._id}>
+                        <ul className="accordion">
+                            <li>
+                            <input type="checkbox" name="accordion" id={course?._id} />
+                            <label id="genReqLabel" htmlFor={course?._id}>{course?.label}</label>
+                            
+                            <div className="classHistory">
+                         
+                                    {course?.list && course.list.map ((item) => (
+                                        <div key={item?._id}>
+                                
+                                            {coursesList.filter((area) => area.courses.some((course) => course.courseID === item?.id)).map((area)=> area.courses.filter((course) => course.courseID.match(item?.id)).map((selectedCourse) => <RequiredChoice key={selectedCourse._id} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>))}
+                                
+                                            <div id="orClasses">
+                                                {item?.or && item.or.map((extra) => (
+                                                    <div key={extra}>
+                                                    <p>Or:</p>
+                                                    {coursesList.filter((area) => area.courses.some((course) => course.courseID === extra)).map((area)=> area.courses.filter((course) => course.courseID.match(extra)).map((selectedCourse) => <RequiredChoice key={selectedCourse._id} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>))}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <hr/>
+                                        </div>
+                                    ))}
+                             
+                                {course?.info && course.info.map((info) => (
+                                    <p key={info?._id}>
+                                        <strong>Comment:</strong> {info?.comment}
+                                    </p>
+                                ))}
+                               
+                                
+                            </div>
+
+                            </li>
+        
+                        </ul>
+                    </div>
+                ))}
+            </div>
+    
+        ))
+
+    } 
+
+  
     return (
         <body id="fullpage">
             <div id="header">
@@ -157,17 +278,16 @@ const Audit = () => {
                                     <label>
                                         Type:
                                         <select name='type' onChange={handleTypeChange}>
-                                            <option value=""></option>
-                                            {typeOptions.map((typeOptions) => (
-                                            <option value={typeOptions}>{typeOptions}</option>))}
+                                            <option value="default"></option>
+                                            <option value="majors">Major</option>
+                                            <option value="minors">Minor</option>
+                                            <option value="certs">Certificate</option>
                                         </select>
                                     </label>
                                     <label>
                                         Category:
                                         <select name='category' onChange={handleCategoryChange}>
-                                            <option value=""></option>
-                                            {Object.keys(category).map((key, index) => 
-                                            <option value={key}>{category[key]}</option>)}
+                                            { options }
                                         </select>
                                     </label>
                                     
@@ -187,6 +307,10 @@ const Audit = () => {
                     </div>
                     <hr/>
 
+                    { typeCourses }
+
+
+                    <hr/>
                     <ul className="accordion">
                         <li>
                             <input type="checkbox" name="accordion" id="first" />

@@ -7,7 +7,9 @@
     align-items: center;
     margin: auto;
 }
-
+#orClasses{
+    display: flex;
+}
 #header{
     text-align: center;
 }
@@ -67,13 +69,12 @@ button{
     border: 1px solid gray;
     border-collapse: collapse;
     padding: 10px;
-    max-width: min-content;
     max-height: min-content;
 }
 .courseTable th, td
 {
     padding: 5px;
-    background-color: lightgray;
+    background-color: rgb(230, 230, 230);
 }
 
 .courseTable td{

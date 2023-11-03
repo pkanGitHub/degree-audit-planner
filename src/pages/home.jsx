@@ -163,7 +163,7 @@ import React, { useState, useEffect } from 'react';
                             {courseGroup.courses.map((course) => (
                                 <li key={course._id}>
                                     <h4 onClick={() => toggleCourse(course._id)}>
-                                        {course.name} {expandedCourse === course._id ? '^' : '⌄'}
+                                        {course.name} {course.courseID} {expandedCourse === course._id ? '^' : '⌄'}
                                     </h4>
                                     {expandedCourse === course._id && (
                                         <div>
@@ -312,6 +312,7 @@ import React, { useState, useEffect } from 'react';
                         </div>
                     ))}
             </div>
+
         </div>
     );
 };
