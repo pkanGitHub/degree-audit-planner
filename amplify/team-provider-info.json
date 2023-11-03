@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-degreeauditplanner-dev-140505-unauthRole",
       "StackName": "amplify-degreeauditplanner-dev-140505",
       "StackId": "arn:aws:cloudformation:us-east-1:953145373171:stack/amplify-degreeauditplanner-dev-140505/3f148fb0-72a0-11ee-8e11-0e7f89a006e1",
-      "AmplifyAppId": "d1vlixywzyk5l"
+      "AmplifyAppId": "d1vlixywzyk5l",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-degreeauditplanner-dev-140505-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "hosting": {
@@ -17,6 +18,22 @@
           "appId": "d1vlixywzyk5l",
           "type": "manual"
         }
+      },
+      "auth": {
+        "degreeauditplanner": {}
+      },
+      "function": {
+        "DatabaseAPI": {
+          "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
+          "s3Key": "amplify-builds/DatabaseAPI-7037484a39594c4c7477-build.zip"
+        },
+        "GeneralAPI": {
+          "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
+          "s3Key": "amplify-builds/GeneralAPI-41706b45734755675568-build.zip"
+        }
+      },
+      "api": {
+        "DatabaseAPI": {}
       }
     }
   }

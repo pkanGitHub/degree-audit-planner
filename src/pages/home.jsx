@@ -4,28 +4,38 @@ import TermsCondition  from '../components/termsConditions';
 import CookiePopup from "../components/cookiepopup";
 //---------------------------------------------------------
 import React, { useState, useEffect } from 'react';
-//const Home = () => {
-    const Home = () => {
-        const [courses, setCourses] = useState([]);
-        const [expandedCourse, setExpandedCourse] = useState(null);
-        // const [expandedArea, setExpandedArea] = useState(null);
-        const [users, setUsers] = useState([]);
-        const [minors, setMinors] = useState([]);
-        const [majors, setMajors] = useState([]);
-        const [certificates, setCertificates] = useState([]);
+import { API } from 'aws-amplify';
 
-        const [isUsersOpen, setIsUsersOpen] = useState(true);
-        const [isAllCoursesOpen, setIsAllCoursesOpen] = useState(true);
-        const [isMinorsOpen, setIsMinorsOpen] = useState(true);
-        const [isMajorsOpen, setIsMajorsOpen] = useState(true);
-        const [isCertificatesOpen, setIsCertificatesOpen] = useState(true);
-        const [expandedArea, setExpandedArea] = useState(true);
+
+//const Home = () => {
+const Home = () => {
+    const [courses, setCourses] = useState([]);
+    const [expandedCourse, setExpandedCourse] = useState(null);
+    // const [expandedArea, setExpandedArea] = useState(null);
+    const [users, setUsers] = useState([]);
+    const [minors, setMinors] = useState([]);
+    const [majors, setMajors] = useState([]);
+    const [certificates, setCertificates] = useState([]);
+
+    const [isUsersOpen, setIsUsersOpen] = useState(true);
+    const [isAllCoursesOpen, setIsAllCoursesOpen] = useState(true);
+    const [isMinorsOpen, setIsMinorsOpen] = useState(true);
+    const [isMajorsOpen, setIsMajorsOpen] = useState(true);
+    const [isCertificatesOpen, setIsCertificatesOpen] = useState(true);
+    const [expandedArea, setExpandedArea] = useState(true);
 
 //---------------------------------------------------------
+
+useEffect(() => {API.get('DatabaseAPI', '/api')
+    .then((response) => console.log(response.json()))
+    .catch((error) => {
+    console.error('Error fetching user data:', error);
+})});
+
 //Courses
     useEffect(() => {
-      fetch('http://localhost:4001/api/courses') 
-        .then((response) => response.json())
+        API.get('DatabaseAPI', '/api/courses')
+        .then((response) => console.log(response))
         .then((data) => {
           setCourses(data.courses);
         })
@@ -35,7 +45,7 @@ import React, { useState, useEffect } from 'react';
     }, []);
 //Users
     useEffect(() => {
-        fetch('http://localhost:4001/api/users') 
+        API.get('DatabaseAPI', '/api/users')
           .then((response) => response.json())
           .then((data) => {
             setUsers(data.users); 
@@ -46,7 +56,7 @@ import React, { useState, useEffect } from 'react';
       }, []);
 //Minors
     useEffect(() => {
-        fetch('http://localhost:4001/api/minors') 
+        API.get('DatabaseAPI', '/api/minors')
           .then((response) => response.json())
           .then((data) => {
             setMinors(data.minors); 
@@ -58,7 +68,7 @@ import React, { useState, useEffect } from 'react';
         , []);
 //Majors
     useEffect(() => {
-        fetch('http://localhost:4001/api/majors')
+        API.get('DatabaseAPI', '/api/majors')
             .then((response) => response.json())
             .then((data) => {
                 setMajors(data.majors); 
@@ -69,7 +79,7 @@ import React, { useState, useEffect } from 'react';
     }, []);
 //Certificates
     useEffect(() => {
-        fetch('http://localhost:4001/api/certificates')
+        API.get('DatabaseAPI', '/api/certificates')
             .then((response) => response.json())
             .then((data) => {
                 setCertificates(data.certificates); 
