@@ -3,9 +3,11 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const passport = require('passport')
 const mongoose = require('mongoose')
 const plannerRoute = require('./routes/planner')
-const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
+const authRoute = require('./routes/auth')
+const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
 const models = {}
 modelNames.forEach(modelName => {
     const Model = require(`./Models/${modelName}`)
@@ -14,6 +16,7 @@ modelNames.forEach(modelName => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
+app.use(passport.initialize())
 
 //middleware
 app.use((req, res, next) => {
@@ -22,6 +25,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/home', plannerRoute)
+app.use('/signup', authRoute)
 
 // connect to db
 mongoose.connect(process.env.MONGO_URI)
