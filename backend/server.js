@@ -43,7 +43,7 @@ app.use('/api/home', plannerRoute)
 app.use('/', authRoute)
 
 // connect to db
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(()=>{
     //listen for request
     app.listen(process.env.BACKEND_PORT, () => {
@@ -53,32 +53,6 @@ mongoose.connect(process.env.MONGO_URI)
 .catch((error) => {
     console.log(error)
 })
-
-
-
-//  This will need to be moved into a separate file and hashed.
-
-// app.post("/signup", (req, res) => {
-//     const user = new models['User']({
-//         email: 'test@test.com',
-//         password: 'password',
-//         major: 'Information Technology',
-//     })
-
-//     user
-//       .save()
-//       .then(result => {
-//         res.status(201).json({
-//           message: "User created!",
-//           result: result
-//         });
-//       })
-//       .catch(err => {
-//         res.status(500).json({
-//           error: err
-//         });
-//       });
-// })
 
 // Get from all schemes
 app.get("/api/certificates", (req, res) => {
