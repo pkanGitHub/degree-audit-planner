@@ -14,6 +14,21 @@ modelNames.forEach(modelName => {
     models[modelName] = Model
 })
 
+/**
+ * Set up CORS
+ */
+app.use((req, res, next)=>{
+  res.setHeader("Access-Control-Allow-Origin","*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Methods",
+    "GET, POST, PATCH, DELETE, OPTIONS"
+  );
+  next();
+});
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(passport.initialize())
@@ -25,7 +40,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/api/home', plannerRoute)
-app.use('/signup', authRoute)
+app.use('/', authRoute)
 
 // connect to db
 mongoose.connect(process.env.MONGO_URI)
@@ -39,45 +54,31 @@ mongoose.connect(process.env.MONGO_URI)
     console.log(error)
 })
 
-/**
- * Set up CORS
- */
-app.use((req, res, next)=>{
-    res.setHeader("Access-Control-Allow-Origin","*");
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    res.setHeader("Access-Control-Allow-Methods",
-      "GET, POST, PATCH, DELETE, OPTIONS"
-    );
-    next();
-});
 
 
 //  This will need to be moved into a separate file and hashed.
 
-app.post("/signup", (req, res) => {
-    const user = new models['User']({
-        email: 'test@test.com',
-        password: 'password',
-        major: 'Information Technology',
-    })
+// app.post("/signup", (req, res) => {
+//     const user = new models['User']({
+//         email: 'test@test.com',
+//         password: 'password',
+//         major: 'Information Technology',
+//     })
 
-    user
-      .save()
-      .then(result => {
-        res.status(201).json({
-          message: "User created!",
-          result: result
-        });
-      })
-      .catch(err => {
-        res.status(500).json({
-          error: err
-        });
-      });
-})
+//     user
+//       .save()
+//       .then(result => {
+//         res.status(201).json({
+//           message: "User created!",
+//           result: result
+//         });
+//       })
+//       .catch(err => {
+//         res.status(500).json({
+//           error: err
+//         });
+//       });
+// })
 
 // Get from all schemes
 app.get("/api/certificates", (req, res) => {
