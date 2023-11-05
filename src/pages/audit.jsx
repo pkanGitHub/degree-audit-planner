@@ -18,7 +18,7 @@ const Audit = () => {
 
 
     const [selectType, setType] = useState("");
-    const handleTypeChange = (e) => {
+    const handleTypeChange = (e, index) => {
         setType(e.target.value);
     };
 
@@ -28,7 +28,7 @@ const Audit = () => {
     //     BIOMED: "Biomedical Engineering - BMEBS",
     //     COMPS: "Computer Science - BS",
     // };
-    const handleCategoryChange = (e) => {
+    const handleCategoryChange = (e, index) => {
         setCategory(e.target.value);
     };
 
@@ -38,7 +38,7 @@ const Audit = () => {
         SP22: "Spring 2022",
         SM22: "Summer 2022",
     };
-    const handleTermChange = (e) => {
+    const handleTermChange = (e, index) => {
         setTerm(e.target.value);
     };
 
@@ -73,11 +73,20 @@ const Audit = () => {
         setEnrollFields([...enrollFields, newField])
     }
 
+    const handleEnrollFieldChange = (i, e) =>{
+        
+        let newFormValues = [...enrollFields];
+        newFormValues[i][e.target.name] = e.target.value;
+        setEnrollFields(enrollFields);
+         
+    }
+
     const removeEnrollFields = (index) =>{
         let data = [...enrollFields]
         data.splice(index, 1)
         setEnrollFields(data)
     }
+
 
     // on click, add course to top of section to show you have added it
     
@@ -187,6 +196,20 @@ const Audit = () => {
             });
     }, []);
 
+    const [genEds, setGenEds] = useState([])
+
+    // gen eds
+    useEffect(() => {
+        fetch('http://localhost:4001/api/genEds') 
+            .then((response) => response.json())
+            .then((data) => {
+                setGenEds(data.genEds);
+            })
+            .catch((error) => {
+                console.error('Error fetching data:', error);
+            });
+    }, []);
+
     let type = null;
     let options = null;
     let typeCourses = null;
@@ -277,7 +300,7 @@ const Audit = () => {
                                 <div key={index} id="addedSectionEnroll">
                                     <label>
                                         Type:
-                                        <select name='type' onChange={handleTypeChange}>
+                                        <select name='type' value={input.type} onChange={(e) => {handleTypeChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
                                             <option value="majors">Major</option>
                                             <option value="minors">Minor</option>
@@ -286,32 +309,64 @@ const Audit = () => {
                                     </label>
                                     <label>
                                         Category:
-                                        <select name='category' onChange={handleCategoryChange}>
+                                        <select name='category' value={input.category} onChange={(e)=> {handleCategoryChange(e); handleEnrollFieldChange(index, e)}}>
                                             { options }
                                         </select>
                                     </label>
                                     
                                     <label>
                                         Year:
-                                        <select name='year' onChange={handleTermChange}>
-                                            <option value=""></option>
+                                        <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
                                             {Object.keys(term).map((key, index) => 
                                             <option value={key}>{term[key]}</option>)}
                                         </select>
                                     </label>
-                                    <button onClick={removeEnrollFields}>Delete</button>
+                                    <button onClick={()=>removeEnrollFields(index)}>Delete</button>
                                 </div>
                             )
                         })}
                         <button onClick={addEnrollFields}>Add</button>
                     </div>
                     <hr/>
+                    
+                    <ul className="accordion">
+                        <li>
+                            <input type="checkbox" name="accordion" id="genEd" />
+                            <label id="genReqLabel" htmlFor="genEd">General Requirements</label>
+                            <div className="classHistory">
+                                { genEds.map((genEd) => 
+                                <div key={genEd?._id}>
+                                    <h3>{genEd?.year}</h3>
+                                    {genEd?.requirements && genEd?.requirements.map((area) => (
+                                        <div key={area?._id}>
+                                            <h4>{area?.label}</h4>
+                                            <p>{area?.info}</p>
+                                            {area?.sub && area.sub.map((subareas)=> (
+                                                <div key={subareas?._id}>
+                                                    <h3>{subareas?.label}</h3>
+                                                    <p>{subareas?.info}</p>
+                                                    {subareas?.categories && subareas.categories.map((coursearea) => (
+                                                        <div key={coursearea._id}>
+                                                            <p>{coursearea}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ))}
+                                        
+                                        
+                                        </div>
+                                    ))}
+                                </div>)}
+                            </div>
+                        </li>
+                    </ul>
 
                     { typeCourses }
 
 
                     <hr/>
-                    <ul className="accordion">
+                    {/* <ul className="accordion">
                         <li>
                             <input type="checkbox" name="accordion" id="first" />
                             <label id="genReqLabel" htmlFor="first">General Requirements</label>
@@ -328,8 +383,8 @@ const Audit = () => {
 
                             </div>
                         </li>
-                    </ul>
-                    <hr/>
+                    </ul> 
+                    <hr/> */}
                     <ul className="accordion">
                         <li>
                             <input type="checkbox" name="accordion" id="second" />
