@@ -31,8 +31,8 @@ app.use('/signup', authRoute)
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     //listen for request
-    app.listen(process.env.PORT, () => {
-        console.log('Mongo connection successful on port', process.env.PORT)
+    app.listen(process.env.BACKEND_PORT, () => {
+        console.log('Mongo connection successful on port', process.env.BACKEND_PORT)
     })
 })
 .catch((error) => {
