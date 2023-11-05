@@ -3,11 +3,11 @@ const mongoose = require('mongoose')
 const certificateSchema = mongoose.Schema({
     title: { type: String, required: true },
     url: String,
-    courses: {
+    courses: { type: [{
         label: String,
-        list: { type: [{ id: String, or: { type: [ String ], default: undefined }}], default: undefined },
+        list: { type: [{ id: String, or: { type: [String], default: undefined }}], default: undefined },
         info: { type: [{ index: Number, comment: String }], default: undefined }
-    },
+    }], default: undefined },
     credits: { type: [{
         area: { type: String, required: true },
         hours: { type: Number, required: true }

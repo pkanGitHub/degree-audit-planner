@@ -9,7 +9,7 @@ const majorSchema = mongoose.Schema({
     }], default: undefined },
     semesters: { type: [{ 
         label: { type: String, required: true },
-        courses: { type: [ String ], default: undefined }
+        courses: { type: [{ id: String, or: { type: [String], default: undefined }}], default: undefined },
     }], default: undefined },
     credits: { type: [{
         area: { type: String, required: true },

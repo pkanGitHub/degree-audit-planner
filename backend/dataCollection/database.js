@@ -189,7 +189,7 @@ async function FillGenEds() {
 
 async function main() {
     // await FillCourseData();
-    await FillPlanData();
+    await FillPlanData(false, true, false);
     // await FillGenEds();
 }
 
