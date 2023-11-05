@@ -5,34 +5,31 @@ const bcrypt = require('bcrypt')
 const User = require('../Models/user')
 
 // create user
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
+    // console.log(req.body);
     const {email, password} = req.body
     // const {email, password, major, coursePlan} = req.body
     
     if (!email || !password) {
         return res.status(400).json({ msg: 'Please provide a email and password' })
     }
+    try {
+        // check if user already exists
+        const existUser = await User.findOne({ email })
+        if (existUser) {
+            return res.status(400).json({ msg: 'User already exists' })
+        }
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const newUser = new User({ email, password: hashedPassword })
+        // const newUser = new User({email, password: hashedPassword, major, coursePlan})
 
-    // check if user already exists
-    User.findOne({ email }, (err, em) => {
-        if (err) {
-         return res.status(500).json({ msg: 'Internal server error' })
-        }
-        if (em) {
-            return res.status(400).json({ msg: 'User already exists' });
-        }
-    })
-    const hashedPassword = bcrypt.hash(password, 10)
-    const newUser = new User({ email, password: hashedPassword })
-    // const newUser = new User({email, password: hashedPassword, major, coursePlan})
-
-    newUser.save((err) => {
-        if (err) {
-            console.error(err)
-            return res.status(500).json({ error: 'Sign up failed' })
-        }
+        await newUser.save()
         res.status(201).json({ msg: 'Sign up successfully' })
-    })
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Sign up failed' });
+    }
 })
 
 // login
