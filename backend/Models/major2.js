@@ -9,10 +9,13 @@ const majorSchema = mongoose.Schema({
         list: { type: [{ id: String, or: { type: [String], default: undefined }}], default: undefined },
         info: { type: [{ index: Number, comment: String }], default: undefined }
     }], default: undefined },
-    semesters: { type: [{ 
-        label: { type: String, required: true },
-        courses: { type: [{ id: String, or: { type: [String], default: undefined }, misc: String}], default: undefined },
-    }], default: undefined },
+    years: {type: [{
+        label: String,
+        semesters: { type: [{ 
+            label: { type: String, required: true },
+            courses: { type: [{ id: String, or: { type: [String], default: undefined }, misc: String}], default: undefined },
+        }], default: undefined },
+    }]},
     url: String
 })
 

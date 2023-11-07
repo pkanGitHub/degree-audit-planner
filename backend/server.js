@@ -235,7 +235,7 @@ app.post("/addMajor2", (req, res) => {
       { title: req.body.title },
       { $set: {
         requirements: req.body.requirements,
-        semesters: req.body.semesters,
+        years: req.body.years,
         credits: req.body.credits
       }},
       { upsert: true }

@@ -24,7 +24,7 @@ async function FillCourseData() {
         }
         
 
-        await axios.post("http://localhost:4000/addCourseArea", { 
+        await axios.post("http://localhost:4001/addCourseArea", { 
             area: key,  
             courses: courseList
         })
@@ -34,7 +34,7 @@ async function FillCourseData() {
 
             if (error.response.status === 413) {
                 courseList.forEach(async (course, index, list) => {
-                    await axios.post("http://localhost:4000/addCourse", { 
+                    await axios.post("http://localhost:4001/addCourse", { 
                         area: key,  
                         course: course
                     }).then(response => console.log(`${key}: ${index}/${list.length} added.`))
@@ -42,7 +42,7 @@ async function FillCourseData() {
                 });
 
                 // for (var i in courseList) {
-                //     await axios.post("http://localhost:4000/addCourse", { 
+                //     await axios.post("http://localhost:4001/addCourse", { 
                 //         area: key,  
                 //         courses: courseList[i]
                 //     }).then((response) => console.log(`${key}: ${i}/${courseList.length} added.`))
@@ -72,7 +72,7 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
             
             if (program.type === "Minor") {
                 if (!runMinors) continue
-                await axios.post("http://localhost:4000/addMinor", { 
+                await axios.post("http://localhost:4001/addMinor", { 
                     title: program.title,
                     url: program.url,
                     courses: courses,
@@ -85,7 +85,7 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
             }
             else if (program.type === "Cert") {
                 if (!runCerts) continue
-                await axios.post("http://localhost:4000/addCert", { 
+                await axios.post("http://localhost:4001/addCert", { 
                     title: title,
                     courses: courses,
                     credits: credits,
@@ -98,10 +98,10 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
                 });
             }
             else if (runMajors) {
-                await axios.post("http://localhost:4000/addMajor2", { 
+                await axios.post("http://localhost:4001/addMajor2", { 
                     title: title,
                     requirements: courses,
-                    semesters: semesters,
+                    years: semesters,
                     url: url
                 })
                 .then((response) => {
@@ -153,13 +153,21 @@ function getCreditReqs(program) {
 
 function getPlan(program) {
     if ((("has_plan" in program) && !program.has_plan) || !program.plan ) return undefined;
+    var yearCnt = 0;
     var semCnt = 0;
-    const semesters = [];
+    const years = [];
     if (program.plan) for (const [, v] of Object.entries(program.plan)) {
-        semesters.push({label: `Semester ${++semCnt}`, courses: v.Fall});
-        semesters.push({label: `Semester ${++semCnt}`, courses: v.Spring});
+        years.push({
+            label: `Year ${++yearCnt}`,
+            semesters: [
+                {label: `Semester ${++semCnt}`, courses: v.Fall},
+                {label: `Semester ${++semCnt}`, courses: v.Spring}
+            ]
+        })
+        // semesters.push({label: `Semester ${++semCnt}`, courses: v.Fall});
+        // semesters.push({label: `Semester ${++semCnt}`, courses: v.Spring});
     }
-    return semesters;
+    return years;
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -193,7 +201,7 @@ async function FillGenEds() {
         requirements.push(req);
     }
 
-    await axios.post("http://localhost:4000/addGenEds", { 
+    await axios.post("http://localhost:4001/addGenEds", { 
         year: 2023,
         reqs: requirements
     })
