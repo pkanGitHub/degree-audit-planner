@@ -98,7 +98,7 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
                 });
             }
             else if (runMajors) {
-                await axios.post("http://localhost:4001/addMajor2", { 
+                await axios.post("http://localhost:4001/addMajor", { 
                     title: title,
                     requirements: courses,
                     years: semesters,

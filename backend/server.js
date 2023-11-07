@@ -205,33 +205,8 @@ app.post("/addCourseArea", (req, res) => {
       });
   })
 
-
-
 app.post("/addMajor", (req, res) => {
-  models['Major'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      courses: req.body.courses,
-      semesters: req.body.semesters,
-      credits: req.body.credits
-    }},
-    { upsert: true }
-  )
-  .then(result => {
-    res.status(201).json({
-      message: "Major created!",
-      result: result
-    });
-  })
-  .catch(err => {
-    res.status(500).json({
-      error: err
-    });
-  });
-})
-
-app.post("/addMajor2", (req, res) => {
-    models['Major2'].findOneAndUpdate(
+    models['Major'].findOneAndUpdate(
       { title: req.body.title },
       { $set: {
         requirements: req.body.requirements,
