@@ -170,14 +170,14 @@ app.post("/addUser", (req, res) => {
 })
 
 app.post("/addCourseArea", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
         { $set: { courses: req.body.courses }},
         { upsert: true }
     )
     .then(result => {
         res.status(201).json({
-          message: "Course added!",
+          message: "Course area added!",
           result: result
         });
       })
@@ -189,9 +189,9 @@ app.post("/addCourseArea", (req, res) => {
   })
 
   app.post("/addCourse", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
-        { $set: { courses: req.body.courses }})
+        { $push: { courses: req.body.course }})
       .then(result => {
         res.status(201).json({
           message: "Course added!",

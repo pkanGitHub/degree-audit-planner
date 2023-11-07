@@ -29,8 +29,26 @@ async function FillCourseData() {
         })
         .then((response) => {
             console.log(`${key} was added successfully!`);
-        }, (error) => {
-            console.log(error.response);
+        }, async (error) => {
+
+            if (error.response.status === 413) {
+                courseList.forEach(async (course, index, list) => {
+                    await axios.post("http://localhost:4000/addCourse", { 
+                        area: key,  
+                        course: course
+                    }).then(response => console.log(`${key}: ${index}/${list.length} added.`))
+                    .catch(error => console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`));
+                });
+
+                // for (var i in courseList) {
+                //     await axios.post("http://localhost:4000/addCourse", { 
+                //         area: key,  
+                //         courses: courseList[i]
+                //     }).then((response) => console.log(`${key}: ${i}/${courseList.length} added.`))
+                //     .catch(error => console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`));
+                // }
+            }
+            else console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`)
         });
     }
 }
@@ -188,8 +206,8 @@ async function FillGenEds() {
 
 
 async function main() {
-    // await FillCourseData();
-    await FillPlanData(false, true, false);
+    await FillCourseData();
+    // await FillPlanData(false, true, false);
     // await FillGenEds();
 }
 

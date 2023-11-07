@@ -4,7 +4,7 @@ const fs = require('fs');
 
 
 async function CourseDataWebscrape() {
-    const browser = await puppeteer.launch({devtools: true});           // Starts virtual browser
+    const browser = await puppeteer.launch();           // Starts virtual browser
     const page = await browser.newPage();                               // Opens a tab in the browser
 
     const courses = await ws.GetCatalogSource(page);
@@ -27,7 +27,7 @@ async function CourseDataWebscrape() {
             nc["credit_hours"] = course.credit_hours;
             nc["prerequisites"] = course.prerequisites;
             nc["recommended"] = course.recommended
-            nc["description"] = course.title;
+            nc["description"] = course.description;
             nc["category"] = categories[course.number]?.category;
             nc["properties"] = categories[course.number]?.properties;
             nc["available_next_semester"] = course.available_next_semester;
@@ -70,5 +70,5 @@ async function DegreePlanWebscrape() {
 
 }
 
-// CourseDataWebscrape();
-DegreePlanWebscrape();
+CourseDataWebscrape();
+// DegreePlanWebscrape();
