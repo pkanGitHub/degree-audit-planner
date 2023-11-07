@@ -3,6 +3,7 @@ import RequiredChoice from "../components/requiredChoice";
 import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
 import { useState, useEffect } from "react";
+import SemesterPlan from "../components/semesterplan";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -223,8 +224,6 @@ const Audit = () => {
     else if (selectType === "certs"){
         type = certificates
     }
-
-
 
 
     if (type) { 
@@ -495,6 +494,9 @@ const Audit = () => {
                     </div>
                 </div>
                 <hr/>
+
+
+                <SemesterPlan data={majors.filter(major => major.title === "BSAcc in Accountancy")}/>
 
                 {/* This is all hardcoded, will make it dynamic when we get test data */}
                 <div id='planner'>
