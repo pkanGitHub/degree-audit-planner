@@ -499,7 +499,7 @@ const Audit = () => {
                 <SemesterPlan data={majors.filter(major => major.title === "BSAcc in Accountancy")}/>
 
                 {/* This is all hardcoded, will make it dynamic when we get test data */}
-                <div id='planner'>
+                {/* <div id='planner'>
                     <h2 id='userPlanner'>User's Degree Planner</h2>
                     <table id='twoSemesterPlan'>
                         <tr>
@@ -617,7 +617,7 @@ const Audit = () => {
                             <td><b>Total Credit Hours:</b> 12</td>
                         </tr>
                     </table>
-                </div>
+                </div> */}
             </div>
         </body>
        
