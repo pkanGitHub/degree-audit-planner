@@ -3,6 +3,7 @@ const ws = require("./webscrape.functions");
 const fs = require('fs');
 
 
+// eslint-disable-next-line no-unused-vars
 async function CourseDataWebscrape() {
     const browser = await puppeteer.launch();           // Starts virtual browser
     const page = await browser.newPage();                               // Opens a tab in the browser
@@ -53,7 +54,7 @@ async function CourseDataWebscrape() {
     //     }
     // });
 }
-
+// eslint-disable-next-line no-unused-vars
 async function DegreePlanWebscrape() {
     const browser = await puppeteer.launch();           // Starts virtual browser
     const page = await browser.newPage();  
@@ -61,7 +62,7 @@ async function DegreePlanWebscrape() {
     await browser.close();
 
     var jsonData = JSON.stringify(plans);
-    fs.writeFile("json/plans.json", jsonData, function(err) {
+    fs.writeFile("./json/plans.json", jsonData, function(err) {
         if (err) {
             console.log(err);
         }
@@ -70,5 +71,7 @@ async function DegreePlanWebscrape() {
 
 }
 
-CourseDataWebscrape();
-// DegreePlanWebscrape();
+// CourseDataWebscrape();
+DegreePlanWebscrape()
+
+// console.log(__dirname + "/json");

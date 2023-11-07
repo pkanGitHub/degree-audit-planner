@@ -194,9 +194,157 @@ function delay(time) {
  */
 
 
-async function GetDegreePlans(page) {                         
+// async function GetDegreePlans(page) {                         
+//     const program = {}                         // Opens a tab in the browser
+//     await page.goto("https://catalog.missouri.edu/degreesanddegreeprograms/");              // Navigates to course offering page
+
+//     const course_links = await page.evaluate(() => {
+//         const rows = document.querySelectorAll("#degree_body tr");                          // Gets the link to every page of courses
+//         const link_dict = {};
+
+//         rows.forEach(row => {
+//             const program = row.querySelector(".column0");
+//             const links = row.querySelectorAll(".column2 a");
+
+//             if (links.length < 1) return;
+
+//             link_dict[program.textContent] = []
+//             links.forEach(link => {
+//                 link_dict[program.textContent].push({ type: link.textContent, url: link.href });
+//             });
+//         });
+
+//         return link_dict;
+//     });
+
+
+//     for (const [title, links] of Object.entries(course_links)) {
+//         const courses = [];
+//         for (var link of links) {
+//             await page.goto(link.url); // Navigates to course offering page
+//             const course_program = await page.evaluate((link) => {
+//                 const requirements = {}
+//                 const course = {};
+//                 const tables = document.querySelectorAll("table.sc_courselist tbody");
+//                 const name = document.querySelector("#content h1").textContent;                   // Gets the name of the program, ie: Minor in Math
+//                 requirements["title"] = name;                                                     // The name of the program
+//                 requirements["type"] = link.type;                                                 // Gets the type of program (minor, cert, major, etc)
+//                 requirements["url"] = link.url;                                                   // Gets the url to the program page
+
+//                 /*
+//                  * Code for finding required courses
+//                  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//                  */
+
+//                 if (tables.length === 0) {
+//                     requirements["has_plan"] = false;
+//                     return requirements;
+//                 }
+//                 var rows = tables[0].querySelectorAll("table.sc_courselist tbody tr");      // Finds the table with required courses
+
+//                 var header = "Courses";                                                     // These two values are used to create sections in the json
+//                 var prevClass = null;
+//                 rows.forEach((row) => {
+//                     if (row.classList.contains("areaheader")) {                             // If the row is a header -> create a new section for the courses to be 
+//                         header = row.querySelector("td span.areaheader").textContent;       // added under
+//                         course[header] = []
+//                         return;
+//                     }
+//                     if (!Object.keys(course).includes(header)) course[header] = [];
+//                     var col = row.querySelector(".codecol");
+//                     if (col === null) {                                                     // Some of the rows are just general information 
+//                         col = row.querySelector("span.courselistcomment");
+//                         course[header].push({info: col?.textContent});                      // So here we just create a new type of object to hold that and add it to the header
+//                         return;
+//                     };
+//                     var id = col.textContent
+//                     id = id.replace(/or\u00a0/g, "");                                       // Clears "or" from text
+//                     id = id.replace(/\u00a0/g, "_");                                        // Clears non-breaking spaces
+//                     id = id.split("&_");                                                    // Splits the multi-element strings into an array. Always creates an array
+
+//                     if (col.classList.contains("orclass")) {                                // Handles the different options for courses
+//                         if (!("or" in prevClass)) prevClass["or"] = id;                     // If "or" key does not yet exist, create it
+//                         else prevClass.or = prevClass.or.concat(id);
+//                         return;
+//                     }
+
+//                     const courseItem = {id: id};
+//                     prevClass = courseItem;
+//                     course[header].push(courseItem);
+//                 });
+
+//                 /*
+//                  * Code for finding credit requirements
+//                  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//                  */
+
+//                 if (tables.length === 1) {                                                       // Checks to see if there was only one table (certifications and minors)
+//                     requirements["requirements"] = course; 
+//                     return requirements;    
+//                 }
+
+//                 const credits = {};                     
+//                 rows = tables[1].querySelectorAll("table.sc_courselist tbody tr");              // Gets table rows
+                
+//                 rows.forEach((row) => {
+//                     const title = row.querySelector(".courselistcomment")?.textContent;         // Requirement title
+//                     const hours = row.querySelector(".hourscol")?.textContent;                  // hours
+
+//                     credits[title] = hours;
+//                 });
+
+//                 requirements["course_requirements"] = course;                             
+//                 requirements["credit_requirements"] = credits;
+
+
+
+//                 /*
+//                  * Code for finding semester plan
+//                  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+//                  */
+
+//                 rows = document.querySelectorAll("table.sc_plangrid tbody tr");
+
+//                 const plan = {};
+//                 var year;
+//                 var semester1;
+//                 var semester2;
+//                 rows.forEach(row => {
+                    
+//                     if (row.classList.contains("plangridyear")) { 
+//                         plan[row.querySelector("th").textContent] = year = {};
+//                         return;
+//                     }
+
+//                     if (row.classList.contains("plangridterm")) {
+//                         const heads = row.querySelectorAll("th");
+//                         year[heads[0].textContent] = semester1 = [];
+//                         year[heads[2].textContent] = semester2 = [];
+//                         return;
+//                     }
+//                     const cells = row.querySelectorAll(".codecol");
+//                     if (cells[0] != null) semester1.push(cells[0]?.textContent.replace(/\u00a0/g, "_"));
+//                     if (cells[1] != null) semester2.push(cells[1]?.textContent.replace(/\u00a0/g, "_"));
+//                 });
+
+
+//                 requirements["plan"] = plan;
+
+//                 return requirements;
+
+
+//             }, link);
+//             courses.push(course_program);
+//         }
+//         program[title] = courses;
+//     }
+
+//     return program;
+// }
+
+async function GetDegreePlans(page) {
     const program = {}                         // Opens a tab in the browser
-    await page.goto("https://catalog.missouri.edu/degreesanddegreeprograms/");              // Navigates to course offering page
+    await page.goto("https://catalog.missouri.edu/degreesanddegreeprograms/");    
 
     const course_links = await page.evaluate(() => {
         const rows = document.querySelectorAll("#degree_body tr");                          // Gets the link to every page of courses
@@ -213,7 +361,6 @@ async function GetDegreePlans(page) {
                 link_dict[program.textContent].push({ type: link.textContent, url: link.href });
             });
         });
-
         return link_dict;
     });
 
@@ -221,40 +368,118 @@ async function GetDegreePlans(page) {
     for (const [title, links] of Object.entries(course_links)) {
         const courses = [];
         for (var link of links) {
-            await page.goto(link.url); // Navigates to course offering page
+            await page.goto(link.url);                                                      // Navigates to course offering page
             const course_program = await page.evaluate((link) => {
-                const requirements = {}
-                const course = {};
-                const tables = document.querySelectorAll("table.sc_courselist tbody");
-                const name = document.querySelector("#content h1").textContent;                   // Gets the name of the program, ie: Minor in Math
-                requirements["title"] = name;                                                     // The name of the program
-                requirements["type"] = link.type;                                                 // Gets the type of program (minor, cert, major, etc)
-                requirements["url"] = link.url;                                                   // Gets the url to the program page
+
+                const toNum = str => {
+                    const num = Number(str);
+                    if (!Number.isNaN(num)) return num;
+    
+                    switch (str) {
+                        case "one": return 1;
+                        case "two": return 2;
+                        case "three": return 3;
+                        case "four": return 4;
+                        case "five": return 5;
+                        case "six": return 6;
+                        case "seven": return 7;
+                        case "eight": return 8;
+                        case "nine": return 9;
+                        default: return str;
+                    }
+                }
+
+                const getRequirements = (title) => {
+                    const value = {
+                        required: undefined,
+                        credits: undefined
+                    }
+
+                    const regex = /\b(\d{1,2})\s*(?:or\s+(\d{1,2}))?\s*(?:hours|credits|credit\s*hours)\b/i;
+                    const match = title.match(regex);
+                    if (match) {
+                        if (match[2])   value.credits = match[1] + "-" + match[2];
+                        else            value.credits = match[1];
+                    }
+      
+                    if (title.toLowerCase().match(/choose |at least |select |complete |credit|hour|from/g)) {   
+                        const regex = /(?:at least|choose|select|complete)\s*(\d+|one|two|three|four|five|six|seven|eight|nine|ten)/i;
+                        const match = title.match(regex);
+                        if (!match) value.required = 0;
+                        else        value.required = toNum(match[1].toLowerCase().trim());
+                        return value;
+                    }
+                
+                
+                    if (title.toLowerCase().match(/required|requirement|core |foundation|must/g) && !title.toLowerCase().includes("not required")) {
+                        value.required = true;
+                        return value;
+                    }
+                
+                    value.required = false;
+                    return value;
+                }
+
+                const program = {}
+                const requirements = {};
+                const rows = document.querySelectorAll("table.sc_courselist tbody tr");
+
+                const name = document.querySelector("#content h1").textContent;             // Gets the name of the program, ie: Minor in Math
+                program["title"] = name;                                                     // 
+                program["type"] = link.type;                                                 // Gets the type of program (minor, cert, major, etc)
+                program["url"] = link.url;                                                   // Gets the url to the program page
 
                 /*
                  * Code for finding required courses
                  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
                  */
-
-                if (tables.length === 0) {
-                    requirements["has_plan"] = false;
-                    return requirements;
+                if (rows.length === 0) {
+                    return program;
                 }
-                var rows = tables[0].querySelectorAll("table.sc_courselist tbody tr");      // Finds the table with required courses
 
-                var header = "Courses";                                                     // These two values are used to create sections in the json
+                var header = "Courses";                                                            // These two values are used to create sections in the json
                 var prevClass = null;
                 rows.forEach((row) => {
                     if (row.classList.contains("areaheader")) {                             // If the row is a header -> create a new section for the courses to be 
                         header = row.querySelector("td span.areaheader").textContent;       // added under
-                        course[header] = []
+                        if (header === undefined || header === "" || header === null || header === " ") return;
+                        const hours = row.querySelector(".hourscol")?.textContent.replace(/ |hrs|hours|credits/g, "");; 
+
+                        const reqs = getRequirements(header);
+                        requirements[header] = {
+                            credits: reqs.credits || hours,
+                            required: reqs.required,
+                            courses: []
+                        }
+
+                        // if (hours !== null && hours !== undefined && hours !== "") {
+                        //     requirements[header].credits = hours;
+                        // }
                         return;
                     }
-                    if (!Object.keys(course).includes(header)) course[header] = [];
+                    if (!Object.keys(requirements).includes(header)) requirements[header] = {
+                        credits: undefined,
+                        required: true,
+                        courses: []
+                    };
                     var col = row.querySelector(".codecol");
                     if (col === null) {                                                     // Some of the rows are just general information 
                         col = row.querySelector("span.courselistcomment");
-                        course[header].push({info: col?.textContent});                      // So here we just create a new type of object to hold that and add it to the header
+                        const hours = row.querySelector(".hourscol")?.textContent.replace(/ |hrs|hours|credits/g, "");;
+                        const isFirst = row.classList.contains("firstrow");
+                        if ((hours !== null && hours !== undefined && hours !== "") || isFirst) {
+                            header = col?.textContent;
+                            if (header === undefined || header === "" || header === null || header === " ") return;
+                            requirements[header] = {
+                                credits: hours,
+                                required: getRequirements(header).required,
+                                courses: requirements[header]?.courses || []
+                            }
+                            return;
+                        }
+
+                        // else
+                        requirements[header].courses?.push({info: col?.textContent});                      // So here we just create a new type of object to hold that and add it to the header
                         return;
                     };
                     var id = col.textContent
@@ -270,7 +495,7 @@ async function GetDegreePlans(page) {
 
                     const courseItem = {id: id};
                     prevClass = courseItem;
-                    course[header].push(courseItem);
+                    requirements[header].courses?.push(courseItem);
                 });
 
                 /*
@@ -278,38 +503,26 @@ async function GetDegreePlans(page) {
                  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
                  */
 
-                if (tables.length === 1) {                                                       // Checks to see if there was only one table (certifications and minors)
-                    requirements["requirements"] = course; 
-                    return requirements;    
+                const cleaned = {}
+                for (var [key, value] of Object.entries(requirements)) {
+                    if ((value?.credits === undefined || value?.credits === "") && (value?.courses === undefined || value?.courses.length === 0)) continue;
+                    cleaned[key] = value;
                 }
 
-                const credits = {};                     
-                rows = tables[1].querySelectorAll("table.sc_courselist tbody tr");              // Gets table rows
-                
-                rows.forEach((row) => {
-                    const title = row.querySelector(".courselistcomment")?.textContent;         // Requirement title
-                    const hours = row.querySelector(".hourscol")?.textContent;                  // hours
-
-                    credits[title] = hours;
-                });
-
-                requirements["course_requirements"] = course;                             
-                requirements["credit_requirements"] = credits;
-
-
+                program["requirements"] = cleaned;                             
 
                 /*
                  * Code for finding semester plan
                  * vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
                  */
 
-                rows = document.querySelectorAll("table.sc_plangrid tbody tr");
+                const plan_rows = document.querySelectorAll("table.sc_plangrid tbody tr");
 
                 const plan = {};
                 var year;
                 var semester1;
                 var semester2;
-                rows.forEach(row => {
+                plan_rows.forEach(row => {
                     
                     if (row.classList.contains("plangridyear")) { 
                         plan[row.querySelector("th").textContent] = year = {};
@@ -322,15 +535,50 @@ async function GetDegreePlans(page) {
                         year[heads[2].textContent] = semester2 = [];
                         return;
                     }
+
+                    if (Object.entries(year).length === 0) {
+                        year.total = semester1 = [];
+                    }
+
                     const cells = row.querySelectorAll(".codecol");
-                    if (cells[0] != null) semester1.push(cells[0]?.textContent.replace(/\u00a0/g, "_"));
-                    if (cells[1] != null) semester2.push(cells[1]?.textContent.replace(/\u00a0/g, "_"));
+                    if (cells[0] != null) {
+                        const links = Array.from(cells[0].querySelectorAll("a"));
+                        // debugger;
+                        if (links.length === 0) semester1?.push({misc: cells[0].textContent});
+                        else {
+                            const id = links[0].title.replace(/\u00a0/g, "_");
+                            const or = [];
+
+                            if (links.length > 1) {
+                                for (var o of links.splice(1)) {
+                                    or.push(o.title.replace(/\u00a0/g, "_"));
+                                }
+                            }
+                            semester1.push({ id: id, or: or.length > 0 ? or : undefined });
+                        }
+                    }
+                    if (cells[1] != null) {
+                        const links = Array.from(cells[1].querySelectorAll("a"));
+                        if (links.length === 0) semester2?.push({misc: cells[1].textContent});
+                        else {
+                            const id = links[0].title.replace(/\u00a0/g, "_");
+                            const or = [];
+
+                            if (links.length > 1) {
+                                for (o of links.splice(1)) {
+                                    or.push(o.title.replace(/\u00a0/g, "_"));
+                                }
+                            }
+                            semester2.push({ id: id, or: or.length > 0 ? or : undefined });
+                        }
+                    }
                 });
 
+                if (Object.keys(plan).length === 0) return program;
 
-                requirements["plan"] = plan;
+                program["plan"] = plan;
 
-                return requirements;
+                return program;
 
 
             }, link);
@@ -338,11 +586,8 @@ async function GetDegreePlans(page) {
         }
         program[title] = courses;
     }
-
     return program;
 }
-
-
 
 
 exports.GetCatalogSource= GetCatalogSource;

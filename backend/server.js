@@ -5,7 +5,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const plannerRoute = require('./routes/planner')
-const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
+const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'Major2']
 const models = {}
 modelNames.forEach(modelName => {
     const Model = require(`./Models/${modelName}`)
@@ -229,6 +229,29 @@ app.post("/addMajor", (req, res) => {
     });
   });
 })
+
+app.post("/addMajor2", (req, res) => {
+    models['Major2'].findOneAndUpdate(
+      { title: req.body.title },
+      { $set: {
+        requirements: req.body.requirements,
+        semesters: req.body.semesters,
+        credits: req.body.credits
+      }},
+      { upsert: true }
+    )
+    .then(result => {
+      res.status(201).json({
+        message: "Major created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+  })
 
 app.post("/addCert", (req, res) => {
   models['Certificate'].findOneAndUpdate(

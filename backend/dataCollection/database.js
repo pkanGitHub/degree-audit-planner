@@ -3,6 +3,7 @@ const courses = require('./json/course.data.json');
 const programs = require('./json/plans.json');
 const gens = require('./json/geneds-reqs.json')
 
+// eslint-disable-next-line no-unused-vars
 async function FillCourseData() {
     for (const [key, value] of Object.entries(courses)) {
 
@@ -53,12 +54,13 @@ async function FillCourseData() {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 async function FillPlanData(minors=true, certs=true, majors=true) {
     const runMinors = minors;
     const runCerts = certs;
     const runMajors = majors;
 
-    for (const [key, value] of Object.entries(programs)) {
+    for (const [, value] of Object.entries(programs)) {
         for (var i = 0; i < value.length; i++) {
             const program = value[i];
 
@@ -96,17 +98,16 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
                 });
             }
             else if (runMajors) {
-                await axios.post("http://localhost:4000/addMajor", { 
+                await axios.post("http://localhost:4000/addMajor2", { 
                     title: title,
-                    courses: courses,
-                    credits: credits,
+                    requirements: courses,
                     semesters: semesters,
                     url: url
                 })
                 .then((response) => {
                     console.log(`${program.title} add successfully`);
                 }, (error) => {
-                    console.log(error.response);
+                    console.log(error.response.data.error.message);
                 });
 
             }
@@ -115,17 +116,17 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
     }
 }
 
-
 function getCourses(program) {
-    if (("has_plan" in program) && !program.has_plan) return undefined;
+    if ((("has_plan" in program) && !program.has_plan) || program.requirements === undefined) return undefined;
 
     const courses = [];
-    for (const [k, v] of Object.entries(program.course_requirements || program.requirements)) {
+    for (const [k, v] of Object.entries(program.requirements)) {
         const courseList = [];
         var info = [];
+        // console.log(v);
 
-        for (var i = 0; i < v.length; i++) {
-            const c = v[i];
+        for (var i = 0; i < v.courses.length; i++) {
+            const c = v.courses[i];
             if (JSON.stringify(c) === '{}') break;
             if ("info" in c) {
                 info.push({index: i, comment: c.info}); 
@@ -133,7 +134,7 @@ function getCourses(program) {
             }
             courseList.push({ id: c.id[0], or: c.or || undefined})
         }
-        courses.push({label: k, list: courseList, info: info.length < 1 ? undefined : info})
+        courses.push({label: k, credits: v.credits, required: v.required, list: courseList, info: info.length < 1 ? undefined : info})
     }
 
     // console.log(courses);
@@ -151,17 +152,17 @@ function getCreditReqs(program) {
 }
 
 function getPlan(program) {
-    if ((("has_plan" in program) && !program.has_plan) || !program.plan) return undefined;
+    if ((("has_plan" in program) && !program.has_plan) || !program.plan ) return undefined;
     var semCnt = 0;
     const semesters = [];
-    if (program.plan) for (const [k, v] of Object.entries(program.plan)) {
+    if (program.plan) for (const [, v] of Object.entries(program.plan)) {
         semesters.push({label: `Semester ${++semCnt}`, courses: v.Fall});
         semesters.push({label: `Semester ${++semCnt}`, courses: v.Spring});
     }
     return semesters;
 }
 
-
+// eslint-disable-next-line no-unused-vars
 async function FillGenEds() {
     const requirements = [];
     for (const [k, v] of Object.entries(gens)) {
@@ -206,8 +207,8 @@ async function FillGenEds() {
 
 
 async function main() {
-    await FillCourseData();
-    // await FillPlanData(false, true, false);
+    // await FillCourseData();
+    await FillPlanData(false, false, true);
     // await FillGenEds();
 }
 
