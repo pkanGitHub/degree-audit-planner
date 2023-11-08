@@ -248,21 +248,27 @@ const Audit = () => {
         options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
     }
 
+
+
     
-    function getCourses(type, category){
+    function getCourses(type, category, index){
         let selectedType = [];
         if (type === "majors"){
             selectedType = majors
         }
-        else if (selectType === "minors"){
+        else if (type === "minors"){
             selectedType = minors
         }
-        else if (selectType === "certificates"){
+        else if (type === "certificates"){
             selectedType = certificates
         }
+        else if (category === ""){
+            category = "default"
+        }
+
 
         return(
-            <CatalogItems type={selectedType} category={category} coursesList={coursesList} />
+            <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
         )
 
     }
@@ -310,7 +316,7 @@ const Audit = () => {
                                             <option value={key}>{term[key]}</option>)}
                                         </select>
                                     </label>
-                                    <button onClick={()=>removeEnrollFields(index)}>Delete</button>
+                                    {/* <button onClick={()=>removeEnrollFields(index)}>Delete</button> */}
                                 </div>
                             )
                         })}
@@ -354,16 +360,11 @@ const Audit = () => {
 
                     { userCatalog.map((key, index) =>
                         <div key={index}>
-                            <p>{key.type} {key.category}</p>
 
-                            { getCourses(key.type, key.category) }
-
-
-                            {/* <CatalogItems key={index} type={key.type} category={key.category} coursesList={coursesList}/> */}
-
-                            <button onClick={()=> removeCatalog(index)}>Delete</button>
+                            { getCourses(key.type, key.category, index) }    
             
-                        </div>)
+                        </div>
+                        )
                     }
 
                 
