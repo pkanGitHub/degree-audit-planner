@@ -2,6 +2,7 @@ import "../styles/audit.css";
 import RequiredChoice from "../components/requiredChoice";
 import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
+import CatalogItems from "../components/catalog";
 import { useState, useEffect } from "react";
 
 const Audit = () => {
@@ -42,11 +43,6 @@ const Audit = () => {
         setTerm(e.target.value);
     };
 
-    //dynamic categories
-    const categories = {MATH: "Math", ENG: "English"}
-
-    //dynamic required courses
-    const requiredCourseData = [{classId: "MATH 1500", creditHours: 5, preReq: "N/A"}, {classId: "MATH 2500", creditHours: 5, preReq: "MATH 2500"}, {classId: "ENG 3000", creditHours: 3, preReq: "ENG 2000"}]
 
     //dynamic course choice
     const classData = [{classId: "MATH 1500", creditHours: 5, preReq: "N/A"}, {classId: "BME 1000", creditHours: 3, preReq: "PHYSICS 1000"}]
@@ -116,16 +112,13 @@ const Audit = () => {
     const handleMajorNumberSelect=(e)=>{
         setMajorNumber(e.target.value)
     }
-    const majorCourseNumber = [1000, 2011, 2270, 2271, 2200, 2000, 2201]
 
 
     const handleAddMajorElective = () => {
-        const courseInfo = "INFOTC " + selectMajorNumber
-        {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
-            
-            setMajorElectCourse([...majorElectCourse, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
-            
-            ))}
+        const courseInfo = selectMajorNumber
+        {coursesList.filter((area) => area.courses.some((course) => course.courseID === courseInfo)).map((area)=> area.courses.filter((course) => course.courseID.match(courseInfo)).map((selectedCourse) => (
+            setMajorElectCourse([...majorElectCourse, {key: selectedCourse._id, classId: selectedCourse.courseID, creditHours: selectedCourse.credit, preReq: selectedCourse.prerequisites}])
+        )))}
         
 
     }
@@ -210,74 +203,69 @@ const Audit = () => {
             });
     }, []);
 
-    let type = null;
+    let userType = null;
     let options = null;
     let typeCourses = null;
 
+    let courseAreas = []
+
+    let infotcCourses = []
+
+    const [userCatalog, setUserCatalog] = useState([{type: "", category: ""}])
+
+    const handleUserCategories = () => {
+       setUserCatalog([...userCatalog, {type: selectType, category: selectCategory}])
+
+    }
+
+    const removeCatalog = (index) =>{
+        let data = [...userCatalog]
+        data.splice(index, 1)
+        setUserCatalog(data)
+    }
+
+
+    {coursesList.map((section) => courseAreas.push(section.area))}
+
+
+    let courseNumbers = coursesList.filter(({ area }) => area === 'Information Technology (INFOTC)').map((filtered) => filtered.courses.map((course) => infotcCourses.push(course.courseID)))
+
+    let userData = null;
+
+    // may need to see if this could be done in the backend to make this easier
+
     if (selectType === "majors"){
-        type = majors
+        userType = majors
     }
     else if (selectType === "minors"){
-        type = minors
+        userType = minors
     }
-    else if (selectType === "certs"){
-        type = certificates
+    else if (selectType === "certificates"){
+        userType = certificates
     }
 
+    if (userType) { 
+        options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
+    }
 
-
-
-    if (type) { 
-        options = type.map((option) => <option key={option?.title}>{option?.title}</option>); 
-        typeCourses = type.filter(option => option.title.match(selectCategory)).map((selectedOption)=> (
-            
-            <div key={selectedOption?._id}>
-                <h2>{selectedOption?.title}</h2>
-                {selectedOption?.courses && selectedOption.courses.map((course)=> (
-                    <div key={course?._id}>
-                        <ul className="accordion">
-                            <li>
-                            <input type="checkbox" name="accordion" id={course?._id} />
-                            <label id="genReqLabel" htmlFor={course?._id}>{course?.label}</label>
-                            
-                            <div className="classHistory">
-                         
-                                    {course?.list && course.list.map ((item) => (
-                                        <div key={item?._id}>
-                                
-                                            {coursesList.filter((area) => area.courses.some((course) => course.courseID === item?.id)).map((area)=> area.courses.filter((course) => course.courseID.match(item?.id)).map((selectedCourse) => <RequiredChoice key={selectedCourse._id} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>))}
-                                
-                                            <div id="orClasses">
-                                                {item?.or && item.or.map((extra) => (
-                                                    <div key={extra}>
-                                                    <p>Or:</p>
-                                                    {coursesList.filter((area) => area.courses.some((course) => course.courseID === extra)).map((area)=> area.courses.filter((course) => course.courseID.match(extra)).map((selectedCourse) => <RequiredChoice key={selectedCourse._id} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>))}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            <hr/>
-                                        </div>
-                                    ))}
-                             
-                                {course?.info && course.info.map((info) => (
-                                    <p key={info?._id}>
-                                        <strong>Comment:</strong> {info?.comment}
-                                    </p>
-                                ))}
-                               
-                                
-                            </div>
-
-                            </li>
-        
-                        </ul>
-                    </div>
-                ))}
-            </div>
     
-        ))
+    function getCourses(type, category){
+        let selectedType = [];
+        if (type === "majors"){
+            selectedType = majors
+        }
+        else if (selectType === "minors"){
+            selectedType = minors
+        }
+        else if (selectType === "certificates"){
+            selectedType = certificates
+        }
 
-    } 
+        return(
+            <CatalogItems type={selectedType} category={category} coursesList={coursesList} />
+        )
+
+    }
 
   
     return (
@@ -304,7 +292,7 @@ const Audit = () => {
                                             <option value="default"></option>
                                             <option value="majors">Major</option>
                                             <option value="minors">Minor</option>
-                                            <option value="certs">Certificate</option>
+                                            <option value="certificates">Certificate</option>
                                         </select>
                                     </label>
                                     <label>
@@ -326,7 +314,7 @@ const Audit = () => {
                                 </div>
                             )
                         })}
-                        <button onClick={addEnrollFields}>Add</button>
+                        <button onClick={handleUserCategories}>Add</button>
                     </div>
                     <hr/>
                     
@@ -362,42 +350,28 @@ const Audit = () => {
                         </li>
                     </ul>
 
-                    { typeCourses }
+                    {/* works but it shows delete when it shouldnt, cannot get list to show once submitted */}
+
+                    { userCatalog.map((key, index) =>
+                        <div key={index}>
+                            <p>{key.type} {key.category}</p>
+
+                            { getCourses(key.type, key.category) }
+
+
+                            {/* <CatalogItems key={index} type={key.type} category={key.category} coursesList={coursesList}/> */}
+
+                            <button onClick={()=> removeCatalog(index)}>Delete</button>
+            
+                        </div>)
+                    }
+
+                
+
 
 
                     <hr/>
-                    {/* <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="first" />
-                            <label id="genReqLabel" htmlFor="first">General Requirements</label>
-                            <div className="classHistory">
-                                <div id="requiredCourses">
-                                    {Object.keys(categories).map((key, index)=> (
-                                        <div>
-                                            <p>{categories[key]}</p>
-                                            {requiredCourseData.map((key, index) => <RequiredCourse key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
-                                        </div>
-                                        
-                                    ))}
-                                </div>
-
-                            </div>
-                        </li>
-                    </ul> 
-                    <hr/> */}
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="second" />
-                            <label id="genReqLabel" htmlFor="second">General Electives</label>
-                            <div className="classHistory">
-                                <div id='chooseCourse'>
-                                    {classData.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq}/>)}
-
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <hr/>
+                    
                     <ul className="accordion">
                         <li>
                             <input type="checkbox" name="accordion" id="third" />
@@ -470,12 +444,19 @@ const Audit = () => {
 
                                     { majorElectCourse.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeMajorCourse}/>) }
                                     <p>Information Technology electives</p>
+                                    <div id="popupDiv">
+                                        {infotcCourses.map((infocourse) => coursesList.filter((area) => area.courses.some((course) => course.courseID === infocourse)).map((area)=> area.courses.filter((course) => course.courseID.match(infocourse)).map((selectedCourse) => (
+                                            <div>
+                                                <ClassInfo key={selectedCourse._id} className={selectedCourse.courseID} classTitle={selectedCourse.name} classDescript={selectedCourse.description} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites} lastOffered={selectedCourse.pastTerms[0]}/>
+                                            </div>
+                                        ))))}
+                                    </div>
                                     <label>
                                         Course number:
                                         <select id='chooseNumber' name='course' onChange={handleMajorNumberSelect}>
                                             <option value=""></option>
-                                            {majorCourseNumber.map((majorCourseNumber) => (
-                                            <option value={majorCourseNumber}>{majorCourseNumber}</option>))}
+                                            {infotcCourses.map((courses) => (
+                                            <option value={courses}>{courses}</option>))}
                                         </select>
                                     </label>
 

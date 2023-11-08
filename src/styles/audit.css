@@ -103,6 +103,7 @@ body{
     height: 100%;
     text-align: left;
     display: flex;
+    overflow-y: scroll;
 }
 
 #optionButtons{
