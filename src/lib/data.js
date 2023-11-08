@@ -46,8 +46,6 @@ export function getCourseById(id) {
     .filter(course => course.courseID === id)[0];
 
     return course;
-
-
 }
 
 export async function getGenEds(pull) {
@@ -62,6 +60,6 @@ async function fetchGet(type) {
     .then(response => response.json())
     .then(data => data[type])
     .catch(error => {
-        console.error('Error fetching data:', error);
+        console.error(`Error fetching ${type} data: ${error}`);
     });
 }

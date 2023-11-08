@@ -1,10 +1,10 @@
 import "../styles/audit.css";
 import RequiredChoice from "../components/requiredChoice";
-import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
 import { useState, useEffect } from "react";
 import SemesterPlan from "../components/semesterplan";
-import { getCerts, getCourseById, getCourses, getGenEds, getMajors, getMinors } from "../lib/data";
+import { getCerts, getCourses, getGenEds, getMajors, getMinors } from "../lib/data";
+import TranscriptUpload from "../components/transcriptUpload";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -240,9 +240,7 @@ const Audit = () => {
     return (
         <body id="fullpage">
             <div id="header">
-                {/* https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 */}
-                <button id="transcriptButton">Upload Unoffical Transcript</button>
-                <input type="file" id="uploadFile"/>
+                <TranscriptUpload/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
