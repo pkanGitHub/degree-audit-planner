@@ -1,3 +1,6 @@
+import { getCourseById } from "../lib/data";
+
+
 export default function SemesterPlan(props) {
 
     var data = props.data;
@@ -11,43 +14,59 @@ export default function SemesterPlan(props) {
         
                 {years.map(year => {
                     const rows =  year.semesters[0].courses.length > year.semesters[1].courses.length ? year.semesters[0].courses.length : year.semesters[1].courses.length;
+                    var total1 = 0;
+                    var total2 = 0;
 
                     return (
                         <table key={year.label} id={year.label} className="planTable">
-                            <tr>
-                                <th colSpan={4} id='tableHeading'>{year.label}</th>
-                            </tr>
-                            <tr>
-                                <td colSpan={2} className="semesterHeading">Semester 1</td>
-                                <td colSpan={2} className="semesterHeading">Semester 2</td>
-                            </tr>
-                            <tr className="courseTableInfo" id="tableDataHeading">
-                                <td>Course name</td>
-                                <td>Credit hours</td>
-                                <td>Course name</td>
-                                <td>Credit hours</td>
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th colSpan={4} id='tableHeading'>{year.label}</th>
+                                </tr>
+                                <tr>
+                                    <td colSpan={2} className="semesterHeading">Semester 1</td>
+                                    <td colSpan={2} className="semesterHeading">Semester 2</td>
+                                </tr>
+                                <tr className="courseTableInfo" id="tableDataHeading">
+                                    <td>Course name</td>
+                                    <td>Credit hours</td>
+                                    <td>Course name</td>
+                                    <td>Credit hours</td>
+                                </tr>
+                            </thead>          
+                            <tbody>
+                                {[...Array(rows).keys()].map(r => {
 
-                            {[...Array(rows).keys()].map(r => {
+                                    const semester1 = year.semesters[0].courses;
+                                    const semester2 = year.semesters[1].courses;
 
-                                const semester1 = year.semesters[0].courses;
-                                const semester2 = year.semesters[1].courses;
+                                    const course1 = semester1[r]?.id;
+                                    const course2 = semester2[r]?.id;
 
-                                return (
-                                    <tr className="courseTableInfo">
-                                        <td>{ semester1[r].id ? semester1[r].id : "" }</td>
-                                        <td>3</td>
-                                        <td>{ semester2[r].id ? semester2[r].id : "" }</td>
-                                        <td>3</td>
-                                    </tr>
-                                )
-                            }, year)}
-                            <tr id='tableSummary'>
-                                <td><b>Status:</b> Complete</td>
-                                <td><b>Total Credit Hours:</b> 12</td>
-                                <td><b>Status:</b> In Progress</td>
-                                <td><b>Total Credit Hours:</b> 12</td>
-                            </tr>
+                                    return (
+                                        <tr className="courseTableInfo" key={r}>
+                                            <td>{ course1?.replace(/_/g, " ") }</td>
+                                            <td>{ (() => {
+                                                const credit = getCourseById(course1)?.credit; 
+                                                total1 += !isNaN(Number(credit)) ? Number(credit) : 0;
+                                                return credit;
+                                            })()}</td>
+                                            <td>{ course2?.replace("_", " ") }</td>
+                                            <td>{ (() => {
+                                                const credit = getCourseById(course2)?.credit; 
+                                                total2 += !isNaN(Number(credit)) ? Number(credit) : 0;
+                                                return credit;
+                                            })()}</td>
+                                        </tr>
+                                    )
+                                }, year)}
+                                <tr id='tableSummary'>
+                                    <td><b>Status:</b> Complete</td>
+                                    <td><b>Total Credit Hours:</b>{ total1 }</td>
+                                    <td><b>Status:</b> In Progress</td>
+                                    <td><b>Total Credit Hours:</b>{ total2 }</td>
+                                </tr>
+                            </tbody>
                         </table>
                     )
                 })}

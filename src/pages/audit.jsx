@@ -4,6 +4,7 @@ import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
 import { useState, useEffect } from "react";
 import SemesterPlan from "../components/semesterplan";
+import { getCerts, getCourseById, getCourses, getGenEds, getMajors, getMinors } from "../lib/data";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -20,6 +21,7 @@ const Audit = () => {
 
     const [selectType, setType] = useState("");
     const handleTypeChange = (e, index) => {
+        console.log('handletype');
         setType(e.target.value);
     };
 
@@ -40,6 +42,7 @@ const Audit = () => {
         SM22: "Summer 2022",
     };
     const handleTermChange = (e, index) => {
+        console.log("setting")
         setTerm(e.target.value);
     };
 
@@ -75,7 +78,8 @@ const Audit = () => {
     }
 
     const handleEnrollFieldChange = (i, e) =>{
-        
+        console.log("here");
+
         let newFormValues = [...enrollFields];
         newFormValues[i][e.target.name] = e.target.value;
         setEnrollFields(enrollFields);
@@ -95,6 +99,7 @@ const Audit = () => {
     const handleLargeCourseClick = () => {
         const courseInfo = selectCourseType + " " + selectNumber
         // find course info for selected course type and number in the pop up classes information. this will have to be chanegd when the data base is working, but this is the idea of it all
+        // eslint-disable-next-line no-lone-blocks
         {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
             
             setSelectedCourses([...selectedCourses, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
@@ -122,6 +127,7 @@ const Audit = () => {
 
     const handleAddMajorElective = () => {
         const courseInfo = "INFOTC " + selectMajorNumber
+        // eslint-disable-next-line no-lone-blocks
         {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
             
             setMajorElectCourse([...majorElectCourse, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
@@ -152,64 +158,16 @@ const Audit = () => {
     const [majors, setMajors] = useState([]);
     const [certificates, setCertificates] = useState([]);
     const [coursesList, setCourses] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:4001/api/majors')
-            .then((response) => response.json())
-            .then((data) => {
-                setMajors(data.majors); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }, []);
-    useEffect(() => {
-        fetch('http://localhost:4001/api/minors') 
-            .then((response) => response.json())
-            .then((data) => {
-                setMinors(data.minors); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }
-    , []);
-    useEffect(() => {
-        fetch('http://localhost:4001/api/certificates')
-            .then((response) => response.json())
-            .then((data) => {
-                setCertificates(data.certificates); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }, []);
-
-    //Courses
-    useEffect(() => {
-        fetch('http://localhost:4001/api/courses') 
-            .then((response) => response.json())
-            .then((data) => {
-                setCourses(data.courses);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
-    }, []);
-
     const [genEds, setGenEds] = useState([])
 
-    // gen eds
     useEffect(() => {
-        fetch('http://localhost:4001/api/genEds') 
-            .then((response) => response.json())
-            .then((data) => {
-                setGenEds(data.genEds);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
+        getMajors(true).then(val => setMajors(val));
+        getMinors(true).then(val => setMinors(val));
+        getCerts(true).then(val => setCertificates(val));
+        getCourses(true).then(val => setCourses(val));
+        getGenEds(true).then(val => setGenEds(val));
     }, []);
+
 
     let type = null;
     let options = null;
@@ -498,126 +456,6 @@ const Audit = () => {
 
                 <SemesterPlan data={majors.filter(major => major.title === "BSAcc in Accountancy")}/>
 
-                {/* This is all hardcoded, will make it dynamic when we get test data */}
-                {/* <div id='planner'>
-                    <h2 id='userPlanner'>User's Degree Planner</h2>
-                    <table id='twoSemesterPlan'>
-                        <tr>
-                            <th colSpan={4} id='tableHeading'>Academic Year Test 2020-2021</th>
-                        </tr>
-                        <tr>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 1
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 2
-                            </td>
-                        </tr>
-                        <tr className="courseTableInfo" id="tableDataHeading">
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr id='tableSummary'>
-                            <td><b>Status:</b> Complete</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> In Progress</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                        </tr>
-
-
-                    </table>
-
-                    <table id='threeSemesterPlan'>
-                        <tr>
-                            <th colSpan={6} id='tableHeading'>Academic Year Test 2021-2022</th>
-                        </tr>
-                        <tr>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 1
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 2
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 3
-                            </td>
-                        </tr>
-                        <tr className="courseTableInfo" id="tableDataHeading">
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr id='tableSummary'>
-                            <td><b>Status:</b> Complete</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> In Progress</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> Planned</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                        </tr>
-                    </table>
-                </div> */}
             </div>
         </body>
        
