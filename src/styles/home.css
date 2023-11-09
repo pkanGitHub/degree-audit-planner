@@ -6,7 +6,7 @@
 .intro
 {
     background-color: white;
-    background-image: url("/Users/yolandazhuo/Documents/degree-audit-planner/src/lafferre.jpg");
+    background-image: url('../lafferre.jpg');
     background-size: 100% auto;
     background-repeat: no-repeat; /* Prevent image from repeating */
     border-radius: 0px 0px 0px 0px;

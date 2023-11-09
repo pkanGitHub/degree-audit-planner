@@ -122,9 +122,10 @@ import React, { useState, useEffect } from 'react';
                 </a>
             </div>
 
-            <h1 id="welcomeTitle">Welcome!</h1>
-            <h1 id="startingTitle">Getting Started</h1>
-
+            <div className="bodyText">
+                <h1 id="welcomeTitle">Welcome!</h1>
+                <h1 id="startingTitle">Getting Started</h1>
+            </div>
 
             {/* might need to use columns if possible */}
             <div className="miniTutorial">
