@@ -3,7 +3,10 @@ import RequiredChoice from "../components/requiredChoice";
 import RequiredCourse from "../components/requiredCourse";
 import ClassInfo from "../components/classInfoPopup";
 import CatalogItems from "../components/catalog";
+import AddCourses from "../components/addCourses";
 import { useState, useEffect } from "react";
+import MajorTest from "../components/test";
+import GenEdsModel from "../components/genEds";
 
 const Audit = () => {
     const [selectCourseType, setCourseType] = useState('');
@@ -24,11 +27,7 @@ const Audit = () => {
     };
 
     const [selectCategory, setCategory] = useState("");
-    // const category = {
-    //     INFOTC: "Information Technology - BS",
-    //     BIOMED: "Biomedical Engineering - BMEBS",
-    //     COMPS: "Computer Science - BS",
-    // };
+    
     const handleCategoryChange = (e, index) => {
         setCategory(e.target.value);
     };
@@ -230,8 +229,6 @@ const Audit = () => {
 
     let courseNumbers = coursesList.filter(({ area }) => area === 'Information Technology (INFOTC)').map((filtered) => filtered.courses.map((course) => infotcCourses.push(course.courseID)))
 
-    let userData = null;
-
     // may need to see if this could be done in the backend to make this easier
 
     if (selectType === "majors"){
@@ -273,6 +270,7 @@ const Audit = () => {
 
     }
 
+
   
     return (
         <body id="fullpage">
@@ -304,6 +302,7 @@ const Audit = () => {
                                     <label>
                                         Category:
                                         <select name='category' value={input.category} onChange={(e)=> {handleCategoryChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
                                             { options }
                                         </select>
                                     </label>
@@ -324,39 +323,9 @@ const Audit = () => {
                     </div>
                     <hr/>
                     
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="genEd" />
-                            <label id="genReqLabel" htmlFor="genEd">General Requirements</label>
-                            <div className="classHistory">
-                                { genEds.map((genEd) => 
-                                <div key={genEd?._id}>
-                                    <h3>{genEd?.year}</h3>
-                                    {genEd?.requirements && genEd?.requirements.map((area) => (
-                                        <div key={area?._id}>
-                                            <h4>{area?.label}</h4>
-                                            <p>{area?.info}</p>
-                                            {area?.sub && area.sub.map((subareas)=> (
-                                                <div key={subareas?._id}>
-                                                    <h3>{subareas?.label}</h3>
-                                                    <p>{subareas?.info}</p>
-                                                    {subareas?.categories && subareas.categories.map((coursearea) => (
-                                                        <div key={coursearea._id}>
-                                                            <p>{coursearea}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            ))}
-                                        
-                                        
-                                        </div>
-                                    ))}
-                                </div>)}
-                            </div>
-                        </li>
-                    </ul>
+                    <GenEdsModel genEds={genEds}/>
 
-                    {/* works but it shows delete when it shouldnt, cannot get list to show once submitted */}
+            
 
                     { userCatalog.map((key, index) =>
                         <div key={index}>
@@ -366,6 +335,8 @@ const Audit = () => {
                         </div>
                         )
                     }
+
+                    <MajorTest majors={majors} coursesList={coursesList}/>
 
                 
 
@@ -436,7 +407,7 @@ const Audit = () => {
 
                 
                     <hr/>
-                    <ul className="accordion">
+                    {/* <ul className="accordion">
                         <li>
                             <input type="checkbox" name="accordion" id="fourth" />
                             <label id="genReqLabel" htmlFor="fourth">Major Electives</label>
@@ -467,7 +438,7 @@ const Audit = () => {
                             </div>
 
                         </li>
-                    </ul>
+                    </ul> */}
                     
 
                     <div id='optionButtons'>

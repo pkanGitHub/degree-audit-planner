@@ -4,7 +4,7 @@ import RequiredCourse from "./requiredCourse"
 const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
 
     return(
-        type.filter(option => option.title.match(category)).map((selectedOption)=> (
+        type.filter(option => option.title.match(category)).map((selectedOption, index)=> {if(index===0){return(
 
                 <div key={selectedOption?._id}>
                     <h2>{selectedOption?.title}</h2>
@@ -53,7 +53,10 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
                 
      
     
-        ))
+        )}else{
+            return null;
+        }}
+        )
 
     )
 

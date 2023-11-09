@@ -6,105 +6,105 @@ import CookiePopup from "../components/cookiepopup";
 import React, { useState, useEffect } from 'react';
 //const Home = () => {
     const Home = () => {
-        const [courses, setCourses] = useState([]);
-        const [expandedCourse, setExpandedCourse] = useState(null);
+        // const [courses, setCourses] = useState([]);
+        // const [expandedCourse, setExpandedCourse] = useState(null);
         // const [expandedArea, setExpandedArea] = useState(null);
-        const [users, setUsers] = useState([]);
-        const [minors, setMinors] = useState([]);
-        const [majors, setMajors] = useState([]);
-        const [certificates, setCertificates] = useState([]);
+        // const [users, setUsers] = useState([]);
+        // const [minors, setMinors] = useState([]);
+        // const [majors, setMajors] = useState([]);
+        // const [certificates, setCertificates] = useState([]);
 
-        const [isUsersOpen, setIsUsersOpen] = useState(true);
-        const [isAllCoursesOpen, setIsAllCoursesOpen] = useState(true);
-        const [isMinorsOpen, setIsMinorsOpen] = useState(true);
-        const [isMajorsOpen, setIsMajorsOpen] = useState(true);
-        const [isCertificatesOpen, setIsCertificatesOpen] = useState(true);
-        const [expandedArea, setExpandedArea] = useState(true);
+        // const [isUsersOpen, setIsUsersOpen] = useState(true);
+        // const [isAllCoursesOpen, setIsAllCoursesOpen] = useState(true);
+        // const [isMinorsOpen, setIsMinorsOpen] = useState(true);
+        // const [isMajorsOpen, setIsMajorsOpen] = useState(true);
+        // const [isCertificatesOpen, setIsCertificatesOpen] = useState(true);
+        // const [expandedArea, setExpandedArea] = useState(true);
 
 //---------------------------------------------------------
 //Courses
-    useEffect(() => {
-      fetch('http://localhost:4001/api/courses') 
-        .then((response) => response.json())
-        .then((data) => {
-          setCourses(data.courses);
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error);
-        });
-    }, []);
+    // useEffect(() => {
+    //   fetch('http://localhost:4001/api/courses')
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       setCourses(data.courses);
+    //     })
+    //     .catch((error) => {
+    //       console.error('Error fetching data:', error);
+    //     });
+    // }, []);
 //Users
-    useEffect(() => {
-        fetch('http://localhost:4001/api/users') 
-          .then((response) => response.json())
-          .then((data) => {
-            setUsers(data.users); 
-          })
-          .catch((error) => {
-            console.error('Error fetching user data:', error);
-          });
-      }, []);
+    // useEffect(() => {
+    //     fetch('http://localhost:4001/api/users')
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         setUsers(data.users);
+    //       })
+    //       .catch((error) => {
+    //         console.error('Error fetching user data:', error);
+    //       });
+    //   }, []);
 //Minors
-    useEffect(() => {
-        fetch('http://localhost:4001/api/minors') 
-          .then((response) => response.json())
-          .then((data) => {
-            setMinors(data.minors); 
-          })
-          .catch((error) => {
-            console.error('Error fetching user data:', error);
-          });
-      }
-        , []);
+    // useEffect(() => {
+    //     fetch('http://localhost:4001/api/minors')
+    //       .then((response) => response.json())
+    //       .then((data) => {
+    //         setMinors(data.minors);
+    //       })
+    //       .catch((error) => {
+    //         console.error('Error fetching user data:', error);
+    //       });
+    //   }
+    //     , []);
 //Majors
-    useEffect(() => {
-        fetch('http://localhost:4001/api/majors')
-            .then((response) => response.json())
-            .then((data) => {
-                setMajors(data.majors); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetch('http://localhost:4001/api/majors')
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             setMajors(data.majors);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error fetching user data:', error);
+    //         });
+    // }, []);
 //Certificates
-    useEffect(() => {
-        fetch('http://localhost:4001/api/certificates')
-            .then((response) => response.json())
-            .then((data) => {
-                setCertificates(data.certificates); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }
-        , []);
+    // useEffect(() => {
+    //     fetch('http://localhost:4001/api/certificates')
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             setCertificates(data.certificates);
+    //         })
+    //         .catch((error) => {
+    //             console.error('Error fetching user data:', error);
+    //         });
+    // }
+    //     , []);
 
-    const toggleCourse = (courseId) => {
-        setExpandedCourse(courseId === expandedCourse ? null : courseId);
-    };
-     const toggleArea = (areaId) => {
-         setExpandedArea(areaId === expandedArea ? null : areaId);
-    };
-    const toggleMajors = () => {
-        setIsMajorsOpen(!isMajorsOpen);
-      };
-    
-      const toggleCertificates = () => {
-        setIsCertificatesOpen(!isCertificatesOpen);
-      };
-    
-        const toggleMinors = () => {
-        setIsMinorsOpen(!isMinorsOpen);
-        };
+    // const toggleCourse = (courseId) => {
+    //     setExpandedCourse(courseId === expandedCourse ? null : courseId);
+    // };
+    //  const toggleArea = (areaId) => {
+    //      setExpandedArea(areaId === expandedArea ? null : areaId);
+    // };
+    // const toggleMajors = () => {
+    //     setIsMajorsOpen(!isMajorsOpen);
+    //   };
 
-        const toggleUsers = () => {
-        setIsUsersOpen(!isUsersOpen);
-        };
+    //   const toggleCertificates = () => {
+    //     setIsCertificatesOpen(!isCertificatesOpen);
+    //   };
 
-        const toggleAllCourses = () => {
-        setIsAllCoursesOpen(!isAllCoursesOpen);
-        }
+        // const toggleMinors = () => {
+        // setIsMinorsOpen(!isMinorsOpen);
+        // };
+
+    //     const toggleUsers = () => {
+    //     setIsUsersOpen(!isUsersOpen);
+    //     };
+
+        // const toggleAllCourses = () => {
+        // setIsAllCoursesOpen(!isAllCoursesOpen);
+        // }
 
 //---------------------------------------------------------
     return (
@@ -140,7 +140,7 @@ import React, { useState, useEffect } from 'react';
             </div>
             {/* ------------------------------------------------------- */}
             {/* Courses */}
-            <div className="courses">
+            {/* <div className="courses">
                 <h1>Course List
                     <button onClick={toggleAllCourses}>
                         {isAllCoursesOpen ? '^' : '⌄'}
@@ -178,9 +178,9 @@ import React, { useState, useEffect } from 'react';
                     </div>
 
                 ))}
-            </div>
+            </div> */}
             {/* Users */}
-            <div className="user-data">
+            {/* <div className="user-data">
                 <h1>User Data
                 <button onClick={toggleUsers}>
                         {isUsersOpen ? '^' : '⌄'}
@@ -195,9 +195,9 @@ import React, { useState, useEffect } from 'react';
                         </li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
             {/* Minors */}
-            <div className="minor-data">
+            {/* <div className="minor-data">
                 <h1>Minor Data
                 <button onClick={toggleMinors}>
                         {isMinorsOpen ? '^' : '⌄'}
@@ -226,9 +226,9 @@ import React, { useState, useEffect } from 'react';
                         ))}
                     </div>
                 ))}
-            </div>
+            </div> */}
             {/* Majors */}
-            <div className="major-data">
+            {/* <div className="major-data">
                 <h1>
                     Major Data
                     <button onClick={toggleMajors}>
@@ -268,9 +268,9 @@ import React, { useState, useEffect } from 'react';
                             ))}
                         </div>
                     ))}
-            </div>
+            </div> */}
             {/* Certificate Data */}
-            <div className="certificate-data">
+            {/* <div className="certificate-data">
                 <h1>
                     Certificate Data
                     <button onClick={toggleCertificates}>
@@ -311,7 +311,7 @@ import React, { useState, useEffect } from 'react';
                             ))}
                         </div>
                     ))}
-            </div>
+            </div> */}
 
         </div>
     );
