@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import '../styles/navbar.css';
 import image from "../profilephoto.png"
+import mizzouLogo from "../MU-StackedMU-4C.png"
 
 const NavBar = () => {
     return (
     <div className='navbar'>
-      
-      <Link to="/" id='title' className='navbarlink'>Mizzou Engineering Degree Audit</Link>
+      <img src={mizzouLogo} alt='mizzouLogo' id='mizLogo'></img>
+      <Link to="/" id='title' className='navbarlink'>University of Missouri</Link>
          
       
       <div className='rightItems'>
