@@ -1,6 +1,11 @@
 // var pdfUtil = require('pdf-to-text');
 // var pdf_path = "backend/dataCollection/files/academic_profile.PDF";     // This is my (jay) academic profile so i left it out of the github, if you want to test the code get your profile and rename it the same thing
 
+// import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
+// import pdfjs from 'pdfjs-dist';
+
+// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+
 // //Omit option to extract all text from the pdf file
 
 // var datas = []
@@ -37,6 +42,10 @@
 //     });
 //     console.log(userData);
 // });
+
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
+import * as PDFWorker from 'pdfjs-dist/build/pdf.worker.mjs'
+GlobalWorkerOptions.workerSrc = PDFWorker;
 
 export async function ReadTranscript(file) {
     console.log(file)

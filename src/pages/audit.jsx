@@ -452,7 +452,7 @@ const Audit = () => {
                 <hr/>
 
 
-                <SemesterPlan data={majors.filter(major => major.title === "BSAcc in Accountancy")}/>
+                <SemesterPlan data={majors.filter(major => major.title === "BA in Art")}/>
 
             </div>
         </body>
