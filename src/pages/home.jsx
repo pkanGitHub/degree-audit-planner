@@ -1,7 +1,10 @@
-import image from "../MU-StackedMU-4C.png";
 import '../styles/home.css';
 import TermsCondition  from '../components/termsConditions';
 import CookiePopup from "../components/cookiepopup";
+import autoCard from "../auto.jpg"
+import manualCard from "../manual.jpg"
+import tutorialCard from "../tutorial.jpg"
+
 //---------------------------------------------------------
 import React, { useState, useEffect } from 'react';
 //const Home = () => {
@@ -110,207 +113,63 @@ import React, { useState, useEffect } from 'react';
     return (
         <div>
             <div className="intro">
-                <img src={image} alt="mulogo" className="muphoto"></img>
-                <h1>PLANNING YOUR DEGREE, MADE EASY</h1>
-                <p>The Mizzou Engineering Degree Audit is a website made by students for students. We wanted to create a usable, understandable, and flexible website to ensure student success.</p>
-                <a className="getstarted" href='/audit'>Get Started</a>
-                <br />
-                <a href="/tutorial">Need help?</a>
+                <header>
+                    <h2 id="mizEngineering">College of Engineering</h2>
+                    <h2 id="degreePlanner">MIZZOU'S DEGREE PLANNER</h2>
+                </header>
+                <a className="getstarted" href='/audit'>
+                <button class="getStart">GET STARTED TODAY</button>
+                </a>
             </div>
 
-            <h1 id="startingTitle">How to get started</h1>
+            <h1 id="welcomeTitle">Welcome!</h1>
+            <h1 id="startingTitle">Getting Started</h1>
+
 
             {/* might need to use columns if possible */}
             <div className="miniTutorial">
-                <div className="transcript">
-                    <h4>Upload Transcript</h4>
-                    <p>Download your unofficial transcript from MyZou and upload it here for easy use!</p>
+                <div className="transcript1">
+                    <img src={autoCard}></img>
+                    <div className="cardText">
+                        <h3 className="miniTutTitles">Upload Transcript</h3>
+                            <p>Download your unofficial transcript from MyZou and upload it here for easy use!</p>
+                            <a class="uploadTranscriptHere" href="/audit">
+                                <button class="auto">Upload your transcript here</button>
+                            </a>
+                    </div>
                 </div>
-                <div className="transcript">
-                    <h4>Do it yourself</h4>
-                    <p>Use this feature when you do not have your unofficial transcript on hand.</p>
+                <div className="transcript2">
+                    <img src={manualCard}></img>
+                    <div className="cardText">
+                        <h3 className="miniTutTitles">Do it yourself</h3>
+                            <p>Use this feature when you do not have your unofficial transcript on hand.</p>
+                            <a class="uploadTranscriptHere" href="/audit">
+                                <button class="tutorialCardButton">Set up your audit planner here</button>
+                            </a>
+                    </div>
                 </div>
+                <div className="transcript2">
+                    <img src={tutorialCard}></img>
+                    <div className="cardText">
+                        <h3 className="miniTutTitles">Still Confused?</h3>
+                            <p>Still not sure on how to start? Do not fear - we have several tutorials to get you started!</p>
+                            <a class="uploadTranscriptHere" href="/tutorial">
+                                <button class="manual">Take me to the tutorial</button>
+                            </a>
+                    </div>
+                </div>
+            </div>
 
+            <div className="tutorialButton">
+                <a class="tlink" href="/tutorial">
+                    <button class="tutBut">TAKE ME TO THE TUTORIAL</button>
+                </a>
             </div>
             <div className="terms">
                 <TermsCondition />
             </div>
             <div id="testcookie">
                 <CookiePopup />
-            </div>
-            {/* ------------------------------------------------------- */}
-            {/* Courses */}
-            <div className="courses">
-                <h1>Course List
-                    <button onClick={toggleAllCourses}>
-                        {isAllCoursesOpen ? '^' : '⌄'}
-                    </button>
-                </h1>
-                {isAllCoursesOpen &&
-                    courses.map((courseGroup) => (
-                    <div key={courseGroup._id}>
-                        <h3>{courseGroup.area}
-                            <button onClick={() => toggleArea(courseGroup._id)}>
-                                {expandedArea === courseGroup._id ? '^' : '⌄'}
-                            </button>
-                        </h3>
-                        {expandedArea === courseGroup._id && (
-                            <div>
-                                <p>{courseGroup.description}</p>
-                            </div>
-                        )}
-                        <ul>
-                            {courseGroup.courses.map((course) => (
-                                <li key={course._id}>
-                                    <h4 onClick={() => toggleCourse(course._id)}>
-                                        {course.name} {expandedCourse === course._id ? '^' : '⌄'}
-                                    </h4>
-                                    {expandedCourse === course._id && (
-                                        <div>
-                                            <p>Credit: {course.credit}</p>
-                                            <p>PreReq: {course.prerequisites}</p>
-                                            <p>Description: {course.description}</p>
-                                        </div>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                ))}
-            </div>
-            {/* Users */}
-            <div className="user-data">
-                <h1>User Data
-                <button onClick={toggleUsers}>
-                        {isUsersOpen ? '^' : '⌄'}
-                    </button>
-                </h1>
-                <ul>
-                {isUsersOpen && users.map((user) => (
-                        <li key={user._id}>
-                            <p>Email: {user.email}</p>
-                            <p>Password: {user.password}</p>
-                            <p>Major: {user.major}</p>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-            {/* Minors */}
-            <div className="minor-data">
-                <h1>Minor Data
-                <button onClick={toggleMinors}>
-                        {isMinorsOpen ? '^' : '⌄'}
-                    </button>
-                </h1>
-                {isMinorsOpen &&
-                    minors.map((minor) => (
-                    <div key={minor?._id}>
-                        <h3>{minor?.title}</h3>
-                        <p><strong>URL:</strong> <a href={minor?.url}>{minor?.url}</a></p>
-                        {minor?.courses && minor?.courses.map((course) => (
-                            <div key={course?._id}>
-                                <h4>{course?.label}</h4>
-                                <ul>
-                                    {course?.list && course.list.map((item) => (
-                                        <li key={item?._id}>
-                                            <p>{item?.id}</p>
-                                            <p><strong>Or:</strong> {item?.or ? item?.or.join(', ') : ''}</p>
-                                        </li>
-                                    ))}
-                                </ul>
-                                {course?.info && course.info.map((info) => (
-                                    <p key={info?._id}><strong>Comment:</strong> {info?.comment}</p>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-                ))}
-            </div>
-            {/* Majors */}
-            <div className="major-data">
-                <h1>
-                    Major Data
-                    <button onClick={toggleMajors}>
-                        {isMajorsOpen ? '^' : '⌄'}
-                    </button>
-                </h1>
-                {isMajorsOpen &&
-                    majors.map((major) => (
-                        <div key={major?._id}>
-                            <h3>{major?.title}</h3>
-                            <p>
-                                <strong>URL:</strong>{' '}
-                                <a href={major?.url} target="_blank" rel="noreferrer">
-                                    {major?.url}
-                                </a>
-                            </p>
-                            {major?.courses && major.courses.map((course) => (
-                                <div key={course?._id}>
-                                    <h4>{course?.label}</h4>
-                                    <ul>
-                                        {course?.list && course.list.map((item) => (
-                                            <li key={item?._id}>
-                                                <p>{item?.id}</p>
-                                                <p>
-                                                    <strong>Or:</strong>{' '}
-                                                    {item?.or ? item?.or.join(', ') : ''}
-                                                </p>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    {course?.info && course.info.map((info) => (
-                                        <p key={info?._id}>
-                                            <strong>Comment:</strong> {info?.comment}
-                                        </p>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-            </div>
-            {/* Certificate Data */}
-            <div className="certificate-data">
-                <h1>
-                    Certificate Data
-                    <button onClick={toggleCertificates}>
-                        {isCertificatesOpen ? '^' : '⌄'}
-                    </button>
-                </h1>
-
-                {isCertificatesOpen &&
-                    certificates.map((certificate) => (
-                        <div key={certificate?._id}>
-                            <h3>{certificate?.title}</h3>
-                            <p>
-                                <strong>URL:</strong>{' '}
-                                <a href={certificate?.url} target="_blank" rel="noreferrer">
-                                    {certificate?.url}
-                                </a>
-                            </p>
-                            {certificate?.courses && certificate.courses.map((course) => (
-                                <div key={course?._id}>
-                                    <h4>{course?.label}</h4>
-                                    <ul>
-                                        {course?.list && course.list.map((item) => (
-                                            <li key={item?._id}>
-                                                <p>{item?.id}</p>
-                                                <p>
-                                                    <strong>Or:</strong>{' '}
-                                                    {item?.or ? item?.or.join(', ') : ''}
-                                                </p>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    {course?.info && course.info.map((info) => (
-                                        <p key={info?._id}>
-                                            <strong>Comment:</strong> {info?.comment}
-                                        </p>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    ))}
             </div>
         </div>
     );
