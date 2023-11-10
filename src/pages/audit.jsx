@@ -3,8 +3,8 @@ import RequiredChoice from "../components/requiredChoice";
 import ClassInfo from "../components/classInfoPopup";
 import CatalogItems from "../components/catalog";
 import { useState, useEffect } from "react";
-import SemesterPlan from "../components/semesterplan";
-import { getCerts, getCourses, getGenEds, getMajors, getMinors } from "../lib/data";
+import SemesterPlan from "../components/semesterPlan";
+import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
 
 const Audit = () => {
@@ -156,7 +156,7 @@ const Audit = () => {
         getMajors(true).then(val => setMajors(val));
         getMinors(true).then(val => setMinors(val));
         getCerts(true).then(val => setCertificates(val));
-        getCourses(true).then(val => setCourses(val));
+        getCourseList(true).then(val => setCourses(val));
         getGenEds(true).then(val => setGenEds(val));
     }, []);
 
@@ -229,11 +229,10 @@ const Audit = () => {
 
     }
 
-  
     return (
         <body id="fullpage">
             <div id="header">
-                <TranscriptUpload/>
+                <TranscriptUpload set={setCategory}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
@@ -432,8 +431,8 @@ const Audit = () => {
                 </div>
                 <hr/>
 
-
-                <SemesterPlan data={majors.filter(major => major.title === selectCategory)}/>
+                                        
+                <SemesterPlan data={majors.filter(major => major.title.match(selectCategory) !== null)}/>
 
             </div>
         </body>

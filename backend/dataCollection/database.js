@@ -1,14 +1,13 @@
 const axios = require('axios');
-// const courses = require('./json/course.data.json');
-// const programs = require('./json/plans.json');
 const gens = require('./json/geneds-reqs.json')
 
 require('dotenv').config();
-
 const url = `http://localhost:${process.env.PORT}/`;
 
 // eslint-disable-next-line no-unused-vars
 async function FillCourseData(courses) {
+
+    console.log(url);
     for (const [key, value] of Object.entries(courses)) {
 
         const courseList = [];
@@ -34,7 +33,6 @@ async function FillCourseData(courses) {
         .then(() => {
             console.log(`${key} was added successfully!`);
         }, async (error) => {
-            console.log(error.response);
             if (error.response.status === 413) {
                 courseList.forEach(async (course, index, list) => {
                     await axios.post(url + "addCourse", { 

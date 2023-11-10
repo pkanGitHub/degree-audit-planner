@@ -27,7 +27,7 @@ export async function getCerts(pull) {
     return Certificates;
 }
 
-export async function getCourses(pull) {
+export async function getCourseList(pull) {
     if (pull || Courses === undefined) {
         return Courses =  await fetchGet('courses');
     }
