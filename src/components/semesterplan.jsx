@@ -73,6 +73,6 @@ export default function SemesterPlan(props) {
     );
 
     else return (
-        <p>No Calendar</p>
+        <h4 style={{textAlign: "center"}}>Add some courses to generate a degree plan</h4>
     )
 }

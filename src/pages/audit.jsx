@@ -2,7 +2,7 @@ import "../styles/audit.css";
 import RequiredChoice from "../components/requiredChoice";
 import ClassInfo from "../components/classInfoPopup";
 import { useState, useEffect } from "react";
-import SemesterPlan from "../components/semesterplan";
+import SemesterPlan from "../components/semesterPlan";
 import { getCerts, getCourses, getGenEds, getMajors, getMinors } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
 
@@ -21,7 +21,6 @@ const Audit = () => {
 
     const [selectType, setType] = useState("");
     const handleTypeChange = (e, index) => {
-        console.log('handletype');
         setType(e.target.value);
     };
 
@@ -452,7 +451,7 @@ const Audit = () => {
                 <hr/>
 
 
-                <SemesterPlan data={majors.filter(major => major.title === "BA in Art")}/>
+                <SemesterPlan data={majors.filter(major => major.title === selectCategory)}/>
 
             </div>
         </body>

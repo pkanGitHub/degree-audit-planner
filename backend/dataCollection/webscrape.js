@@ -4,7 +4,7 @@ const fs = require('fs');
 const db = require('./database');
 
 async function CourseDataWebscrape() {
-    const browser = await puppeteer.launch({devtools: true});                           // Starts virtual browser
+    const browser = await puppeteer.launch();                           // Starts virtual browser
     const page = await browser.newPage();                               // Opens a tab in the browser
 
     const courses = await ws.GetCatalogSource(page);

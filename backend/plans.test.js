@@ -14,7 +14,7 @@ const all = {
     onerequired: onerequired
 }
 
-for (const [area, program] of Object.entries(plan)) {
+for (const [, program] of Object.entries(plan)) {
 
     for (var i in program) {
         var reqs = program[i].course_requirements;
