@@ -66,11 +66,13 @@ const AddCourses = ({courses, orCourses}) => {
                 {sortedCourses.map((singleCourse, index) => {if((orCourses.filter(course => course.orId.match(singleCourse.id))).length > 0){
                     return(
                         <div key={singleCourse.id}>
-                            <ClassInfo key={index} className={singleCourse.classId} classTitle={singleCourse.name} classDescript={singleCourse.description} creditHours={singleCourse.creditHours} preReq={singleCourse.preReq} lastOffered={singleCourse.lastOffered}/>
-                            
-                            <button onClick={toggleOrCourses}>
-                                {isOrOpen ? '-' : '+'}
-                            </button>
+                            <div style={{display: "flex"}}>
+                                <ClassInfo key={index} className={singleCourse.classId} classTitle={singleCourse.name} classDescript={singleCourse.description} creditHours={singleCourse.creditHours} preReq={singleCourse.preReq} lastOffered={singleCourse.lastOffered}/>
+                                
+                                <button onClick={toggleOrCourses}>
+                                    {isOrOpen ? '-' : '+'}
+                                </button>
+                            </div>
         
                     
                                 {isOrOpen && orCourses.filter((course) => course.orId.match(singleCourse.id)).map((chosenCourse, index) => 

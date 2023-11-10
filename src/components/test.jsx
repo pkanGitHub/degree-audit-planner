@@ -12,11 +12,12 @@ const MajorTest = ({majors, coursesList}) => {
     }
     return(
             
-        majors.filter(option => option.title.match("BA in Biological Sciences")).map((selectedOption, index)=> {if(index===0){return(
-
+        majors.filter(option => option.title.match("BS in Information Technology")).map((selectedOption, index)=> {if(index===0){return(
+            // this first if basically says take the first filtered option. did this because would grab names that match but have extra. for example, minor in social justice would also return minor in social justice for educators
             <div key={selectedOption?._id}>
                 <h2>{selectedOption?.title}</h2>
                 {selectedOption?.requirements && selectedOption.requirements.map((course)=> {if(course.required === "true"){return(
+                    // this section if filters based on if the course section is required or not, if not, will do a mass select type of thing
                     <div key={course?._id}>
                         <ul className="accordion">
                             <li>
@@ -27,21 +28,22 @@ const MajorTest = ({majors, coursesList}) => {
                                     <p><b>Credits hours needed:</b> {course.credits}</p>
                             
                                         {course?.list && course.list.map ((item) => {if(item?.or && item.or.length > 0){return(
+                                            // this if statement filters based on whether or not the specific class has an OR class. if it does, returns all of this information. if it doesn't then only returns specific class
                                             <div key={item?._id}>
                                     
                                                 {coursesList.filter((area) => area.courses.some((course) => course.courseID === item?.id)).map((area)=> area.courses.filter((course) => course.courseID.match(item?.id)).map((selectedCourse, index) => {if(index===0){return(
-                                                    <div>
+                                                    // this return does the same that the top filter does but with courses. for example: filtering BIO 1000 would also get BIO 1000H or BIO 1000W or any other combination. to get the only match necessary, need only thee first return. if you want the other courses, searching for them specifically works fine
+                                                    <div style={{display:"flex"}}>
                                                         <div style={{display:"flex"}}>
                                                             <RequiredCourse key={selectedCourse._id} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>
+                                                            {/* this button acts as an open close type of function */}
                                                             <button onClick={toggleOrCourses}>
-                                                                {isOrOpen ? '-' : '+'}
+                                                                {isOrOpen ? 'Hide' : 'Other Courses'}
                                                             </button>
-                                                        </div>
-                                                        <div id="orClasses">
+                                                        
 
                                                             {isOrOpen && item?.or && item.or.map((extra) => (
                                                                 <div key={extra}>
-                                                                    <p>Or:</p>
                                                                     {coursesList.filter((area) => area.courses.some((course) => course.courseID === extra)).map((area)=> area.courses.filter((course) => course.courseID.match(extra)).map((selectedCourse, index) => {if(index===0){return(
                                                                     
                                                                         <RequiredCourse key={selectedCourse._id} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>)}
@@ -97,6 +99,7 @@ const MajorTest = ({majors, coursesList}) => {
                     </div>
                 )}
                 else{
+                    // this section is for courses that are not required but need a sort of user input to add the courses to the degree accordingly
                     let manySelect = []
                     let orClasses = []
                     return(
@@ -115,7 +118,7 @@ const MajorTest = ({majors, coursesList}) => {
                                                 <div key={item?._id}>
                                         
                                                     {coursesList.filter((area) => area.courses.some((course) => course.courseID === item?.id)).map((area)=> area.courses.filter((course) => course.courseID.match(item?.id)).map((selectedCourse, index) => {if(index===0){
-                                                        let x = manySelect.push({id: item._id, classId: selectedCourse.courseID, creditHours: selectedCourse.credit, preReq: selectedCourse.prerequisites, description: selectedCourse.description, name: selectedCourse.name, lastOffered: selectedCourse.pastTerms[0]})
+                                                            let x = manySelect.push({id: item._id, classId: selectedCourse.courseID, creditHours: selectedCourse.credit, preReq: selectedCourse.prerequisites, description: selectedCourse.description, name: selectedCourse.name, lastOffered: selectedCourse.pastTerms[0]})
                                                         }
                                                         else{
                                                             return null;
