@@ -1,7 +1,6 @@
 import "../styles/audit.css";
 import CatalogItems from "../components/catalog";
 import { useState, useEffect } from "react";
-import MajorTest from "../components/test";
 import GenEdsModel from "../components/genEds";
 import ExtraCourses from "../components/extraCourses";
 import TransferCourse from "../components/transferCourses";
