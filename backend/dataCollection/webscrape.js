@@ -1,20 +1,20 @@
 const puppeteer = require("puppeteer");
 const ws = require("./webscrape.functions");
 const fs = require('fs');
+const db = require('./database');
 
-
-// eslint-disable-next-line no-unused-vars
 async function CourseDataWebscrape() {
-    const browser = await puppeteer.launch();           // Starts virtual browser
+    const browser = await puppeteer.launch({devtools: true});                           // Starts virtual browser
     const page = await browser.newPage();                               // Opens a tab in the browser
 
     const courses = await ws.GetCatalogSource(page);
+    console.log("Courses got");
     const categories = await ws.GetCategories(page);
+    console.log("Categories got");
     const semesters = await ws.GetSemesters(page);
-    // const plans = await ws.GetDegreePlans(page);
+    console.log("Semesters got");
 
     await browser.close();                                              // Closes browser, womp womp
-
 
     const new_courses = {};
 
@@ -29,8 +29,7 @@ async function CourseDataWebscrape() {
             nc["prerequisites"] = course.prerequisites;
             nc["recommended"] = course.recommended
             nc["description"] = course.description;
-            nc["category"] = categories[course.number]?.category;
-            nc["properties"] = categories[course.number]?.properties;
+            nc["categories"] = categories[course.number]?.categories;
             nc["available_next_semester"] = course.available_next_semester;
             nc["past_terms_offered"] = semesters[course.number];
 
@@ -47,13 +46,10 @@ async function CourseDataWebscrape() {
         }
     });
 
-    // jsonData = JSON.stringify(plans);
-    // fs.writeFile("json/plans.json", jsonData, function(err) {
-    //     if (err) {
-    //         console.log(err);
-    //     }
-    // });
+    // await db.FillCourseData(new_courses);
 }
+
+
 // eslint-disable-next-line no-unused-vars
 async function DegreePlanWebscrape() {
     const browser = await puppeteer.launch();           // Starts virtual browser
@@ -61,17 +57,15 @@ async function DegreePlanWebscrape() {
     const plans = await ws.GetDegreePlans(page);
     await browser.close();
 
-    var jsonData = JSON.stringify(plans);
-    fs.writeFile("./json/plans.json", jsonData, function(err) {
-        if (err) {
-            console.log(err);
-        }
-    });
+    // var jsonData = JSON.stringify(plans);
+    // fs.writeFile("./json/plans.json", jsonData, function(err) {
+    //     if (err) {
+    //         console.log(err);
+    //     }
+    // });
 
 
+    await db.FillPlanData(plans);
 }
 
-// CourseDataWebscrape();
-DegreePlanWebscrape()
-
-// console.log(__dirname + "/json");
+CourseDataWebscrape();

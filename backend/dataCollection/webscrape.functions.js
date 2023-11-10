@@ -83,7 +83,7 @@ async function GetCatalogSource(page) {
      */
 
 async function GetCategories(page) {
-    var courses;;
+    var courses = {};
     var pageCount = 1;
     var hasNext = true;                         //  This page has pagination, so we check if the pagination is available, and while it is the loop continues
 
@@ -92,22 +92,21 @@ async function GetCategories(page) {
         await page.waitForSelector("#course_list");
 
         const info = await page.evaluate(() => {
-            const rows = document.querySelectorAll("#course_list tbody tr");                                    // Get the table rows
+            const rows = document.querySelectorAll("#course_list tbody tr");                                        // Get the table rows
             const courses = {};
             rows.forEach((row) => {
-                const id = row.querySelector(".course_name")?.textContent.trim().replace('-', '_');             // Get the course name from each row
-                const cat = row.querySelectorAll(".category abbr")[0]?.textContent.trim();                      // Get any categories (ie, humanities, social sciences, etc.)
-                const prop = row.querySelectorAll(".category abbr")[1]?.textContent.trim();                     // Get any properties (ie. labs)
+                const id = row.querySelector(".course_name")?.textContent.trim().replace('-', '_');                 // Get the course name from each row
+                const cats = Array.from(row.querySelectorAll(".category abbr")).map(cat => cat.textContent.trim())  // Get any categories (ie, humanities, social sciences, etc.) or any properties (ie. labs)
 
-                courses[id] = { category: cat, properties: prop ? prop : undefined };                           // Return that info as an object
+                courses[id] = { categories: cats };                                                                 // Return that info as an object
             });
-            const next = (document.querySelector(".pagination__item--next")) ? true : false;                    // Here is where we check the pagination
+            const next = (document.querySelector(".pagination__item--next")) ? true : false;                        // Here is where we check the pagination
             return { hasNext: next, courses: courses }
         });
-        // for (const [id, vals] of Object.entries(info.courses)) {                                                //  
-        //     courses[id.replace('-', '_')] = vals;
-        // }
-        courses = info.courses;
+        courses = {
+            ...courses,
+            ...info.courses
+        }
         hasNext = info.hasNext;
 
     }
@@ -590,7 +589,7 @@ async function GetDegreePlans(page) {
 }
 
 
-exports.GetCatalogSource= GetCatalogSource;
-exports.GetCategories= GetCategories;
-exports.GetSemesters= GetSemesters;
-exports.GetDegreePlans= GetDegreePlans;
+exports.GetCatalogSource = GetCatalogSource;
+exports.GetCategories = GetCategories;
+exports.GetSemesters = GetSemesters;
+exports.GetDegreePlans = GetDegreePlans;
