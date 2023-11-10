@@ -5,7 +5,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const plannerRoute = require('./routes/planner')
-const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
+const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'Major2']
 const models = {}
 modelNames.forEach(modelName => {
     const Model = require(`./Models/${modelName}`)
@@ -197,14 +197,14 @@ app.post("/addUser", (req, res) => {
 })
 
 app.post("/addCourseArea", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
         { $set: { courses: req.body.courses }},
         { upsert: true }
     )
     .then(result => {
         res.status(201).json({
-          message: "Course added!",
+          message: "Course area added!",
           result: result
         });
       })
@@ -216,9 +216,9 @@ app.post("/addCourseArea", (req, res) => {
   })
 
   app.post("/addCourse", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
-        { $set: { courses: req.body.courses }})
+        { $push: { courses: req.body.course }})
       .then(result => {
         res.status(201).json({
           message: "Course added!",
@@ -232,30 +232,28 @@ app.post("/addCourseArea", (req, res) => {
       });
   })
 
-
-
 app.post("/addMajor", (req, res) => {
-  models['Major'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      courses: req.body.courses,
-      semesters: req.body.semesters,
-      credits: req.body.credits
-    }},
-    { upsert: true }
-  )
-  .then(result => {
-    res.status(201).json({
-      message: "Major created!",
-      result: result
+    models['Major'].findOneAndUpdate(
+      { title: req.body.title },
+      { $set: {
+        requirements: req.body.requirements,
+        years: req.body.years,
+        credits: req.body.credits
+      }},
+      { upsert: true }
+    )
+    .then(result => {
+      res.status(201).json({
+        message: "Major created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
     });
   })
-  .catch(err => {
-    res.status(500).json({
-      error: err
-    });
-  });
-})
 
 app.post("/addCert", (req, res) => {
   models['Certificate'].findOneAndUpdate(

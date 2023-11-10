@@ -6,9 +6,10 @@ const coursesSchema = mongoose.Schema({
         courseID: { type: String, required: true },
         name: { type: String, required: true },
         credit: String,
-        category: String,
+        categories: [ String ],
         prerequisites: String,
         description: String,
+        pastTerms: [ String ],
         available: Boolean
     }], required: true}
 })

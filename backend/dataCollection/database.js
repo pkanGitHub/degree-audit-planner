@@ -1,9 +1,14 @@
 const axios = require('axios');
-const courses = require('./json/course.data.json');
-const programs = require('./json/plans.json');
+// const courses = require('./json/course.data.json');
+// const programs = require('./json/plans.json');
 const gens = require('./json/geneds-reqs.json')
 
-async function FillCourseData() {
+require('dotenv').config();
+
+const url = `http://localhost:${process.env.PORT}/`;
+
+// eslint-disable-next-line no-unused-vars
+async function FillCourseData(courses) {
     for (const [key, value] of Object.entries(courses)) {
 
         const courseList = [];
@@ -14,33 +19,51 @@ async function FillCourseData() {
                 courseID: course.course_id,
                 name: course.title,
                 credit: course.credit_hours || undefined,
-                category: course.category || undefined,
+                categories: course.categories || undefined,
                 prerequisites: course.prerequisites || undefined,
                 recommended: course.recommended || undefined,
                 description: course.description || undefined,
                 pastTerms: course.past_terms_offered || undefined
             })
         }
-        
 
-        await axios.post("http://localhost:4000/addCourseArea", { 
+        await axios.post(url + "addCourseArea", { 
             area: key,  
             courses: courseList
         })
-        .then((response) => {
+        .then(() => {
             console.log(`${key} was added successfully!`);
-        }, (error) => {
+        }, async (error) => {
             console.log(error.response);
+            if (error.response.status === 413) {
+                courseList.forEach(async (course, index, list) => {
+                    await axios.post(url + "addCourse", { 
+                        area: key,  
+                        course: course
+                    }).then(() => console.log(`${key}: ${index}/${list.length} added.`))
+                    .catch(error => console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`));
+                });
+
+                // for (var i in courseList) {
+                //     await axios.post(url + "addCourse", { 
+                //         area: key,  
+                //         courses: courseList[i]
+                //     }).then((response) => console.log(`${key}: ${i}/${courseList.length} added.`))
+                //     .catch(error => console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`));
+                // }
+            }
+            else console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`)
         });
     }
 }
 
-async function FillPlanData(minors=true, certs=true, majors=true) {
+// eslint-disable-next-line no-unused-vars
+async function FillPlanData(programs, minors=true, certs=true, majors=true) {
     const runMinors = minors;
     const runCerts = certs;
     const runMajors = majors;
 
-    for (const [key, value] of Object.entries(programs)) {
+    for (const [, value] of Object.entries(programs)) {
         for (var i = 0; i < value.length; i++) {
             const program = value[i];
 
@@ -52,7 +75,7 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
             
             if (program.type === "Minor") {
                 if (!runMinors) continue
-                await axios.post("http://localhost:4000/addMinor", { 
+                await axios.post(url + "addMinor", { 
                     title: program.title,
                     url: program.url,
                     courses: courses,
@@ -65,7 +88,7 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
             }
             else if (program.type === "Cert") {
                 if (!runCerts) continue
-                await axios.post("http://localhost:4000/addCert", { 
+                await axios.post(url + "addCert", { 
                     title: title,
                     courses: courses,
                     credits: credits,
@@ -78,17 +101,16 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
                 });
             }
             else if (runMajors) {
-                await axios.post("http://localhost:4000/addMajor", { 
+                await axios.post(url + "addMajor", { 
                     title: title,
-                    courses: courses,
-                    credits: credits,
-                    semesters: semesters,
+                    requirements: courses,
+                    years: semesters,
                     url: url
                 })
                 .then((response) => {
                     console.log(`${program.title} add successfully`);
                 }, (error) => {
-                    console.log(error.response);
+                    console.log(error.response.data.error.message);
                 });
 
             }
@@ -97,17 +119,17 @@ async function FillPlanData(minors=true, certs=true, majors=true) {
     }
 }
 
-
 function getCourses(program) {
-    if (("has_plan" in program) && !program.has_plan) return undefined;
+    if ((("has_plan" in program) && !program.has_plan) || program.requirements === undefined) return undefined;
 
     const courses = [];
-    for (const [k, v] of Object.entries(program.course_requirements || program.requirements)) {
+    for (const [k, v] of Object.entries(program.requirements)) {
         const courseList = [];
         var info = [];
+        console.log(v);
 
-        for (var i = 0; i < v.length; i++) {
-            const c = v[i];
+        for (var i = 0; i < v.courses.length; i++) {
+            const c = v.courses[i];
             if (JSON.stringify(c) === '{}') break;
             if ("info" in c) {
                 info.push({index: i, comment: c.info}); 
@@ -115,7 +137,7 @@ function getCourses(program) {
             }
             courseList.push({ id: c.id[0], or: c.or || undefined})
         }
-        courses.push({label: k, list: courseList, info: info.length < 1 ? undefined : info})
+        courses.push({label: k, credits: v.credits, required: v.required, categories: v.categories, list: courseList, info: info.length < 1 ? undefined : info})
     }
 
     // console.log(courses);
@@ -133,17 +155,25 @@ function getCreditReqs(program) {
 }
 
 function getPlan(program) {
-    if ((("has_plan" in program) && !program.has_plan) || !program.plan) return undefined;
+    if ((("has_plan" in program) && !program.has_plan) || !program.plan ) return undefined;
+    var yearCnt = 0;
     var semCnt = 0;
-    const semesters = [];
-    if (program.plan) for (const [k, v] of Object.entries(program.plan)) {
-        semesters.push({label: `Semester ${++semCnt}`, courses: v.Fall});
-        semesters.push({label: `Semester ${++semCnt}`, courses: v.Spring});
+    const years = [];
+    if (program.plan) for (const [, v] of Object.entries(program.plan)) {
+        years.push({
+            label: `Year ${++yearCnt}`,
+            semesters: [
+                {label: `Semester ${++semCnt}`, courses: v.Fall},
+                {label: `Semester ${++semCnt}`, courses: v.Spring}
+            ]
+        })
+        // semesters.push({label: `Semester ${++semCnt}`, courses: v.Fall});
+        // semesters.push({label: `Semester ${++semCnt}`, courses: v.Spring});
     }
-    return semesters;
+    return years;
 }
 
-
+// eslint-disable-next-line no-unused-vars
 async function FillGenEds() {
     const requirements = [];
     for (const [k, v] of Object.entries(gens)) {
@@ -174,7 +204,7 @@ async function FillGenEds() {
         requirements.push(req);
     }
 
-    await axios.post("http://localhost:4000/addGenEds", { 
+    await axios.post(url + "addGenEds", { 
         year: 2023,
         reqs: requirements
     })
@@ -189,8 +219,12 @@ async function FillGenEds() {
 
 async function main() {
     // await FillCourseData();
-    await FillPlanData();
+    // await FillPlanData(false, false, true);
     // await FillGenEds();
 }
 
 main();
+
+exports.FillCourseData = FillCourseData;
+exports.FillPlanData = FillPlanData;
+exports.FillGenEds = FillGenEds;
