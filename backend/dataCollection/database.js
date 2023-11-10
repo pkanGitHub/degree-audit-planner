@@ -33,13 +33,13 @@ async function FillCourseData(courses) {
         .then(() => {
             console.log(`${key} was added successfully!`);
         }, async (error) => {
-            if (error.response.status === 413) {
+            if (error?.response?.status === 413) {
                 courseList.forEach(async (course, index, list) => {
                     await axios.post(url + "addCourse", { 
                         area: key,  
                         course: course
                     }).then(() => console.log(`${key}: ${index}/${list.length} added.`))
-                    .catch(error => console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`));
+                    .catch(error => console.error(`ERROR: ${error?.response?.status}: ${error?.response?.statusText}`));
                 });
 
                 // for (var i in courseList) {
@@ -66,20 +66,20 @@ async function FillPlanData(programs, minors=true, certs=true, majors=true) {
             const program = value[i];
 
             const title = program.title;
-            const url = program.url;
+            const pUrl = program.url;
             const courses = getCourses(program);
-            const credits = getCreditReqs(program);
+            // const credits = getCreditReqs(program);
             const semesters = getPlan(program);
             
             if (program.type === "Minor") {
                 if (!runMinors) continue
                 await axios.post(url + "addMinor", { 
-                    title: program.title,
-                    url: program.url,
-                    courses: courses,
+                    title: title,
+                    url: pUrl,
+                    requirements: courses,
                 })
                 .then((response) => {
-                    console.log(`${program.title} add successfully`);
+                    console.log(`${title} add successfully`);
                 }, (error) => {
                     console.log(error.response);
                 });
@@ -88,9 +88,9 @@ async function FillPlanData(programs, minors=true, certs=true, majors=true) {
                 if (!runCerts) continue
                 await axios.post(url + "addCert", { 
                     title: title,
-                    courses: courses,
-                    credits: credits,
-                    url: url
+                    requirements: courses,
+                    years: semesters,
+                    url: pUrl
                 })
                 .then((response) => {
                     console.log(`${program.title} add successfully`);
@@ -103,12 +103,12 @@ async function FillPlanData(programs, minors=true, certs=true, majors=true) {
                     title: title,
                     requirements: courses,
                     years: semesters,
-                    url: url
+                    url: pUrl
                 })
                 .then((response) => {
                     console.log(`${program.title} add successfully`);
                 }, (error) => {
-                    console.log(error.response.data.error.message);
+                    console.log(error?.response?.data?.error?.message);
                 });
 
             }
@@ -124,7 +124,6 @@ function getCourses(program) {
     for (const [k, v] of Object.entries(program.requirements)) {
         const courseList = [];
         var info = [];
-        console.log(v);
 
         for (var i = 0; i < v.courses.length; i++) {
             const c = v.courses[i];
@@ -158,6 +157,15 @@ function getPlan(program) {
     var semCnt = 0;
     const years = [];
     if (program.plan) for (const [, v] of Object.entries(program.plan)) {
+
+        if (v.total) {
+            years.push({
+                label: `Year ${++yearCnt}`,
+                courses: v.total
+            })
+            continue;
+        }
+
         years.push({
             label: `Year ${++yearCnt}`,
             semesters: [

@@ -5,7 +5,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const plannerRoute = require('./routes/planner')
-const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'Major2']
+const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
 const models = {}
 modelNames.forEach(modelName => {
     const Model = require(`./Models/${modelName}`)
@@ -154,7 +154,7 @@ app.post("/addMinor", (req, res) => {
     { title: req.body.title },
     { $set: {
       title: req.body.title,
-      courses: req.body.courses,
+      requirements: req.body.requirements,
       url: req.body.url
     }},
     { upsert: true }
@@ -260,8 +260,8 @@ app.post("/addCert", (req, res) => {
     { title: req.body.title },
     { $set: {
       url: req.body.url,
-      courses: req.body.courses,
-      credits: req.body.credits
+      requirements: req.body.requirements,
+      years: req.body.years,
     }},{ upsert: true }
   )
   .then(result => {
