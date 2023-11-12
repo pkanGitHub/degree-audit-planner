@@ -23,10 +23,11 @@ const SignUp = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:4000/signup', formData)
+            const response = await axios.post('http://localhost:4001/signup', formData)
             
             if (response.status === 201) {
                 console.log('User sign up successfully');
+                window.location.href = '/audit'
             } else {
                 const data = await response.json();
                 console.error(data.message);

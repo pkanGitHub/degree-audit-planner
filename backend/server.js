@@ -3,7 +3,6 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-const cookieParser = require("cookie-parser");
 const passport = require('passport')
 const mongoose = require('mongoose')
 const session = require("express-session");
@@ -15,12 +14,6 @@ modelNames.forEach(modelName => {
   const Model = require(`./Models/${modelName}`)
   models[modelName] = Model
 })
-
-// require('./passport-config')(passport)
-// const initializePassport = require('./passport-config')
-// initializePassport(passport, email => users.find(user => user.email === email))
-
-// const users = []
 
 /**
  * Set up CORS
