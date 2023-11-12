@@ -126,6 +126,18 @@ app.get("/api/courses", (req, res) => {
   });
 });
 
+app.get("/api/genEds", (req, res) => {
+  retrieveGenEds().then((genEds) => {
+    res.status(200).json({
+      message: "Gen Eds",
+      genEds: genEds
+    });
+  })
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Gen Eds" });
+  });
+});
+
 
 app.post("/addMinor", (req, res) => {
   models['Minor'].findOneAndUpdate(
@@ -286,6 +298,15 @@ async function retrieveCourseData() {
   try {
     const courses = await models['Course'].find({}); 
     return courses;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveGenEds() {
+  try {
+    const genEds = await models['GenEds'].find({}); 
+    return genEds;
   } catch (error) {
     throw error;
   }
