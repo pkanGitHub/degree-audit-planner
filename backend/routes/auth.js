@@ -53,8 +53,7 @@ router.post('/signup', async (req, res) => {
 
 // login
 router.post("/login", (req, res, next) => {
-    console.log('Login request body:', req.body)
-    
+    // console.log('Login request body:', req.body)
     passport.authenticate("local", (err, user, info) => {
       console.log('Authentication info:', info)
       
@@ -81,5 +80,5 @@ router.post("/login", (req, res, next) => {
       })
     })(req, res, next)
   })
-  
+
 module.exports = router

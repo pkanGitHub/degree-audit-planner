@@ -22,9 +22,10 @@ module.exports = function(passport) {
                 }
                 // Compare login form password with the hashed password(database)
                 const passwordMatch = await bcrypt.compare(password, user.password)
-                console.log('Input Password:', password)
-                console.log('Stored Password:', user.password)
-                console.log('Password Match:', passwordMatch)
+                // for debugging
+                // console.log('Input Password:', password)
+                // console.log('Stored Password:', user.password)
+                // console.log('Password Match:', passwordMatch)
                 if (passwordMatch) {
                   console.log('Authentication successful')
                   return done(null, user)

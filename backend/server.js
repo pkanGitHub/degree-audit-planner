@@ -4,7 +4,6 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const cookieParser = require("cookie-parser");
-const cookieSession = require('cookie-session')
 const passport = require('passport')
 const mongoose = require('mongoose')
 const session = require("express-session");
@@ -42,44 +41,41 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     // save if nothing is changed
-    resave: true,
+    resave: false,
     // save empty value in the session if there is no value
-    saveUninitialized: true,
+    saveUninitialized: false,
   })
 );
-app.use(cookieParser(process.env.SESSION_SECRET,));
-
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
-app.use(passport.initialize())
-app.use(passport.session())
-require('./passport-config')(passport)
-app.use('/', authRoute)
+
+//middlewares
+app.use((req, res, next) => {
+    console.log(req.path, req.method);
+    next();
+});
+app.use(passport.initialize());
+app.use(passport.session());
+require('./passport-config')(passport);
+app.use('/', authRoute);
 
 app.use('/', (err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
 });
-
-//middleware
-app.use((req, res, next) => {
-    console.log(req.path, req.method)
-    next()
-})
-
 // app.use('/api/home', plannerRoute)
 // connect to db
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(()=>{
     //listen for request
     app.listen(process.env.BACKEND_PORT, () => {
-        console.log('Mongo connection successful on port', process.env.BACKEND_PORT)
-    })
+        console.log('Mongo connection successful on port', process.env.BACKEND_PORT);
+    });
 })
 .catch((error) => {
-    console.log(error)
-})
+    console.log(error);
+});
 
 // Get from all schemes
 app.get("/api/certificates", (req, res) => {
@@ -153,30 +149,6 @@ app.post("/addMinor", (req, res) => {
     });
   });
 })
-
-// app.post("/addUser", (req, res) => {
-//   const user = new models['User']({
-//     email: req.body.email,
-//     password: req.body.password,
-//     major: req.body.major,
-//     coursePlan: req.body.coursePlan,
-//     url: req.body.url
-//   })
-
-//   user
-//     .save()
-//     .then(result => {
-//       res.status(201).json({
-//         message: "User created!",
-//         result: result
-//       });
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         error: err
-//       });
-//     });
-// })
 
 app.post("/addCourseArea", (req, res) => {
     models['Courses'].findOneAndUpdate(

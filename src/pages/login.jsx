@@ -19,13 +19,13 @@ const Login = () => {
             const data = await response.json()
         
             if (response.ok) {
-              console.log('Login successful on the frontend')
-              // Redirect or update UI...
+                console.log('Login successful on the frontend')
+                // Redirect
                 window.location.href = '/audit'
             } else {
+                // show error message on browser or console...
                 setErrorMsg(data.message)
-              console.log('Login failed on the frontend:', data.message)
-              // Update UI or show error message...
+                console.log('Login failed on the frontend:', data.message)
             }
           } catch (error) {
             console.error('Error during login on the frontend:', error)
