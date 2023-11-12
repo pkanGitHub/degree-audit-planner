@@ -111,7 +111,6 @@ hr{
     text-align: left;
     display: flex;
     overflow-y: scroll;
-    border: 1px solid lightgray;
 
 }
 
@@ -234,4 +233,10 @@ input[type="checkbox"]{
     content: '-';
 }
 
+#transferCourseInput label, input[type="text"]{
+    font-weight: normal;
+}
 
+#errorMessage{
+    color: red;
+}

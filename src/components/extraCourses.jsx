@@ -55,7 +55,7 @@ const ExtraCourses = ({coursesList}) => {
 
             { userCourses.map((key, index) => <RequiredChoice key={index} classId={key.courseID} creditHours={key.credit} preReq={key.prerequisites} removeCourse={()=>removeCourse(index)}/>) }
             <label>
-                Select Section:
+                Select Section:&nbsp;&nbsp;
                 <select name='section' onChange={handleSectionChange}>
                     <option value="default"></option>
                     { courseAreas }
@@ -80,7 +80,7 @@ const ExtraCourses = ({coursesList}) => {
                 ))}
             </div>
             <label>
-                Choose course:
+                Choose course:&nbsp;&nbsp;
                 <select id='chooseNumber' name='course' onChange={handleChangeCourse}>
                     <option value=""></option>
                     {sortedTotalCourses.map((key) => (

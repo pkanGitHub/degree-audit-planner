@@ -52,7 +52,7 @@ const MassSelectCourse = ({coursesList}) => {
             
             
             <label>
-                Course type:
+                Course type:&nbsp;&nbsp;
                 <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
                     <option value=""></option>
                     {Object.keys(categorySelect).map((key, index) => 
@@ -75,7 +75,7 @@ const MassSelectCourse = ({coursesList}) => {
 
 
             <label>
-                Course Options:
+                Course Options:&nbsp;&nbsp;
                 <select name="courseName" onChange={handleCourseSelect}>
                     <option value=""></option>
                     { courseOptions }

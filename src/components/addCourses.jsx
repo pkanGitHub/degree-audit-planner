@@ -103,7 +103,7 @@ const AddCourses = ({courses, orCourses}) => {
                 }})}
             </div>
             <label>
-                Course number:
+                Course number:&nbsp;&nbsp;
                 <select id='chooseNumber' name='course' onChange={handleChangeCourse}>
                     <option value=""></option>
                     {sortedTotalCourses.map((key) => (
