@@ -431,8 +431,8 @@ const Audit = () => {
                 </div>
                 <hr/>
 
-                                        
-                <SemesterPlan data={majors.filter(major => major.title.match(selectCategory) !== null)}/>
+                <p>{JSON.stringify(userCatalog)}</p>
+                <SemesterPlan data={userCatalog}/>
 
             </div>
         </body>

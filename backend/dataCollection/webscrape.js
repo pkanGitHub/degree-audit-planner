@@ -3,6 +3,7 @@ const ws = require("./webscrape.functions");
 const fs = require('fs');
 const db = require('./database');
 
+// eslint-disable-next-line no-unused-vars
 async function CourseDataWebscrape() {
     const browser = await puppeteer.launch();                           // Starts virtual browser
     const page = await browser.newPage();                               // Opens a tab in the browser

@@ -27,6 +27,21 @@ export async function getCerts(pull) {
     return Certificates;
 }
 
+export function getProgramByExactName(name) {
+    if (!name) return;
+
+    const major = Majors.filter(major => major.title === name)[0];
+    if (major) return major;
+
+    const minor = Minors.filter(minor => minor.title === name)[0];
+    if (minor) return minor;
+
+    const cert = Certificates.filter(cert => cert.title === name)[0];
+    if (cert) return cert;
+
+    return null;
+}
+
 export async function getCourseList(pull) {
     if (pull || Courses === undefined) {
         return Courses =  await fetchGet('courses');
