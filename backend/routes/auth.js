@@ -52,14 +52,7 @@ router.post('/signup', async (req, res) => {
 })
 
 // login
-const preventMultipleLogins = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return res.redirect('/audit')
-    }
-    return next()
-}
-
-router.post("/login", preventMultipleLogins, (req, res, next) => {
+router.post("/login", (req, res, next) => {
     console.log('Login request body:', req.body)
     
     passport.authenticate("local", (err, user, info) => {
@@ -88,12 +81,5 @@ router.post("/login", preventMultipleLogins, (req, res, next) => {
       })
     })(req, res, next)
   })
-
-// or
-
-// router.post("/login", passport.authenticate("local", {
-//     successRedirect: '/audit',
-//     failureRedirect: '/login',
-//     failureFlash: true
-// }))
+  
 module.exports = router
