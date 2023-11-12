@@ -6,10 +6,10 @@ const User = require('../Models/user')
 
 async function retrieveUserData() {
     try {
-      const users = await User.find({}); 
-      return users;
+      const users = await User.find({}) 
+      return users
     } catch (error) {
-      throw error;
+      throw error
     }
   }
 
@@ -18,16 +18,16 @@ router.get("/users", (req, res) => {
       res.status(200).json({
         message: "User List",
         users: users
-      });
+      })
     })
     .catch((error) => {
-      res.status(500).json({ error: "Failed to retrieve Users" });
-    });
-  });
+      res.status(500).json({ error: "Failed to retrieve Users" })
+    })
+  })
 
 // create user
 router.post('/signup', async (req, res) => {
-    // console.log(req.body);
+    // console.log(req.body)
     const {email, password} = req.body
     
     if (!email || !password) {
@@ -46,42 +46,48 @@ router.post('/signup', async (req, res) => {
         res.status(201).json({ msg: 'Sign up successfully' })
         
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: 'Sign up failed' });
+        console.error(error)
+        return res.status(500).json({ error: 'Sign up failed' })
     }
 })
 
 // login
+const preventMultipleLogins = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return res.redirect('/audit')
+    }
+    return next()
+}
 
-router.post("/login", (req, res, next) => {
-    console.log('Login request body:', req.body);
+router.post("/login", preventMultipleLogins, (req, res, next) => {
+    console.log('Login request body:', req.body)
     
     passport.authenticate("local", (err, user, info) => {
-      console.log('Authentication info:', info);
+      console.log('Authentication info:', info)
       
       if (err) {
-        console.error('Error during authentication:', err);
-        return res.status(500).json({ message: 'Internal server error' });
+        console.error('Error during authentication:', err)
+        return res.status(500).json({ message: 'Internal server error' })
       }
-      
+
       if (!user) {
         // Authentication failed
-        console.log('Incorrect email or password on the server');
-        return res.status(401).json({ message: 'Incorrect email or password' });
+        console.log('Incorrect email or password on the server')
+        return res.status(401).json({ message: 'Incorrect email or password' })
       }
   
       // Authentication succeeded
       req.logIn(user, (err) => {
         if (err) {
-          console.error('Error during login:', err);
-          return res.status(500).json({ message: 'Internal server error' });
+          console.error('Error during login:', err)
+          return res.status(500).json({ message: 'Internal server error' })
         }
   
-        console.log('Authentication successful on the server');
-        return res.status(200).json({ message: 'Authentication successful' });
-      });
-    })(req, res, next);
-  });
+        console.log('Authentication successful on the server')
+        return res.status(200).json({ message: 'Authentication successful' })
+      })
+    })(req, res, next)
+  })
 
 // or
 
@@ -89,5 +95,5 @@ router.post("/login", (req, res, next) => {
 //     successRedirect: '/audit',
 //     failureRedirect: '/login',
 //     failureFlash: true
-// }));
+// }))
 module.exports = router

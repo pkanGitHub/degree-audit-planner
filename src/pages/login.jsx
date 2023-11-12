@@ -5,7 +5,7 @@ const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' })
     const [errorMsg, setErrorMsg] = useState(null)
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
     
         try {
             const response = await fetch('http://localhost:4000/login', {
@@ -14,21 +14,21 @@ const Login = () => {
                 'Content-Type': 'application/json',
               },
               body: JSON.stringify(formData),
-            });
+            })
         
-            const data = await response.json();
+            const data = await response.json()
         
             if (response.ok) {
-              console.log('Login successful on the frontend');
+              console.log('Login successful on the frontend')
               // Redirect or update UI...
-                window.location.href = '/audit';
+                window.location.href = '/audit'
             } else {
                 setErrorMsg(data.message)
-              console.log('Login failed on the frontend:', data.message);
+              console.log('Login failed on the frontend:', data.message)
               // Update UI or show error message...
             }
           } catch (error) {
-            console.error('Error during login on the frontend:', error);
+            console.error('Error during login on the frontend:', error)
         }
     }
     
@@ -36,7 +36,7 @@ const Login = () => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
         setErrorMsg(null)
-      };
+      }
 
     return (
         <div className="formSection">
@@ -63,6 +63,6 @@ const Login = () => {
             </div>
         </div>
     )
-};
+}
 
-export default Login;
+export default Login
