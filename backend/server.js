@@ -3,16 +3,25 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const cookieParser = require("cookie-parser");
+const cookieSession = require('cookie-session')
 const passport = require('passport')
 const mongoose = require('mongoose')
-const plannerRoute = require('./routes/planner')
+const session = require("express-session");
+// const plannerRoute = require('./routes/planner')
 const authRoute = require('./routes/auth')
 const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
 const models = {}
 modelNames.forEach(modelName => {
-    const Model = require(`./Models/${modelName}`)
-    models[modelName] = Model
+  const Model = require(`./Models/${modelName}`)
+  models[modelName] = Model
 })
+
+// require('./passport-config')(passport)
+// const initializePassport = require('./passport-config')
+// initializePassport(passport, email => users.find(user => user.email === email))
+
+// const users = []
 
 /**
  * Set up CORS
@@ -29,9 +38,29 @@ app.use((req, res, next)=>{
   next();
 });
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    // save if nothing is changed
+    resave: true,
+    // save empty value in the session if there is no value
+    saveUninitialized: true,
+  })
+);
+app.use(cookieParser(process.env.SESSION_SECRET,));
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(passport.initialize())
+app.use(passport.session())
+require('./passport-config')(passport)
+app.use('/', authRoute)
+
+app.use('/', (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
 
 //middleware
 app.use((req, res, next) => {
@@ -39,9 +68,7 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use('/api/home', plannerRoute)
-app.use('/', authRoute)
-
+// app.use('/api/home', plannerRoute)
 // connect to db
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(()=>{
@@ -91,18 +118,6 @@ app.get("/api/minors", (req, res) => {
   });
 });
 
-app.get("/api/users", (req, res) => {
-  retrieveUserData().then((users) => {
-    res.status(200).json({
-      message: "User List",
-      users: users
-    });
-  })
-  .catch((error) => {
-    res.status(500).json({ error: "Failed to retrieve Users" });
-  });
-});
-
 app.get("/api/courses", (req, res) => {
   retrieveCourseData().then((courses) => {
     res.status(200).json({
@@ -139,29 +154,29 @@ app.post("/addMinor", (req, res) => {
   });
 })
 
-app.post("/addUser", (req, res) => {
-  const user = new models['User']({
-    email: req.body.email,
-    password: req.body.password,
-    major: req.body.major,
-    coursePlan: req.body.coursePlan,
-    url: req.body.url
-  })
+// app.post("/addUser", (req, res) => {
+//   const user = new models['User']({
+//     email: req.body.email,
+//     password: req.body.password,
+//     major: req.body.major,
+//     coursePlan: req.body.coursePlan,
+//     url: req.body.url
+//   })
 
-  user
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "User created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-})
+//   user
+//     .save()
+//     .then(result => {
+//       res.status(201).json({
+//         message: "User created!",
+//         result: result
+//       });
+//     })
+//     .catch(err => {
+//       res.status(500).json({
+//         error: err
+//       });
+//     });
+// })
 
 app.post("/addCourseArea", (req, res) => {
     models['Courses'].findOneAndUpdate(
@@ -290,15 +305,6 @@ async function retrieveMinorData() {
   try {
     const minors = await models['Minor'].find({}); 
     return minors;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function retrieveUserData() {
-  try {
-    const users = await models['User'].find({}); 
-    return users;
   } catch (error) {
     throw error;
   }
