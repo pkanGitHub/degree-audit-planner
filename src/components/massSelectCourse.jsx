@@ -2,8 +2,9 @@ import { useState } from "react";
 import "../styles/audit.css";
 import ClassInfo from "./classInfoPopup";
 import RequiredChoice from "./requiredChoice";
+import { get } from "mongoose";
 
-const MassSelectCourse = ({coursesList}) => {
+const MassSelectCourse = ({coursesList, categories}) => {
     const [selectCourseType, setCourseType] = useState('');
     const handleSelect=(e)=>{
         setCourseType(e.target.value)
@@ -32,13 +33,22 @@ const MassSelectCourse = ({coursesList}) => {
         setSelectedCourses(data)
     }
 
-    const categorySelect = {"BISC": "Biological Science", "PHSC": 'Physical Science', "MSCI": "Mathematical Science", "BSCI": "Behavioral Science", "SSCI": "Social Science", "HUM": "Humanities", "GLAB": "Labratory Course"}
+    const categorySelect = [{id: "BISC", name: "Biological Science"}, {id: "PHSC", name: 'Physical Science'}, {id: "MSCI", name: "Mathematical Science"}, {id: "BSCI", name: "Behavioral Science"}, {id: "SSCI", name: "Social Science"}, {id: "HUM", name:"Humanities"}, {id: "GLAB", name: "Labratory Course"}, {id: "W", name: "Writing Intensive"}, {id: "MQR", name: "Math Requirement"}, {id: "MSLR", name: "MO State Law Course"}]
+    const filteredCategory = []
+
+    categories.map(singleCategory => categorySelect.filter(category => category.id.match(singleCategory)).map(sortedCategory => filteredCategory.push({id: sortedCategory.id, name: sortedCategory.name})))
+
 
     let courseOptions = null;
     let getOptions = []
-    if(selectCourseType){
+    if(selectCourseType === "W"){
+        coursesList.filter((area) => area.courses.some((course) => course?.courseID && course.courseID.endsWith("W"))).map((area)=> area.courses.filter((course) => course.courseID.endsWith("W")).map((selectedCourse) => getOptions.push(selectedCourse)))
+        courseOptions = getOptions.map((option) => <option key={option?.courseID}>{option?.courseID}</option>)
+    }
+    else{
         coursesList.map(area => area.courses.filter(course => course?.categories && course.categories.some(category => category === selectCourseType)).map(course => getOptions.push(course)))
         courseOptions = getOptions.map((option) => <option key={option?.courseID}>{option?.courseID}</option>)
+
     }
 
 
@@ -48,15 +58,13 @@ const MassSelectCourse = ({coursesList}) => {
             
         
             { selectedCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeCourse}/>) }
-
-            
             
             <label>
                 Course type:&nbsp;&nbsp;
                 <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
                     <option value=""></option>
-                    {Object.keys(categorySelect).map((key, index) => 
-                    <option value={key}>{categorySelect[key]}</option>)}
+                    {filteredCategory.map((key) => 
+                    <option value={key.id}>{key.name}</option>)}
                 </select>
             </label>
 
