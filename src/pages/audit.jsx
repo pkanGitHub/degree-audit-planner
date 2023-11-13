@@ -1,21 +1,11 @@
 import "../styles/audit.css";
-import RequiredChoice from "../components/requiredChoice";
-import RequiredCourse from "../components/requiredCourse";
-import ClassInfo from "../components/classInfoPopup";
 import CatalogItems from "../components/catalog";
 import { useState, useEffect } from "react";
+import GenEdsModel from "../components/genEds";
+import ExtraCourses from "../components/extraCourses";
+import TransferCourse from "../components/transferCourses";
 
 const Audit = () => {
-    const [selectCourseType, setCourseType] = useState('');
-    const handleSelect=(e)=>{
-        setCourseType(e.target.value)
-    }
-
-    const [selectNumber, setNumber] = useState('');
-    const handleNumberSelect=(e)=>{
-        setNumber(e.target.value)
-    }
-    const courseNumber = [1000, 2011, 2270, 2271, 2200, 2000, 2201]
 
 
     const [selectType, setType] = useState("");
@@ -24,11 +14,7 @@ const Audit = () => {
     };
 
     const [selectCategory, setCategory] = useState("");
-    // const category = {
-    //     INFOTC: "Information Technology - BS",
-    //     BIOMED: "Biomedical Engineering - BMEBS",
-    //     COMPS: "Computer Science - BS",
-    // };
+    
     const handleCategoryChange = (e, index) => {
         setCategory(e.target.value);
     };
@@ -44,31 +30,10 @@ const Audit = () => {
     };
 
 
-    //dynamic course choice
-    const classData = [{classId: "MATH 1500", creditHours: 5, preReq: "N/A"}, {classId: "BME 1000", creditHours: 3, preReq: "PHYSICS 1000"}]
-
-    //delete entry
-    //https://stackoverflow.com/questions/61661526/react-delete-one-children-without-rendering-the-parent-again
-    const removeClass = (index) => {
-        let data = [...classData]
-        data.splice(index, 1)
-
-    }
-
-    //class type select dynamic
-
-    const classSelect = {"INFOTC": "Information Technology", "ENGINR": "Engineering", "CMP_SC": "Computer Science", "MAE": "Mechanical Engineering"}
-
-    const popupClasses = [{className: "INFOTC 1000", classTitle: "Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "ENGINR 2011", classTitle: "Engineering Leadership and Strategic Communication", classDescript: "This course is inspired by the experience and writings of CEO and world-renowned leader David Novak. It is designed to introduce engineering students to the concepts, theory, and practice of engineering leadership. Topics include; effective written and oral communications, presentations, engineering leadership characteristics, individual differences and self-awareness, and developing and building teams. Graded on A-F basis only.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "CMP_SC 2270", classTitle: "Introduction to Logic Systems", classDescript: "(same as ECE 2210). Basic tools, methods and procedures to design combinational and sequential digital circuits and systems, including number systems, boolean algebra, logic minimization, circuit design, memory elements, and finite state machine design.", creditHours: "3", preReq: "C or higher in CMP_SC 1050 or INFOTC 1040", lastOffered: "Summer 2021"}, {className: "MAE 2200", classTitle: "Engineering Materials", classDescript: "The nature of the structure of engineering materials. The relationship of material structure to physical properties. Mechanical behavior of engineering materials. Graded on A-F basis only.", creditHours: "3", preReq: "Grade of C- or better in ENGINR 1200 and CHEM 1320.", lastOffered: "Spring 2022"}, {className: "CMP_SC 2271", classTitle: "Introduction to Logic Systems", classDescript: "(same as ECE 2210). Basic tools, methods and procedures to design combinational and sequential digital circuits and systems, including number systems, boolean algebra, logic minimization, circuit design, memory elements, and finite state machine design.", creditHours: "3", preReq: "C or higher in CMP_SC 1050 or INFOTC 1040", lastOffered: "Summer 2021"}, {className: "MAE 2201", classTitle: "Engineering Materials", classDescript: "The nature of the structure of engineering materials. The relationship of material structure to physical properties. Mechanical behavior of engineering materials. Graded on A-F basis only.", creditHours: "3", preReq: "Grade of C- or better in ENGINR 1200 and CHEM 1320.", lastOffered: "Spring 2022"}, {className: "INFOTC 2000", classTitle: "Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}];
-
-
+    
     // testing add function! this is applied to the mass select, will need to get this to work on the top and other select course
     const [enrollFields, setEnrollFields] = useState([{type: "", category: "", year: ""}])
-    const addEnrollFields = () => {
-        let newField = {type: "", category: "", year: ""}
-        setEnrollFields([...enrollFields, newField])
-    }
-
+    
     const handleEnrollFieldChange = (i, e) =>{
         
         let newFormValues = [...enrollFields];
@@ -77,68 +42,9 @@ const Audit = () => {
          
     }
 
-    const removeEnrollFields = (index) =>{
-        let data = [...enrollFields]
-        data.splice(index, 1)
-        setEnrollFields(data)
-    }
-
-
-    // on click, add course to top of section to show you have added it
     
-    const [selectedCourses, setSelectedCourses] = useState([])
-    const handleLargeCourseClick = () => {
-        const courseInfo = selectCourseType + " " + selectNumber
-        // find course info for selected course type and number in the pop up classes information. this will have to be chanegd when the data base is working, but this is the idea of it all
-        {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
-            
-            setSelectedCourses([...selectedCourses, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
-            
-            ))}
-        
 
-    }
-
-    const removeCourse = (index) =>{
-        let data = [...selectedCourses]
-        data.splice(index, 1)
-        setSelectedCourses(data)
-    }
-
-    // code for specific category you need to choose from 
-
-    const [majorElectCourse, setMajorElectCourse] = useState([])
-    const [selectMajorNumber, setMajorNumber] = useState('');
-    const handleMajorNumberSelect=(e)=>{
-        setMajorNumber(e.target.value)
-    }
-
-
-    const handleAddMajorElective = () => {
-        const courseInfo = selectMajorNumber
-        {coursesList.filter((area) => area.courses.some((course) => course.courseID === courseInfo)).map((area)=> area.courses.filter((course) => course.courseID.match(courseInfo)).map((selectedCourse) => (
-            setMajorElectCourse([...majorElectCourse, {key: selectedCourse._id, classId: selectedCourse.courseID, creditHours: selectedCourse.credit, preReq: selectedCourse.prerequisites}])
-        )))}
-        
-
-    }
-
-    const removeMajorCourse = (index) =>{
-        let data = [...majorElectCourse]
-        data.splice(index, 1)
-        setMajorElectCourse(data)
-    }
-
-    // working on data transfer
-
-    const [courseStatus, setCourseStatus] = useState([{classId: "", creditHours: "", progressSelect: "", semesterSelect: ""}])
-    const handleClassCallback = (classData) => {
-        let newStatus = {classId: classData.classId, creditHours: classData.creditHours, progressSelect: classData.progressSelect, semesterSelect: classData.semesterSelect}
-        setCourseStatus([...courseStatus, newStatus])
-
-    }
-
-    // database work
+    // gets database data and turns it into a list of objects
 
     const [minors, setMinors] = useState([]);
     const [majors, setMajors] = useState([]);
@@ -203,13 +109,8 @@ const Audit = () => {
             });
     }, []);
 
-    let userType = null;
-    let options = null;
-    let typeCourses = null;
 
-    let courseAreas = []
-
-    let infotcCourses = []
+    // this is the user catalog section. this is a list of the type and category that the user has chosen. this is used to loop through database data
 
     const [userCatalog, setUserCatalog] = useState([{type: "", category: ""}])
 
@@ -223,16 +124,11 @@ const Audit = () => {
         data.splice(index, 1)
         setUserCatalog(data)
     }
+    
+    // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
 
-
-    {coursesList.map((section) => courseAreas.push(section.area))}
-
-
-    let courseNumbers = coursesList.filter(({ area }) => area === 'Information Technology (INFOTC)').map((filtered) => filtered.courses.map((course) => infotcCourses.push(course.courseID)))
-
-    let userData = null;
-
-    // may need to see if this could be done in the backend to make this easier
+    let userType = null;
+    let options = null;
 
     if (selectType === "majors"){
         userType = majors
@@ -249,7 +145,7 @@ const Audit = () => {
     }
 
 
-
+    // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
     
     function getCourses(type, category, index){
         let selectedType = [];
@@ -272,6 +168,7 @@ const Audit = () => {
         )
 
     }
+
 
   
     return (
@@ -304,6 +201,7 @@ const Audit = () => {
                                     <label>
                                         Category:
                                         <select name='category' value={input.category} onChange={(e)=> {handleCategoryChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
                                             { options }
                                         </select>
                                     </label>
@@ -320,44 +218,14 @@ const Audit = () => {
                                 </div>
                             )
                         })}
-                        <button onClick={handleUserCategories}>Add</button>
+                        <button onClick={handleUserCategories}>Add Program</button>
                     </div>
                     <hr/>
                     
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="genEd" />
-                            <label id="genReqLabel" htmlFor="genEd">General Requirements</label>
-                            <div className="classHistory">
-                                { genEds.map((genEd) => 
-                                <div key={genEd?._id}>
-                                    <h3>{genEd?.year}</h3>
-                                    {genEd?.requirements && genEd?.requirements.map((area) => (
-                                        <div key={area?._id}>
-                                            <h4>{area?.label}</h4>
-                                            <p>{area?.info}</p>
-                                            {area?.sub && area.sub.map((subareas)=> (
-                                                <div key={subareas?._id}>
-                                                    <h3>{subareas?.label}</h3>
-                                                    <p>{subareas?.info}</p>
-                                                    {subareas?.categories && subareas.categories.map((coursearea) => (
-                                                        <div key={coursearea._id}>
-                                                            <p>{coursearea}</p>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            ))}
-                                        
-                                        
-                                        </div>
-                                    ))}
-                                </div>)}
-                            </div>
-                        </li>
-                    </ul>
+                    <GenEdsModel genEds={genEds} coursesList={coursesList}/>
 
-                    {/* works but it shows delete when it shouldnt, cannot get list to show once submitted */}
-
+            
+                    {/* this is a map that gets all user input programs here, user can delete or add programs */}
                     { userCatalog.map((key, index) =>
                         <div key={index}>
 
@@ -367,108 +235,35 @@ const Audit = () => {
                         )
                     }
 
-                
+                    {/* <MajorTest majors={majors} coursesList={coursesList}/> */}
 
+                    <div>
+                        <h2>Elective Courses</h2>
+                        <p>If you have other courses you have taken that are outside of your major or transfer courses, enter them here:</p>
+                        <ul className="accordion">
+                            <li>
+                                <input type="checkbox" name="accordion" id="elective" />
+                                <label id="genReqLabel" htmlFor="elective">Mizzou Courses:</label>
+                                <div className="classHistory">
 
-
-                    <hr/>
-                    
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="third" />
-                            <label id='genReqLabel' htmlFor="third">Sample large class select</label>
-                            <div className="classHistory">
-                                <div id='largeClassSelect'>
-                                    
-                              
-                                    { selectedCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeCourse}/>) }
-
-                                   
-                                    
-                                    <label>
-                                        Course type:
-                                        <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
-                                            <option value=""></option>
-                                            {Object.keys(classSelect).map((key, index) => 
-                                            <option value={key}>{classSelect[key]}</option>)}
-                                        </select>
-                                    </label>
-
-                                    {/* will want to find a way to pass information through to the pop up, will have to use query based on selection above*/}
-                                    {/* https://www.telerik.com/blogs/how-to-programmatically-add-input-fields-react-forms might want this later*/}
-                                    <p>
-                                        Choose from {selectCourseType} courses below:
-                                    </p>
-                                    <div id="popupDiv">
-
-                                        {popupClasses.filter(item => {
-                                            if (!selectCourseType) return false
-                                            if (item.className.includes(selectCourseType)) {
-                                                return true
-                                            }
-                                        }).map(item => (
-                                            <div>
-                                                <ClassInfo key={item} className={item.className} classTitle={item.classTitle} classDescript={item.classDescript} creditHours={item.creditHours} preReq={item.preReq} lastOffered={item.lastOffered}/>
-                                            </div>
-                                        ))
-                                        }
-                                    </div>
-
-
-                                    <label>
-                                        Course Number: 
-                                        <select name="courseNumber" onChange={handleNumberSelect}>
-                                            <option value=""></option>
-                                            {courseNumber.map((courseNumber) => (
-                                            <option value={courseNumber}>{courseNumber}</option>))}
-                                        </select>
-                                    </label>
-                                        
-                                  
-                                    <button onClick={handleLargeCourseClick} id='addCourseButton'>Add Course</button>
-
-                                    
-                                    
+                                    <ExtraCourses coursesList={coursesList}/>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
 
-                
-                    <hr/>
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="fourth" />
-                            <label id="genReqLabel" htmlFor="fourth">Major Electives</label>
-                            <div className="classHistory">
-                                <div id='specifcElective'>
+                        <ul className="accordion">
+                            <li>
+                                <input type="checkbox" name="accordion" id="transfer" />
+                                <label id="genReqLabel" htmlFor="transfer">Transfer Courses:</label>
+                                <div className="classHistory">
 
-                                    { majorElectCourse.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeMajorCourse}/>) }
-                                    <p>Information Technology electives</p>
-                                    <div id="popupDiv">
-                                        {infotcCourses.map((infocourse) => coursesList.filter((area) => area.courses.some((course) => course.courseID === infocourse)).map((area)=> area.courses.filter((course) => course.courseID.match(infocourse)).map((selectedCourse) => (
-                                            <div>
-                                                <ClassInfo key={selectedCourse._id} className={selectedCourse.courseID} classTitle={selectedCourse.name} classDescript={selectedCourse.description} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites} lastOffered={selectedCourse.pastTerms[0]}/>
-                                            </div>
-                                        ))))}
-                                    </div>
-                                    <label>
-                                        Course number:
-                                        <select id='chooseNumber' name='course' onChange={handleMajorNumberSelect}>
-                                            <option value=""></option>
-                                            {infotcCourses.map((courses) => (
-                                            <option value={courses}>{courses}</option>))}
-                                        </select>
-                                    </label>
-
-                                    <button id='addCourseButton' onClick={handleAddMajorElective}>Add Course</button>
-                                    
+                                    <TransferCourse/>
                                 </div>
-                            </div>
+                            </li>
+                        </ul>
 
-                        </li>
-                    </ul>
-                    
+                    </div>
+
 
                     <div id='optionButtons'>
                         <button id='saveButton'>Save</button>
