@@ -333,7 +333,50 @@ async function retrieveCourseData() {
     throw error;
   }
 }
+
 //-------------------------------------------------------------
 
+app.get("/api/courses/:id", (req, res) => {
+  models['Course'].findById(req.params.id)
+  .then(course => {
+    if (course) {
+      res.status(200).json(course);
+    } else {
+      res.status(404).json({ message: "Course not found!" });
+    }
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: "Fetching course failed!"
+    });
+  });
+});
 
+app.get("/api/courses/:id", (req, res) => {
+  models['Course'].findById(req.params.id)
+  .then(course => {
+    if (course) {
+      res.status(200).json(course);
+    } else {
+      res.status(404).json({ message: "Course not found." });
+    }
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: "Fetching course failed."
+    });
+  });
+});
 
+app.delete("/api/courses/:id", (req, res) => {
+  models['Course'].deleteOne({ _id: req.params.id })
+  .then(result => {
+    console.log(result);
+    res.status(200).json({ message: "Course deleted!" });
+  })
+  .catch(error => {
+    res.status(500).json({
+      message: "Deleting course failed!"
+    });
+  });
+});
