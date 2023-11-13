@@ -7,6 +7,8 @@ const mongoose = require('mongoose')
 const plannerRoute = require('./routes/planner')
 const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
 const models = {}
+const bcrypt = require("bcrypt");
+
 modelNames.forEach(modelName => {
     const Model = require(`./Models/${modelName}`)
     models[modelName] = Model
@@ -345,16 +347,35 @@ async function retrieveCourseData() {
     throw error;
   }
 }
-
-async function retrieveGenEds() {
-  try {
-    const genEds = await models['GenEds'].find({}); 
-    return genEds;
-  } catch (error) {
-    throw error;
-  }
-}
 //-------------------------------------------------------------
 
-
-
+app.get('/api/login', (req, res) => {
+  //const email = req.body.email;
+  const email = "pkan@123.com";
+  const password = "$2b$10$wsmHaLZm5zm6.8Y/h8uYfuSwx/PGfuJcX8F5aHZdN1uIwHYqnPBW6";
+  models['User'].findOne({email: email})
+  .then(user => {
+    console.log("User =" + user);
+    if (!user) {
+      return res.status(401).json({
+        message: "Auth failed"
+      });
+    }
+    return bcrypt.compare(password, user.password);
+  })
+  .then(result => {
+    if (!result) {
+      return res.status(401).json({
+        message: "Auth failed"
+      });
+    }
+    res.status(200).json({
+      message: "Auth successful"
+    });
+  })
+  .catch(err => {
+    return res.status(401).json({
+      message: "Auth failed"
+    });
+  });
+});
