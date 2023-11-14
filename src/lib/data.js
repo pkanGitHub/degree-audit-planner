@@ -1,4 +1,4 @@
-const url = "http://localhost:/api/"
+const url = "http://localhost:4001/api/"
 
 var Majors;
 var Minors;
