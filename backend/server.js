@@ -137,7 +137,7 @@ app.post("/addMinor", (req, res) => {
     { title: req.body.title },
     { $set: {
       title: req.body.title,
-      courses: req.body.courses,
+      requirements: req.body.requirements,
       url: req.body.url
     }},
     { upsert: true }
@@ -156,14 +156,14 @@ app.post("/addMinor", (req, res) => {
 })
 
 app.post("/addCourseArea", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
         { $set: { courses: req.body.courses }},
         { upsert: true }
     )
     .then(result => {
         res.status(201).json({
-          message: "Course added!",
+          message: "Course area added!",
           result: result
         });
       })
@@ -175,9 +175,9 @@ app.post("/addCourseArea", (req, res) => {
   })
 
   app.post("/addCourse", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
-        { $set: { courses: req.body.courses }})
+        { $push: { courses: req.body.course }})
       .then(result => {
         res.status(201).json({
           message: "Course added!",
@@ -191,38 +191,36 @@ app.post("/addCourseArea", (req, res) => {
       });
   })
 
-
-
 app.post("/addMajor", (req, res) => {
-  models['Major'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      courses: req.body.courses,
-      semesters: req.body.semesters,
-      credits: req.body.credits
-    }},
-    { upsert: true }
-  )
-  .then(result => {
-    res.status(201).json({
-      message: "Major created!",
-      result: result
+    models['Major'].findOneAndUpdate(
+      { title: req.body.title },
+      { $set: {
+        requirements: req.body.requirements,
+        years: req.body.years,
+        credits: req.body.credits
+      }},
+      { upsert: true }
+    )
+    .then(result => {
+      res.status(201).json({
+        message: "Major created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
     });
   })
-  .catch(err => {
-    res.status(500).json({
-      error: err
-    });
-  });
-})
 
 app.post("/addCert", (req, res) => {
   models['Certificate'].findOneAndUpdate(
     { title: req.body.title },
     { $set: {
       url: req.body.url,
-      courses: req.body.courses,
-      credits: req.body.credits
+      requirements: req.body.requirements,
+      years: req.body.years,
     }},{ upsert: true }
   )
   .then(result => {

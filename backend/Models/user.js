@@ -13,7 +13,14 @@ const userSchema = mongoose.Schema({
                 completion_date: { type: Date }
             }]
         }]
-    }
+    },
+    generalEducationCompleted: { type: Boolean, required: true, default: false },
+    programRequirements: [{
+        description: String,
+        completed: { type: Boolean, default: false },
+        courses: [String],
+        creditHours: Number
+    }]
 })
 
 module.exports = mongoose.model('User', userSchema)

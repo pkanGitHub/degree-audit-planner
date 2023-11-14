@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import GenEdsModel from "../components/genEds";
 import ExtraCourses from "../components/extraCourses";
 import TransferCourse from "../components/transferCourses";
+import SemesterPlan from "../components/semesterplan";
+import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
+import TranscriptUpload from "../components/transcriptUpload";
 
 const Audit = () => {
 
@@ -35,11 +38,9 @@ const Audit = () => {
     const [enrollFields, setEnrollFields] = useState([{type: "", category: "", year: ""}])
     
     const handleEnrollFieldChange = (i, e) =>{
-        
         let newFormValues = [...enrollFields];
         newFormValues[i][e.target.name] = e.target.value;
         setEnrollFields(enrollFields);
-         
     }
 
     
@@ -50,63 +51,14 @@ const Audit = () => {
     const [majors, setMajors] = useState([]);
     const [certificates, setCertificates] = useState([]);
     const [coursesList, setCourses] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:4001/api/majors')
-            .then((response) => response.json())
-            .then((data) => {
-                setMajors(data.majors); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }, []);
-    useEffect(() => {
-        fetch('http://localhost:4001/api/minors') 
-            .then((response) => response.json())
-            .then((data) => {
-                setMinors(data.minors); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }
-    , []);
-    useEffect(() => {
-        fetch('http://localhost:4001/api/certificates')
-            .then((response) => response.json())
-            .then((data) => {
-                setCertificates(data.certificates); 
-            })
-            .catch((error) => {
-                console.error('Error fetching user data:', error);
-            });
-    }, []);
-
-    //Courses
-    useEffect(() => {
-        fetch('http://localhost:4001/api/courses') 
-            .then((response) => response.json())
-            .then((data) => {
-                setCourses(data.courses);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
-    }, []);
-
     const [genEds, setGenEds] = useState([])
 
-    // gen eds
     useEffect(() => {
-        fetch('http://localhost:4001/api/genEds') 
-            .then((response) => response.json())
-            .then((data) => {
-                setGenEds(data.genEds);
-            })
-            .catch((error) => {
-                console.error('Error fetching data:', error);
-            });
+        getMajors(true).then(val => setMajors(val));
+        getMinors(true).then(val => setMinors(val));
+        getCerts(true).then(val => setCertificates(val));
+        getCourseList(true).then(val => setCourses(val));
+        getGenEds(true).then(val => setGenEds(val));
     }, []);
 
 
@@ -125,6 +77,10 @@ const Audit = () => {
         setUserCatalog(data)
     }
     
+    const addCatalog = (type, category) => {
+        setUserCatalog([...userCatalog, {type: type, category: category}])
+    }
+
     // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
 
     let userType = null;
@@ -169,14 +125,10 @@ const Audit = () => {
 
     }
 
-
-  
     return (
         <body id="fullpage">
             <div id="header">
-                {/* https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 */}
-                <button id="transcriptButton">Upload Unoffical Transcript</button>
-                <input type="file" id="uploadFile"/>
+                <TranscriptUpload set={addCatalog}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
@@ -273,126 +225,8 @@ const Audit = () => {
                 </div>
                 <hr/>
 
-                {/* This is all hardcoded, will make it dynamic when we get test data */}
-                <div id='planner'>
-                    <h2 id='userPlanner'>User's Degree Planner</h2>
-                    <table id='twoSemesterPlan'>
-                        <tr>
-                            <th colSpan={4} id='tableHeading'>Academic Year Test 2020-2021</th>
-                        </tr>
-                        <tr>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 1
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 2
-                            </td>
-                        </tr>
-                        <tr className="courseTableInfo" id="tableDataHeading">
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr id='tableSummary'>
-                            <td><b>Status:</b> Complete</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> In Progress</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                        </tr>
+                <SemesterPlan data={userCatalog}/>
 
-
-                    </table>
-
-                    <table id='threeSemesterPlan'>
-                        <tr>
-                            <th colSpan={6} id='tableHeading'>Academic Year Test 2021-2022</th>
-                        </tr>
-                        <tr>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 1
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 2
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 3
-                            </td>
-                        </tr>
-                        <tr className="courseTableInfo" id="tableDataHeading">
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr id='tableSummary'>
-                            <td><b>Status:</b> Complete</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> In Progress</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> Planned</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                        </tr>
-                    </table>
-                </div>
             </div>
         </body>
        

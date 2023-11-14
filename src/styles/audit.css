@@ -137,7 +137,7 @@ hr{
     width: 15%;
 }
 
-#twoSemesterPlan, #threeSemesterPlan{
+#twoSemesterPlan, #threeSemesterPlan, .planTable{
     margin-left: auto;
     margin-right: auto;
     border: 1px solid black;
@@ -145,7 +145,7 @@ hr{
     width: 90%;
     margin-bottom: 10px;
 }
-#twoSemesterPlan th, #threeSemesterPlan th{
+#twoSemesterPlan th, #threeSemesterPlan th, .planTable th{
     text-align: center;
     background-color: #F1B82D;
     border-bottom: 1px solid black;
