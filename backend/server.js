@@ -3,77 +3,72 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const passport = require('passport')
 const mongoose = require('mongoose')
-const plannerRoute = require('./routes/planner')
-const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
+const session = require("express-session");
+// const plannerRoute = require('./routes/planner')
+const authRoute = require('./routes/auth')
+const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
 const models = {}
 modelNames.forEach(modelName => {
-    const Model = require(`./Models/${modelName}`)
-    models[modelName] = Model
-})
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
-
-//middleware
-app.use((req, res, next) => {
-    console.log(req.path, req.method)
-    next()
-})
-
-app.use('/api/home', plannerRoute)
-
-// connect to db
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>{
-    //listen for request
-    app.listen(process.env.PORT, () => {
-        console.log('Mongo connection successful on port', process.env.PORT)
-    })
-})
-.catch((error) => {
-    console.log(error)
+  const Model = require(`./Models/${modelName}`)
+  models[modelName] = Model
 })
 
 /**
  * Set up CORS
  */
 app.use((req, res, next)=>{
-    res.setHeader("Access-Control-Allow-Origin","*");
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    res.setHeader("Access-Control-Allow-Methods",
-      "GET, POST, PATCH, DELETE, OPTIONS"
-    );
-    next();
+  res.setHeader("Access-Control-Allow-Origin","*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Methods",
+    "GET, POST, PATCH, DELETE, OPTIONS"
+  );
+  next();
 });
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    // save if nothing is changed
+    resave: false,
+    // save empty value in the session if there is no value
+    saveUninitialized: false,
+  })
+);
 
-//  This will need to be moved into a separate file and hashed.
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
 
-app.post("/signup", (req, res) => {
-    const user = new models['User']({
-        email: 'test@test.com',
-        password: 'password',
-        major: 'Information Technology',
-    })
+//middlewares
+app.use((req, res, next) => {
+    console.log(req.path, req.method);
+    next();
+});
+app.use(passport.initialize());
+app.use(passport.session());
+require('./passport-config')(passport);
+app.use('/', authRoute);
 
-    user
-      .save()
-      .then(result => {
-        res.status(201).json({
-          message: "User created!",
-          result: result
-        });
-      })
-      .catch(err => {
-        res.status(500).json({
-          error: err
-        });
-      });
+app.use('/', (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+// app.use('/api/home', plannerRoute)
+// connect to db
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(()=>{
+    //listen for request
+    app.listen(process.env.BACKEND_PORT, () => {
+        console.log('Mongo connection successful on port', process.env.BACKEND_PORT);
+    });
 })
+.catch((error) => {
+    console.log(error);
+});
 
 // Get from all schemes
 app.get("/api/certificates", (req, res) => {
@@ -109,18 +104,6 @@ app.get("/api/minors", (req, res) => {
   })
   .catch((error) => {
     res.status(500).json({ error: "Failed to retrieve Minors" });
-  });
-});
-
-app.get("/api/users", (req, res) => {
-  retrieveUserData().then((users) => {
-    res.status(200).json({
-      message: "User List",
-      users: users
-    });
-  })
-  .catch((error) => {
-    res.status(500).json({ error: "Failed to retrieve Users" });
   });
 });
 
@@ -170,30 +153,6 @@ app.post("/addMinor", (req, res) => {
       error: err
     });
   });
-})
-
-app.post("/addUser", (req, res) => {
-  const user = new models['User']({
-    email: req.body.email,
-    password: req.body.password,
-    major: req.body.major,
-    coursePlan: req.body.coursePlan,
-    url: req.body.url
-  })
-
-  user
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "User created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
 })
 
 app.post("/addCourseArea", (req, res) => {
@@ -321,15 +280,6 @@ async function retrieveMinorData() {
   try {
     const minors = await models['Minor'].find({}); 
     return minors;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function retrieveUserData() {
-  try {
-    const users = await models['User'].find({}); 
-    return users;
   } catch (error) {
     throw error;
   }

@@ -6,12 +6,8 @@ export default function SemesterPlan(props) {
 
     for (const cat of props.data) {
         const programs = getProgramsBySearch(cat.category, cat.type);
-        console.log(programs);
         const program = programs ? programs[0] : undefined;
-        console.log(program)
         if (!program || !program.years) continue;
-
-        console.log(program.years);
 
         for (var i in program.years) {
             const year = program.years[i];

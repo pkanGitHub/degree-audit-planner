@@ -16,7 +16,7 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse}) => {
                 
                 <tr>
                     <td>
-                        Credits: {creditHours}
+                        <b>Credits:</b> {creditHours}
                     </td>
                     <td>
                     <select className="requiredCourseSelect" name="progressSelect">
@@ -31,7 +31,7 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse}) => {
                 
                 <tr>
                     <td>
-                        Prerequisites: {preReq}
+                        <b>Prerequisities:</b> {preReq}
                     </td>
                     <td>
                         <select className="requiredCourseSelect" name="semesterSelect" >

@@ -1,4 +1,4 @@
-const url = "http://localhost:4001/api/"
+const url = "http://localhost:/api/"
 
 var Majors;
 var Minors;
@@ -68,7 +68,6 @@ export function getProgramsBySearch(name_segment, category=undefined) {
     }
 
     const program = list?.filter(program => program.title.match(new RegExp(name_segment, "g")));
-    console.log(program);
     return program;
 }
 
