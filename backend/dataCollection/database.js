@@ -6,10 +6,8 @@ const url = `http://localhost:${process.env.PORT}/`;
 
 // eslint-disable-next-line no-unused-vars
 async function FillCourseData(courses) {
-
-    console.log(url);
     for (const [key, value] of Object.entries(courses)) {
-
+        if (key !== "English (ENGLSH)") continue;
         const courseList = [];
         for (var i = 0; i < value.length; i++) {
             const course = value[i];
@@ -34,6 +32,10 @@ async function FillCourseData(courses) {
             console.log(`${key} was added successfully!`);
         }, async (error) => {
             if (error?.response?.status === 413) {
+                await axios.post(url + "addCourseArea", { 
+                    area: key,  
+                    courses: []
+                })
                 courseList.forEach(async (course, index, list) => {
                     await axios.post(url + "addCourse", { 
                         area: key,  
@@ -50,7 +52,7 @@ async function FillCourseData(courses) {
                 //     .catch(error => console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`));
                 // }
             }
-            else console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`)
+            else console.error(`ERROR: ${error?.response?.status}: ${error?.response?.statusText}`)
         });
     }
 }

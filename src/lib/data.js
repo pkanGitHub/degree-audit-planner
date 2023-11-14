@@ -42,6 +42,37 @@ export function getProgramByExactName(name) {
     return null;
 }
 
+export function getProgramsBySearch(name_segment, category=undefined) {
+
+    if (category === undefined) {
+        const programs = [];
+        programs.concat(getProgramsBySearch(name_segment, "major"))
+        programs.concat(getProgramsBySearch(name_segment, "minor"))
+        programs.concat(getProgramsBySearch(name_segment, "cert"))
+        return programs;
+    }
+    var list;
+
+    switch(category.toLowerCase()) {
+        case "majors":
+        case "major": 
+            list = Majors;
+            break;
+        case "minor": 
+            list = Minors;
+            break;
+        case "cert": 
+            list = Certificates;
+            break;
+        default: return undefined;
+    }
+
+    const program = list?.filter(program => program.title.match(new RegExp(name_segment, "g")));
+    console.log(program);
+    return program;
+}
+
+
 export async function getCourseList(pull) {
     if (pull || Courses === undefined) {
         return Courses =  await fetchGet('courses');

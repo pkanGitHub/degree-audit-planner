@@ -1424,10 +1424,6 @@
             { "id": ["ANTHRO_2050"], "or": ["ANTHRO_2051", "ANTHRO_2052"] },
             { "id": ["ANTHRO_4990"] }
           ]
-        },
-        "undefined": {
-          "required": true,
-          "courses": [{ "id": ["ANTHRO_4960"] }]
         }
       },
       "plan": {
@@ -4242,8 +4238,7 @@
             { "id": ["MATH_1500"] },
             { "id": ["MATH_1700"] }
           ]
-        },
-        "undefined": { "required": true, "courses": [{ "id": ["CHEM_4800"] }] }
+        }
       },
       "plan": {
         "First Year": {

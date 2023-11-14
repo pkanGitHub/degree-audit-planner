@@ -3,7 +3,7 @@ import RequiredChoice from "../components/requiredChoice";
 import ClassInfo from "../components/classInfoPopup";
 import CatalogItems from "../components/catalog";
 import { useState, useEffect } from "react";
-import SemesterPlan from "../components/semesterPlan";
+import SemesterPlan from "../components/semesterplan";
 import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
 
@@ -181,6 +181,9 @@ const Audit = () => {
         setUserCatalog(data)
     }
 
+    const addCatalog = (type, category) => {
+        setUserCatalog([...userCatalog, {type: type, category: category}])
+    }
 
     {coursesList.map((section) => courseAreas.push(section.area))}
 
@@ -232,7 +235,7 @@ const Audit = () => {
     return (
         <body id="fullpage">
             <div id="header">
-                <TranscriptUpload set={setCategory}/>
+                <TranscriptUpload set={addCatalog}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
@@ -431,7 +434,6 @@ const Audit = () => {
                 </div>
                 <hr/>
 
-                <p>{JSON.stringify(userCatalog)}</p>
                 <SemesterPlan data={userCatalog}/>
 
             </div>

@@ -504,7 +504,11 @@ async function GetDegreePlans(page) {
 
                 const cleaned = {}
                 for (var [key, value] of Object.entries(requirements)) {
-                    if ((value?.credits === undefined || value?.credits === "") && (value?.courses === undefined || value?.courses.length === 0)) continue;
+                    if ((
+                        (value?.credits === undefined || value?.credits === "") && 
+                        (value?.courses === undefined || value?.courses.length === 0)) || 
+                        (key === undefined || key === "" || key === "undefined" || key === " ")) 
+                        continue;
                     cleaned[key] = value;
                 }
 
