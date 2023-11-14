@@ -29,7 +29,6 @@ const Audit = () => {
         SM22: "Summer 2022",
     };
     const handleTermChange = (e, index) => {
-        console.log("setting")
         setTerm(e.target.value);
     };
 
@@ -39,12 +38,9 @@ const Audit = () => {
     const [enrollFields, setEnrollFields] = useState([{type: "", category: "", year: ""}])
     
     const handleEnrollFieldChange = (i, e) =>{
-        console.log("here");
-
         let newFormValues = [...enrollFields];
         newFormValues[i][e.target.name] = e.target.value;
         setEnrollFields(enrollFields);
-         
     }
 
     
