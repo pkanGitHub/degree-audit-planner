@@ -125,6 +125,16 @@ const Audit = () => {
 
     }
 
+    // delete button/refresh page button
+
+    const [state, setState] = useState(0) // when clicked, refreshes state on the gen eds, transfer, and elective courses
+    function refreshPage() {
+        setUserCatalog([{type: "", category: ""}])
+        setState(state+1)
+    }
+
+
+  
     return (
         <body id="fullpage">
             <div id="header">
@@ -142,7 +152,7 @@ const Audit = () => {
                             return(
                                 <div key={index} id="addedSectionEnroll">
                                     <label>
-                                        Type:
+                                        Type:&nbsp;&nbsp;
                                         <select name='type' value={input.type} onChange={(e) => {handleTypeChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
                                             <option value="majors">Major</option>
@@ -151,7 +161,7 @@ const Audit = () => {
                                         </select>
                                     </label>
                                     <label>
-                                        Category:
+                                        Category:&nbsp;&nbsp;
                                         <select name='category' value={input.category} onChange={(e)=> {handleCategoryChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
                                             { options }
@@ -159,7 +169,7 @@ const Audit = () => {
                                     </label>
                                     
                                     <label>
-                                        Year:
+                                        Year:&nbsp;&nbsp;
                                         <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
                                             {Object.keys(term).map((key, index) => 
@@ -174,7 +184,7 @@ const Audit = () => {
                     </div>
                     <hr/>
                     
-                    <GenEdsModel genEds={genEds} coursesList={coursesList}/>
+                    <GenEdsModel key={state} genEds={genEds} coursesList={coursesList}/>
 
             
                     {/* this is a map that gets all user input programs here, user can delete or add programs */}
@@ -198,7 +208,7 @@ const Audit = () => {
                                 <label id="genReqLabel" htmlFor="elective">Mizzou Courses:</label>
                                 <div className="classHistory">
 
-                                    <ExtraCourses coursesList={coursesList}/>
+                                    <ExtraCourses key={state} coursesList={coursesList}/>
                                 </div>
                             </li>
                         </ul>
@@ -209,7 +219,7 @@ const Audit = () => {
                                 <label id="genReqLabel" htmlFor="transfer">Transfer Courses:</label>
                                 <div className="classHistory">
 
-                                    <TransferCourse/>
+                                    <TransferCourse key={state}/>
                                 </div>
                             </li>
                         </ul>
@@ -220,7 +230,7 @@ const Audit = () => {
                     <div id='optionButtons'>
                         <button id='saveButton'>Save</button>
                         <button id='exportButton'>Export</button>
-                        <button id='deleteButton'>Delete</button>
+                        <button id='deleteButton' onClick={refreshPage}>Delete</button>
                     </div>
                 </div>
                 <hr/>
