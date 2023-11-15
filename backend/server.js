@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const session = require("express-session");
 // const plannerRoute = require('./routes/planner')
 const authRoute = require('./routes/auth')
-const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
+const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'Major2']
 const models = {}
 modelNames.forEach(modelName => {
   const Model = require(`./Models/${modelName}`)
@@ -71,8 +71,13 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 });
 
 // Get from all schemes
+
 app.get("/api/certificates", (req, res) => {
-  retrieveCertificateData().then((certificates) => {
+    res.redirect('/api/certificates/2023-24')
+});
+
+app.get("/api/certificates/:year", (req, res) => {
+  retrieveCertificateData(req.params.year).then((certificates) => {
     res.status(200).json({
       message: "Certificate List",
       certificates: certificates
@@ -84,7 +89,11 @@ app.get("/api/certificates", (req, res) => {
 });
 
 app.get("/api/majors", (req, res) => {
-  retrieveMajorData().then((majors) => {
+    res.redirect('/api/majors/2023-24')
+});
+
+app.get("/api/majors/:year", (req, res) => {
+  retrieveMajorData(req.params.year).then((majors) => {
     res.status(200).json({
       message: "Major List",
       majors: majors
@@ -96,7 +105,11 @@ app.get("/api/majors", (req, res) => {
 });
 
 app.get("/api/minors", (req, res) => {
-  retrieveMinorData().then((minors) => {
+    res.redirect('/api/minors/2023-24')
+});
+
+app.get("/api/minors/:year", (req, res) => {
+  retrieveMinorData(req.params.year).then((minors) => {
     res.status(200).json({
       message: "Minor List",
       minors: minors
@@ -130,30 +143,6 @@ app.get("/api/genEds", (req, res) => {
     res.status(500).json({ error: "Failed to retrieve Gen Eds" });
   });
 });
-
-
-app.post("/addMinor", (req, res) => {
-  models['Minor'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      title: req.body.title,
-      requirements: req.body.requirements,
-      url: req.body.url
-    }},
-    { upsert: true }
-    )
-  .then(result => {
-    res.status(201).json({
-      message: "Minor created!",
-      result: result
-    });
-  })
-  .catch(err => {
-    res.status(500).json({
-      error: err
-    });
-  });
-})
 
 app.post("/addCourseArea", (req, res) => {
     models['Courses'].updateOne(
@@ -191,16 +180,63 @@ app.post("/addCourseArea", (req, res) => {
       });
   })
 
-app.post("/addMajor", (req, res) => {
-    models['Major'].findOneAndUpdate(
-      { title: req.body.title },
-      { $set: {
-        requirements: req.body.requirements,
-        years: req.body.years,
-        credits: req.body.credits
-      }},
-      { upsert: true }
-    )
+
+app.post("/addMinor/:year", (req, res) => {
+    models['Minor'].updateOne({
+        year: req.params.year
+        },{
+        $addToSet: { programs: { title: req.body.title }}
+        },{
+        upsert: true
+    })
+    .then(() => models['Minor'].updateOne({
+        year: req.params.year,
+        programs: {
+            $elemMatch: {
+                title: req.body.title
+            }
+        }}, {
+        $set: {
+            "programs.$.requirements": req.body.requirements,
+            "programs.$.url": req.body.url
+        }}, {
+        upsert: true      
+    }))
+  .then(result => {
+    res.status(201).json({
+      message: "Minor created!",
+      result: result
+    });
+  })
+  .catch(err => {
+    res.status(500).json({
+      error: err
+    });
+  });
+})
+
+app.post("/addMajor/:year", (req, res) => {
+    models['Major'].updateOne({
+        year: req.params.year
+        },{
+        $addToSet: { programs: { title: req.body.title }}
+        },{
+        upsert: true
+    })
+    .then(() => models['Major'].updateOne({
+        year: req.params.year,
+        programs: {
+            $elemMatch: {
+                title: req.body.title
+            }
+        }}, {
+        $set: {
+            "programs.$.requirements": req.body.requirements,
+            "programs.$.years": req.body.years,
+            "programs.$.url": req.body.url
+        }}, {
+        upsert: true      
+    }))
     .then(result => {
       res.status(201).json({
         message: "Major created!",
@@ -214,15 +250,101 @@ app.post("/addMajor", (req, res) => {
     });
   })
 
-app.post("/addCert", (req, res) => {
-  models['Certificate'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      url: req.body.url,
-      requirements: req.body.requirements,
-      years: req.body.years,
-    }},{ upsert: true }
-  )
+  app.post("/addMajor2/:year", (req, res) => {
+
+    // models['Major2'].updateOne({
+    //     year: req.params.year,
+    //     "programs.title": req.body.title
+    // },{
+    //     $set: { "programs.$": { 
+    //         title: req.body.title ,
+    //         years: req.body.years,
+    //         url: req.body.url
+    //     }}
+    // },{
+    //     upsert: true
+    // })
+
+    // models['Major2'].updateOne(
+    //     {
+    //         year: req.params.year,
+    //         "programs.title": req.body.title
+    //     },
+    //     {
+    //         $setOnInsert: {
+    //             programs: []
+    //         },
+    //         $set: {
+    //             "programs.$[elem].title": req.body.title,
+    //             "programs.$[elem].years": req.body.years,
+    //             "programs.$[elem].url": req.body.url
+    //         }
+    //     },
+    //     {
+    //         upsert: true,
+    //         arrayFilters: [
+    //             {"elem.title": req.body.title}
+    //         ]
+    //     }
+    // )
+
+    models['Major2'].updateOne({
+        year: req.params.year
+        },{
+        $addToSet: { programs: { title: req.body.title }}
+        },{
+        upsert: true
+    })
+    .then(() => models['Major2'].updateOne({
+        year: req.params.year,
+        programs: {
+            $elemMatch: {
+                title: req.body.title
+            }
+        }}, {
+        $set: {
+            "programs.$.requirements": req.body.requirements,
+            "programs.$.years": req.body.years,
+            "programs.$.url": req.body.url
+        }}, {
+        upsert: true      
+    }))
+    .then(result => {
+      res.status(201).json({
+        message: "Major created!",
+        result: result
+      });
+    })
+    .catch(err => {
+        console.log(err);
+      res.status(500).json({
+        error: err
+      });
+    });
+  })
+
+app.post("/addCert/:year", (req, res) => {
+    models['Certificate'].updateOne({
+        year: req.params.year
+        },{
+        $addToSet: { programs: { title: req.body.title }}
+        },{
+        upsert: true
+    })
+    .then(() => models['Certificate'].updateOne({
+        year: req.params.year,
+        programs: {
+            $elemMatch: {
+                title: req.body.title
+            }
+        }}, {
+        $set: {
+            "programs.$.requirements": req.body.requirements,
+            "programs.$.years": req.body.years,
+            "programs.$.url": req.body.url
+        }}, {
+        upsert: true      
+    }))
   .then(result => {
     res.status(201).json({
       message: "Major created!",
@@ -258,28 +380,29 @@ app.post('/addGenEds', (req, res) => {
 })
 
 //Retrieve data functions
-async function retrieveCertificateData() {
+async function retrieveCertificateData(year) {
   try {
-    const certificates = await models['Certificate'].find({}); 
-    return certificates;
+    const certificates = await models['Certificate'].findOne({ year: year }); 
+    return certificates.programs;
   } catch (error) {
     throw error;
   }
 }
 
-async function retrieveMajorData() {
+async function retrieveMajorData(year) {
+    console.log(year);
   try {
-    const majors = await models['Major'].find({}); 
-    return majors;
+    const majors = await models['Major'].findOne({ year: year });
+    return majors.programs;
   } catch (error) {
     throw error;
   }
 }
 
-async function retrieveMinorData() {
+async function retrieveMinorData(year) {
   try {
-    const minors = await models['Minor'].find({}); 
-    return minors;
+    const minors = await models['Minor'].findOne({ year: year }); 
+    return minors.programs;
   } catch (error) {
     throw error;
   }
