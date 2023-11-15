@@ -122,3 +122,6 @@
     background-color: #69901D;
     width: 25%;
 }
+#errorMessage{
+    color: red;
+}

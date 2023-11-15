@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
-import "../styles/formStyle.css"
+import React, {useState} from 'react';
+import "../styles/formStyle.css";
+import Cookies from 'universal-cookie';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' })
@@ -20,6 +21,7 @@ const Login = () => {
         
             if (response.ok) {
                 console.log('Login successful on the frontend')
+                cookies.set("user2", {email: formData.email, password: formData.password, programs: []}, {expires: tomorrow}) // takes data and adds it to cookie
                 // Redirect
                 window.location.href = '/audit'
             } else {
@@ -38,9 +40,21 @@ const Login = () => {
         setErrorMsg(null)
       }
 
+  
+    // grabs today's date and then sets the date to tomorrow, used for cookie expiry
+    var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+
+
+    const cookies = new Cookies(null);
+
+    // this is a test to see how information from that works, DELETE WHEN COMPLETED
+    cookies.set("user", {email: "test", password: "password", testCategories: [{type: "majors", category: "BS in Information Technology"}, {type: "majors", category: "BS in Information Technology"}]}, {expires: tomorrow})
+
     return (
         <div className="formSection">
             {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
+  
+            <p></p>
             <div id="formDesign">
                 <h1>Login</h1>
                 <form onSubmit={handleSubmit}>

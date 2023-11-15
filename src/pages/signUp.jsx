@@ -15,10 +15,21 @@ const SignUp = () => {
         setFormData({ ...formData, [name]: value })
     }
 
+    const [isChecked, setIsChecked] = useState(false)
+    const handleCheckbox = () => {
+        setIsChecked(prevCheck => !prevCheck)
+    }
+
+    const [error, setError] = useState("")
+
     const handleSubmit = async (event) => {
         event.preventDefault()
         if (formData.password !== formData.confirmPassword) {
             alert("Passwords do not match.");
+            return
+        }
+        else if(isChecked === false){
+            setError("You must agree to the terms and conditions.")
             return
         }
 
@@ -27,7 +38,7 @@ const SignUp = () => {
             
             if (response.status === 201) {
                 console.log('User sign up successfully');
-                window.location.href = '/audit'
+                window.location.href = '/login'
             } else {
                 const data = await response.json();
                 console.error(data.message);
@@ -56,9 +67,10 @@ const SignUp = () => {
                         </label>
                         <br/>
                         <div id="checkboxDiv">
+                            <p id='errorMessage'>{ error }</p>
                             
                             <label for="terms" id="checkboxlabel">
-                                <input type="checkbox" name="terms" value="terms"/>
+                                <input type="checkbox" name="terms" value={isChecked} onChange={handleCheckbox}/>
                                 I accept the <TermsCondition/>
                             </label>
                         </div>

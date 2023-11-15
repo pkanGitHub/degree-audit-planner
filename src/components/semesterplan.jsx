@@ -41,7 +41,7 @@ export default function SemesterPlan(props) {
 
     if (years != null) return (
         <div id="planner">
-            <h2 id='userPlanner'>User's Degree Planner</h2>
+            <h2 id='userPlanner'>{props.user}</h2>
                 {years?.map(year => {
                     const rows =  year?.semesters[0].length > year?.semesters[1].length ? year?.semesters[0].length : year?.semesters[1].length;
                     var total1 = 0;
