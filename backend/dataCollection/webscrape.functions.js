@@ -341,9 +341,10 @@ function delay(time) {
 //     return program;
 // }
 
-async function GetDegreePlans(page) {
+async function GetDegreePlans(page, year) {
     const program = {}                         // Opens a tab in the browser
-    await page.goto("https://catalog.missouri.edu/degreesanddegreeprograms/");    
+    const url_inject = year ? `archives/${year}/` : "";
+    await page.goto(`https://catalog.missouri.edu/${url_inject}degreesanddegreeprograms/`);    
 
     const course_links = await page.evaluate(() => {
         const rows = document.querySelectorAll("#degree_body tr");                          // Gets the link to every page of courses
@@ -423,7 +424,7 @@ async function GetDegreePlans(page) {
                 const requirements = {};
                 const rows = document.querySelectorAll("table.sc_courselist tbody tr");
 
-                const name = document.querySelector("#content h1").textContent;             // Gets the name of the program, ie: Minor in Math
+                const name = document.querySelector("#content h1")?.textContent;             // Gets the name of the program, ie: Minor in Math
                 program["title"] = name;                                                     // 
                 program["type"] = link.type;                                                 // Gets the type of program (minor, cert, major, etc)
                 program["url"] = link.url;                                                   // Gets the url to the program page
@@ -440,7 +441,7 @@ async function GetDegreePlans(page) {
                 var prevClass = null;
                 rows.forEach((row) => {
                     if (row.classList.contains("areaheader")) {                             // If the row is a header -> create a new section for the courses to be 
-                        header = row.querySelector("td span.areaheader").textContent;       // added under
+                        header = row.querySelector("td span.areaheader")?.textContent;       // added under
                         if (header === undefined || header === "" || header === null || header === " ") return;
                         const hours = row.querySelector(".hourscol")?.textContent.replace(/ |hrs|hours|credits/g, "");; 
 
@@ -481,7 +482,7 @@ async function GetDegreePlans(page) {
                         requirements[header].courses?.push({info: col?.textContent});                      // So here we just create a new type of object to hold that and add it to the header
                         return;
                     };
-                    var id = col.textContent
+                    var id = col?.textContent
                     id = id.replace(/or\u00a0/g, "");                                       // Clears "or" from text
                     id = id.replace(/\u00a0/g, "_");                                        // Clears non-breaking spaces
                     id = id.split("&_");                                                    // Splits the multi-element strings into an array. Always creates an array
@@ -528,14 +529,14 @@ async function GetDegreePlans(page) {
                 plan_rows.forEach(row => {
                     
                     if (row.classList.contains("plangridyear")) { 
-                        plan[row.querySelector("th").textContent] = year = {};
+                        plan[row.querySelector("th")?.textContent] = year = {};
                         return;
                     }
 
                     if (row.classList.contains("plangridterm")) {
                         const heads = row.querySelectorAll("th");
-                        year[heads[0].textContent] = semester1 = [];
-                        year[heads[2].textContent] = semester2 = [];
+                        year[heads[0]?.textContent] = semester1 = [];
+                        year[heads[2]?.textContent] = semester2 = [];
                         return;
                     }
 
@@ -547,7 +548,7 @@ async function GetDegreePlans(page) {
                     if (cells[0] != null) {
                         const links = Array.from(cells[0].querySelectorAll("a"));
                         // debugger;
-                        if (links.length === 0) semester1?.push({misc: cells[0].textContent});
+                        if (links.length === 0) semester1?.push({misc: cells[0]?.textContent});
                         else {
                             const id = links[0].title.replace(/\u00a0/g, "_");
                             const or = [];
@@ -562,7 +563,7 @@ async function GetDegreePlans(page) {
                     }
                     if (cells[1] != null) {
                         const links = Array.from(cells[1].querySelectorAll("a"));
-                        if (links.length === 0) semester2?.push({misc: cells[1].textContent});
+                        if (links.length === 0) semester2?.push({misc: cells[1]?.textContent});
                         else {
                             const id = links[0].title.replace(/\u00a0/g, "_");
                             const or = [];

@@ -2,12 +2,11 @@ const axios = require('axios');
 const gens = require('./json/geneds-reqs.json')
 
 require('dotenv').config();
-const url = `http://localhost:${process.env.PORT}/`;
+const url = `http://localhost:${process.env.BACKEND_PORT}/`;
 
 // eslint-disable-next-line no-unused-vars
 async function FillCourseData(courses) {
     for (const [key, value] of Object.entries(courses)) {
-        if (key !== "English (ENGLSH)") continue;
         const courseList = [];
         for (var i = 0; i < value.length; i++) {
             const course = value[i];
@@ -43,14 +42,6 @@ async function FillCourseData(courses) {
                     }).then(() => console.log(`${key}: ${index}/${list.length} added.`))
                     .catch(error => console.error(`ERROR: ${error?.response?.status}: ${error?.response?.statusText}`));
                 });
-
-                // for (var i in courseList) {
-                //     await axios.post(url + "addCourse", { 
-                //         area: key,  
-                //         courses: courseList[i]
-                //     }).then((response) => console.log(`${key}: ${i}/${courseList.length} added.`))
-                //     .catch(error => console.error(`ERROR: ${error.response.status}: ${error.response.statusText}`));
-                // }
             }
             else console.error(`ERROR: ${error?.response?.status}: ${error?.response?.statusText}`)
         });
@@ -58,7 +49,7 @@ async function FillCourseData(courses) {
 }
 
 // eslint-disable-next-line no-unused-vars
-async function FillPlanData(programs, minors=true, certs=true, majors=true) {
+async function FillPlanData(year, programs, minors=true, certs=true, majors=true) {
     const runMinors = minors;
     const runCerts = certs;
     const runMajors = majors;
@@ -72,10 +63,10 @@ async function FillPlanData(programs, minors=true, certs=true, majors=true) {
             const courses = getCourses(program);
             // const credits = getCreditReqs(program);
             const semesters = getPlan(program);
-            
+            // if (program.type === "Minor" || program.type === "Cert") continue;
             if (program.type === "Minor") {
                 if (!runMinors) continue
-                await axios.post(url + "addMinor", { 
+                await axios.post(url + "addMinor/" + year, { 
                     title: title,
                     url: pUrl,
                     requirements: courses,
@@ -83,12 +74,26 @@ async function FillPlanData(programs, minors=true, certs=true, majors=true) {
                 .then((response) => {
                     console.log(`${title} add successfully`);
                 }, (error) => {
-                    console.log(error.response);
+                    console.log(error.response.data.error);
                 });
             }
             else if (program.type === "Cert") {
                 if (!runCerts) continue
-                await axios.post(url + "addCert", { 
+                await axios.post(url + "addCert/" + year, { 
+                    title: title,
+                    requirements: courses,
+                    years: semesters,
+                    url: pUrl
+                })
+                .then((response) => {
+                    console.log(`${program.title} add successfully`);
+                }, (error) => {
+                    // console.log(error);
+                    console.log(error.response.data.error);
+                });
+            }
+            else if (runMajors) {
+                await axios.post(url + "addMajor/" + year, { 
                     title: title,
                     requirements: courses,
                     years: semesters,
@@ -98,19 +103,7 @@ async function FillPlanData(programs, minors=true, certs=true, majors=true) {
                     console.log(`${program.title} add successfully`);
                 }, (error) => {
                     console.log(error.response);
-                });
-            }
-            else if (runMajors) {
-                await axios.post(url + "addMajor", { 
-                    title: title,
-                    requirements: courses,
-                    years: semesters,
-                    url: pUrl
-                })
-                .then((response) => {
-                    console.log(`${program.title} add successfully`);
-                }, (error) => {
-                    console.log(error?.response?.data?.error?.message);
+                    // console.log(error?.response?.data?.error?.message);
                 });
 
             }
@@ -143,6 +136,7 @@ function getCourses(program) {
     return courses;
 }
 
+// eslint-disable-next-line no-unused-vars
 function getCreditReqs(program) {
     if ((("has_plan" in program) && !program.has_plan) || !program.credit_requirements) return undefined;
 
