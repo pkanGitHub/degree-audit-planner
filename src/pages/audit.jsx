@@ -22,7 +22,7 @@ const Audit = () => {
         setCategory(e.target.value);
     };
 
-    const [selectTerm, setTerm] = useState("");
+    const [selectTerm, setTerm] = useState(null);
     const term = {
         FS21: "Fall 2021",
         SP22: "Spring 2022",
@@ -64,10 +64,10 @@ const Audit = () => {
 
     // this is the user catalog section. this is a list of the type and category that the user has chosen. this is used to loop through database data
 
-    const [userCatalog, setUserCatalog] = useState([{type: "", category: ""}])
+    const [userCatalog, setUserCatalog] = useState([{type: "", category: "", year: ""}])
 
     const handleUserCategories = () => {
-       setUserCatalog([...userCatalog, {type: selectType, category: selectCategory}])
+       setUserCatalog([...userCatalog, {type: selectType, category: selectCategory, year: selectTerm}])
 
     }
 
@@ -77,8 +77,8 @@ const Audit = () => {
         setUserCatalog(data)
     }
     
-    const addCatalog = (type, category) => {
-        setUserCatalog([...userCatalog, {type: type, category: category}])
+    const addCatalog = (type, category, year) => {
+        setUserCatalog([...userCatalog, {type: type, category: category, year: year}])
     }
 
     // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
@@ -96,8 +96,8 @@ const Audit = () => {
         userType = certificates
     }
 
-    if (userType) { 
-        options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
+    if (selectTerm && userType) { 
+        options = userType[selectTerm].map((option) => <option key={option?.title}>{option?.title}</option>); 
     }
 
 
@@ -106,13 +106,13 @@ const Audit = () => {
     function getCourses(type, category, index){
         let selectedType = [];
         if (type === "majors"){
-            selectedType = majors
+            selectedType = majors[selectTerm]
         }
         else if (type === "minors"){
-            selectedType = minors
+            selectedType = minors[selectTerm]
         }
         else if (type === "certificates"){
-            selectedType = certificates
+            selectedType = certificates[selectTerm]
         }
         else if (category === ""){
             category = "default"
@@ -136,7 +136,7 @@ const Audit = () => {
 
   
     return (
-        <body id="fullpage">
+        <div id="fullpage">
             <div id="header">
                 <TranscriptUpload set={addCatalog}/>
                 <br/>
@@ -152,6 +152,18 @@ const Audit = () => {
                             return(
                                 <div key={index} id="addedSectionEnroll">
                                     <label>
+                                        Year:&nbsp;&nbsp;
+                                        <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
+                                            {/* {Object.keys(term).map((key, index) => 
+                                            <option value={key}>{term[key]}</option>)} */}
+
+                                            { Object.keys( majors ).sort().reverse().map(key => <option value={ key } >{ key }</option> )}
+
+                                        </select>
+                                    </label>
+
+                                    <label>
                                         Type:&nbsp;&nbsp;
                                         <select name='type' value={input.type} onChange={(e) => {handleTypeChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
@@ -160,20 +172,12 @@ const Audit = () => {
                                             <option value="certificates">Certificate</option>
                                         </select>
                                     </label>
+
                                     <label>
                                         Category:&nbsp;&nbsp;
                                         <select name='category' value={input.category} onChange={(e)=> {handleCategoryChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
                                             { options }
-                                        </select>
-                                    </label>
-                                    
-                                    <label>
-                                        Year:&nbsp;&nbsp;
-                                        <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
-                                            <option value="default"></option>
-                                            {Object.keys(term).map((key, index) => 
-                                            <option value={key}>{term[key]}</option>)}
                                         </select>
                                     </label>
                                     {/* <button onClick={()=>removeEnrollFields(index)}>Delete</button> */}
@@ -238,7 +242,7 @@ const Audit = () => {
                 <SemesterPlan data={userCatalog}/>
 
             </div>
-        </body>
+        </div>
        
     )
 };

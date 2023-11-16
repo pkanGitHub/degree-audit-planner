@@ -137,54 +137,6 @@ hr{
     width: 15%;
 }
 
-#twoSemesterPlan, #threeSemesterPlan, .planTable{
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid black;
-    border-collapse: collapse;
-    width: 90%;
-    margin-bottom: 10px;
-}
-#twoSemesterPlan th, #threeSemesterPlan th, .planTable th{
-    text-align: center;
-    background-color: #F1B82D;
-    border-bottom: 1px solid black;
-    padding: 10px;
-}
-
-.semesterHeading{
-    background-color: lightgray;
-    font-weight: bold;
-    border-bottom: 1px solid black;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-
-}
-.courseTableInfo td{
-    background-color: white;
-}
-
-.courseTableInfo td:nth-child(2), .courseTableInfo td:nth-child(4){
-    border-right: 1px solid black;
-}
-
-#tableDataHeading td{
-    font-weight: bold;
-}
-
-#tableSummary td{
-    border-top: 1px solid black;
-    background-color: #F1B82D;
-}
-
-#tableSummary td:nth-child(2), #tableSummary td:nth-child(4){
-    border-right: 1px solid black;
-}
-
-#userPlanner{
-    text-align: center;
-}
-
 /* for drop down menu selection */
 
 .accordion{

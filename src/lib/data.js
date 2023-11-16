@@ -8,21 +8,26 @@ var GenEds;
 
 export async function getMajors(pull) {
     if (pull || Majors === undefined) {
-        return Majors = await fetchGet('majors') ;
+        return Majors = await fetchGet('majors')
+        .then(majors => planFormat(majors))
     }
+    console.log(Majors);
     return Majors;
 }
 
 export async function getMinors(pull) {
     if (pull || Minors === undefined) {
-        return Minors = await fetchGet('minors');
+        return Minors = await fetchGet('minors')
+        .then(minors => planFormat(minors));
     }
     return Minors;
 }
 
 export async function getCerts(pull) {
     if (pull || Certificates === undefined) {
-        return Certificates = await fetchGet('certificates');
+        return Certificates = await fetchGet('certificates')
+        .then(certs => planFormat(certs))
+        .catch(err => console.log(err));
     }
     return Certificates;
 }
@@ -42,13 +47,13 @@ export function getProgramByExactName(name) {
     return null;
 }
 
-export function getProgramsBySearch(name_segment, category=undefined) {
+export function getProgramsBySearch(name_segment, year, category=undefined) {
 
     if (category === undefined) {
         const programs = [];
-        programs.concat(getProgramsBySearch(name_segment, "major"))
-        programs.concat(getProgramsBySearch(name_segment, "minor"))
-        programs.concat(getProgramsBySearch(name_segment, "cert"))
+        programs.concat(getProgramsBySearch(name_segment, year, "major"))
+        programs.concat(getProgramsBySearch(name_segment, year, "minor"))
+        programs.concat(getProgramsBySearch(name_segment, year, "cert"))
         return programs;
     }
     var list;
@@ -56,13 +61,13 @@ export function getProgramsBySearch(name_segment, category=undefined) {
     switch(category.toLowerCase()) {
         case "majors":
         case "major": 
-            list = Majors;
+            list = Majors[year];
             break;
         case "minor": 
-            list = Minors;
+            list = Minors[year];
             break;
         case "cert": 
-            list = Certificates;
+            list = Certificates[year];
             break;
         default: return undefined;
     }
@@ -107,4 +112,13 @@ async function fetchGet(type) {
     .catch(error => {
         console.error(`Error fetching ${type} data: ${error}`);
     });
+}
+
+
+function planFormat(plan) {
+    return plan
+    .reduce((obj, item) => {
+        obj[item.year] = item.programs;
+        return obj;
+    }, {});
 }

@@ -73,7 +73,17 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 // Get from all schemes
 
 app.get("/api/certificates", (req, res) => {
-    res.redirect('/api/certificates/2023-24')
+    // res.redirect('/api/certificates/2023-24')
+    models['Certificate'].find()
+    .then((certificates) => {
+        res.status(200).json({
+            message: "Certificate List",
+            certificates: certificates
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Certificates" });
+      });;
 });
 
 app.get("/api/certificates/:year", (req, res) => {
@@ -89,7 +99,17 @@ app.get("/api/certificates/:year", (req, res) => {
 });
 
 app.get("/api/majors", (req, res) => {
-    res.redirect('/api/majors/2023-24')
+    // res.redirect('/api/majors/2023-24')
+    models['Major'].find()
+    .then((majors) => {
+        res.status(200).json({
+            message: "Major List",
+            majors: majors
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Majors" });
+      });;
 });
 
 app.get("/api/majors/:year", (req, res) => {
@@ -105,7 +125,16 @@ app.get("/api/majors/:year", (req, res) => {
 });
 
 app.get("/api/minors", (req, res) => {
-    res.redirect('/api/minors/2023-24')
+    models['Minor'].find()
+    .then((minors) => {
+        res.status(200).json({
+            message: "Minor List",
+            minors: minors
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Minors" });
+      });;
 });
 
 app.get("/api/minors/:year", (req, res) => {
