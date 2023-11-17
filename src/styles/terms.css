@@ -5,10 +5,11 @@
 }
 #termsButton {
     border: none;
-    background-color: #F1EEF0;
+    background-color: transparent;
     text-decoration: underline;
     color: #1C5E90;
     font-size: medium;
+    padding: 0;
 }
 
 #close {

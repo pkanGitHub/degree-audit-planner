@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import "../styles/formStyle.css";
 import Cookies from 'universal-cookie';
+import CookiePopup from '../components/cookiepopup';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' })
@@ -75,6 +76,8 @@ const Login = () => {
 
                 </form>
             </div>
+
+            <CookiePopup />
         </div>
     )
 }

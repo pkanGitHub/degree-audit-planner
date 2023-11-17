@@ -1,11 +1,11 @@
 #contents
 {
-    background-color: white;
+    background-color: rgb(255, 255, 255);
     padding: 20px;
-    box-shadow: 5px 10px 8px #c3c3c3;
-    width: 80%;
+    width: 90%;
     align-items: center;
     margin: auto;
+    border: 1px solid black;
 }
 #orClasses{
     display: flex;
@@ -219,6 +219,15 @@ hr{
     text-align: center;
 }
 
+#checkboxDiv input[type=checkbox]{
+    border: 1px solid gray;
+    display: inline-block;
+}
+
+#checkboxlabel{
+    display: inline-block;
+}
+
 /* for drop down menu selection */
 
 .accordion{
@@ -246,7 +255,7 @@ hr{
     font-weight: 600;
 }
 
-input[type="checkbox"]{
+.accordion input[type="checkbox"]{
     display: none;
 }
 
@@ -279,6 +288,9 @@ input[type="checkbox"]{
     padding: 20px;
     border: 1px solid black;
     border-radius: 25px;
+    background-color: white;
+    width: 50%;
+    margin: auto;
 }
 #confirmButtonsDiv{
     display: flex;

@@ -11,7 +11,7 @@ const ClassInfo = ({key, className, classTitle, classDescript, creditHours, preR
     return(
         <Popup contentStyle={{overflowX: "scroll", overflowY: 'scroll', height: "40%", width: "40%", margin: 'auto', padding: "10px"}} trigger=
             {<button id='classInfoButton'>{className}</button>} 
-            position={'top center'}>
+            position={'top center'} keepTooltipInside={true}>
             {
     
                 <div className='classInfoPopup'>

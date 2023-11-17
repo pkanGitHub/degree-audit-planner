@@ -10,7 +10,7 @@ const TermsCondition = () => {
     }
     return(
         <Popup trigger=
-            {<button id='termsButton' onClick={handleClick}> Terms and Conditions </button>} 
+            {<button id='termsButton' onClick={handleClick}> Terms and Conditions </button>} lockScroll={true} keepTooltipInside={true}
             modal nested>
             {
                 close => (

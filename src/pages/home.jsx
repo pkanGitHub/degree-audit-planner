@@ -1,14 +1,11 @@
 import '../styles/home.css';
 import TermsCondition  from '../components/termsConditions';
-import CookiePopup from "../components/cookiepopup";
 import autoCard from "../auto.jpg"
 import manualCard from "../manual.jpg"
 import tutorialCard from "../tutorial.jpg"
 
 //---------------------------------------------------------
-import React, { useState, useEffect } from 'react';
-//const Home = () => {
-    const Home = () => {
+const Home = () => {
         // const [courses, setCourses] = useState([]);
         // const [expandedCourse, setExpandedCourse] = useState(null);
         // const [expandedArea, setExpandedArea] = useState(null);
@@ -110,6 +107,7 @@ import React, { useState, useEffect } from 'react';
         // }
 
 //---------------------------------------------------------
+
     return (
         <div>
             <div className="intro">
@@ -169,10 +167,8 @@ import React, { useState, useEffect } from 'react';
             <div className="terms">
                 <TermsCondition />
             </div>
-            <div id="testcookie">
-                <CookiePopup />
-            </div>
-            </div>
+
+        </div>
     );
 };
 

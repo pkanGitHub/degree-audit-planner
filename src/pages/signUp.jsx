@@ -73,6 +73,7 @@ const SignUp = () => {
                                 <input type="checkbox" name="terms" value={isChecked} onChange={handleCheckbox}/>
                                 I accept the <TermsCondition/>
                             </label>
+                            <br/>
                         </div>
                         
                     </div>
