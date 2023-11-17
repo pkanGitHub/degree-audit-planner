@@ -1,5 +1,5 @@
 import "../styles/audit.css"
-import { useState } from "react"
+import React, { useState, useEffect } from "react";
 import RequiredCourse from "./requiredCourse";
 import "../styles/audit.css"
 import AddCourses from "./addCourses";
@@ -7,29 +7,61 @@ import AddCourses from "./addCourses";
 
 const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
     const [isOrOpen, setIsOrOpen] = useState(false)
+
+    const [totalRequiredCredits, setTotalRequiredCredits] = useState(0);
+    
+    useEffect(() => {
+        calculateTotalRequiredCredits();
+      }, [type, category, coursesList]);
+    
+
     const toggleOrCourses = () => {
         setIsOrOpen(!isOrOpen)
     }
+
+    const calculateTotalRequiredCredits = () => {
+        let totalCredits = 0;
+    
+        type
+            .filter((option) => option.title.match(category))
+            .forEach((selectedOption) => {
+                selectedOption?.requirements &&
+                    selectedOption.requirements.forEach((course) => {
+                        if (course?.label === "Total Minimum"
+                            /* course.list.length > 0 && 
+                            course?.label !== "Total Minimum" &&
+                            course?.label !== "Accountancy Elective" &&
+                            course?.label !== "Free Elective" &&
+                            course?.label !== "General Education"  */
+                        ) {
+                            const credits = parseInt(course?.credits, 10) || 0;
+                            totalCredits += credits;
+                        }
+                    });
+            });
+    
+        setTotalRequiredCredits(totalCredits);
+    };
 
     return(
         type.filter(option => option.title.match(category)).map((selectedOption, index)=> {if(index===0){return(
             // this first if basically says take the first filtered option. did this because would grab names that match but have extra. for example, minor in social justice would also return minor in social justice for educators
             <div key={selectedOption?._id}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <h2>{selectedOption?.title}</h2>
+                    <h2>{selectedOption?.title}- Required Credits:{" "} {totalRequiredCredits}</h2>
                     <button className="programDelete" onClick={removeCatalog}>Delete</button>
                 </div>
                 
-                {selectedOption?.requirements && selectedOption.requirements.map((course)=> {if(course.required === "true"){return(
+                {selectedOption?.requirements && selectedOption.requirements.map((course)=> {if(course.required === "true" && course.list.lenght !== 0){return(
                     // this section if filters based on if the course section is required or not, if not, will do a mass select type of thing
                     <div key={course?._id}>
                         <ul className="accordion">
                             <li>
                             <input type="checkbox" name="accordion" id={course?._id} />
-                            <label id="genReqLabel" htmlFor={course?._id}>{course?.label}</label>
+                            <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</label>
                             
                                 <div className="classHistory">
-                                    <p><b>Credits hours needed:</b> {course.credits}</p>
+                                    {/* <p><b>Credits hours needed:</b> {course.credits}</p> */}
                             
                                         {course?.list && course.list.map ((item) => {if(item?.or && item.or.length > 0){return(
                                             // this if statement filters based on whether or not the specific class has an OR class. if it does, returns all of this information. if it doesn't then only returns specific class
@@ -102,7 +134,14 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
                         </ul>
                     </div>
                 )}
+                // else if(course.list.length !== 0){
                 else{
+                    if(course.list.length === 0){
+                        return(
+                                        <label htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</label>
+                        )
+                    }
+                    else{
                     // this section is for courses that are not required but need a sort of user input to add the courses to the degree accordingly
                     let manySelect = []
                     let orClasses = []
@@ -111,10 +150,10 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
                             <ul className="accordion">
                                 <li>
                                     <input type="checkbox" name="accordion" id={course?._id} />
-                                    <label id="genReqLabel" htmlFor={course?._id}>{course?.label}</label>
+                                    <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</label>
                                 
                                     <div className="classHistory">
-                                        <p><b>Credits hours needed:</b> {course.credits}</p>
+                                        {/* <p><b>Credits hours needed:</b> {course.credits}</p> */}
                             
                                         <AddCourses courses={manySelect} orCourses={orClasses}/>
                                         
@@ -159,7 +198,7 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
                             </ul>
                         </div>
 
-                    )
+                    )}
                 }})}
                
             </div>

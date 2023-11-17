@@ -12,6 +12,17 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import Cookies from "universal-cookie";
 
 const Audit = () => {
+
+    const [userCredits, setUserCredits] = useState(0);
+    const [userCreditsNeeded, setUserCreditsNeeded] = useState(0);
+    const [userCreditsRemaining, setUserCreditsRemaining] = useState(0);
+    const [userCreditsElectives, setUserCreditsElectives] = useState(0);
+    const [userCreditsGenEds, setUserCreditsGenEds] = useState(0);
+    const [userCreditsMajor, setUserCreditsMajor] = useState(0);
+    const [userCreditsMinor, setUserCreditsMinor] = useState(0);
+    const [userCreditsCertificate, setUserCreditsCertificate] = useState(0);
+    const [userCreditsTransfer, setUserCreditsTransfer] = useState(0);
+
     const [selectType, setType] = useState("");
     const handleTypeChange = (e, index) => {
         setType(e.target.value);
@@ -103,6 +114,131 @@ const Audit = () => {
         options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
     }
 
+    //------------------------------------------------------------------------------------------
+    
+    const calculateUserCredits = () => {
+
+        let credits = 0;
+        let creditsNeeded = 0;
+        let creditsRemaining = 0;
+        let creditsElectives = 0;
+        let creditsGenEds = 0;
+        let creditsMajor = 0;
+        let creditsMinor = 0;
+        let creditsCertificate = 0;
+        let creditsTransfer = 0;
+
+        let userCredits = 0;
+        let userCreditsNeeded = 0;
+        let userCreditsRemaining = 0;
+        let userCreditsElectives = 0;
+        let userCreditsGenEds = 0;
+        let userCreditsMajor = 0;
+        let userCreditsMinor = 0;
+        let userCreditsCertificate = 0;
+        let userCreditsTransfer = 0;
+        
+      
+        // calculates credits for each category
+        userCatalog.forEach((category) => {
+          if (category.type === "majors") {
+            const major = majors.find((major) => major.title === category.category);
+            creditsMajor += major?.credits || 0;
+            console.log("Credits Major: ", major?.credits || 0);
+          } else if (category.type === "minors") {
+            const minor = minors.find((minor) => minor.title === category.category);
+            creditsMinor += minor?.credits || 0;
+            console.log("Credits Minor: ", minor?.credits || 0);
+          } else if (category.type === "certificates") {
+            const certificate = certificates.find((cert) => cert.title === category.category);
+            creditsCertificate += certificate?.credits || 0;
+            console.log("Credits Certificate: ", certificate?.credits || 0);
+          }
+        });
+      
+        // calculates credits for gen eds
+        genEds.forEach((genEd) => {
+          if (genEd.type === "genEds") {
+            creditsGenEds += genEd.credits || 0;
+          }
+        });
+      
+        // calculates credits for electives
+        creditsElectives += userCredits - creditsMajor - creditsMinor - creditsCertificate - creditsGenEds - creditsTransfer;
+      
+        // calculates credits needed
+        creditsNeeded += creditsGenEds + creditsMajor + creditsMinor + creditsCertificate;
+      
+        // calculates credits remaining
+        creditsRemaining += creditsNeeded - userCredits;
+      
+        // calculates credits from transfer courses
+        creditsTransfer += userCreditsTransfer || 0;
+      
+        return {
+          credits,
+          creditsNeeded,
+          creditsRemaining,
+          creditsElectives,
+          creditsGenEds,
+          creditsMajor,
+          creditsMinor,
+          creditsCertificate,
+          creditsTransfer,
+        };
+      };
+      
+      // useEffect for initial load and updates
+      useEffect(() => {
+        const {
+          credits,
+          creditsNeeded,
+          creditsRemaining,
+          creditsElectives,
+          creditsGenEds,
+          creditsMajor,
+          creditsMinor,
+          creditsCertificate,
+          creditsTransfer,
+        } = calculateUserCredits();
+      
+        setUserCredits(credits);
+        setUserCreditsNeeded(creditsNeeded);
+        setUserCreditsRemaining(creditsRemaining);
+        setUserCreditsElectives(creditsElectives);
+        setUserCreditsGenEds(creditsGenEds);
+        setUserCreditsMajor(creditsMajor);
+        setUserCreditsMinor(creditsMinor);
+        setUserCreditsCertificate(creditsCertificate);
+        setUserCreditsTransfer(creditsTransfer);
+      }, [userCatalog, userCredits, userCreditsNeeded, userCreditsRemaining, userCreditsElectives, userCreditsGenEds, userCreditsMajor, userCreditsMinor, userCreditsCertificate, userCreditsTransfer]);
+      
+       
+      const calculateCategoryCredits = (categoryItem, type) => {
+        if (type === "majors") {
+          return categoryItem?.credits || 0;
+        } else if (type === "minors") {
+          return categoryItem?.credits || 0;
+        } else if (type === "certificates") {
+          return categoryItem?.credits || 0;
+        }
+        return 0;
+      };
+
+//write all these totals to the console showing the title and value
+        console.log("Credits: ", userCredits);
+        console.log("Credits Needed: ", userCreditsNeeded);
+        console.log("Credits Remaining: ", userCreditsRemaining);
+        console.log("Credits Electives: ", userCreditsElectives);
+        console.log("Credits Gen Eds: ", userCreditsGenEds);
+        console.log("Credits Major: ", userCreditsMajor);
+        console.log("Credits Minor: ", userCreditsMinor);
+        console.log("Credits Certificate: ", userCreditsCertificate);
+        console.log("Credits Transfer: ", userCreditsTransfer);
+
+
+
+      //------------------------------------------------------------------------------------------
 
     // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
     
@@ -121,11 +257,31 @@ const Audit = () => {
             category = "default"
         }
 
-
+/* 
         return(
             <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
         )
+ */
+//for each category and catalog items display the credits required and the credits taken. the totals need to update when the user adds a course. reduce the creidt hours needed when coursed are updated 
+ //refresh when courses are added, deleted, set to in progress, or set to taken
+        return(
+            <div>
+                <div id="catalogCredits">
+                    <p>Credits Required: {calculateCategoryCredits(selectedType.find((item) => item.title === category), type)}</p>
+                    <p>Credits Taken: {calculateCategoryCredits(selectedType.find((item) => item.title === category), type)}</p>
+                </div>
+                <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
+            </div>
+        )
 
+
+
+        
+        
+
+
+
+        
     }
 
     // delete button/refresh page button
@@ -244,11 +400,10 @@ const Audit = () => {
                     </div>
                     <hr/>
 
-                    
                     <GenEdsModel key={state} genEds={genEds} coursesList={coursesList}/>
 
             
-                    {/* this is a map that gets all user input programs here, user can delete or add programs */}
+                    {/* this is a map that gets all user input programs here, user can delete or add programs. display all the credit totals*/}
                     { userCatalog.map((key, index) =>
                         <div key={index}>
 
@@ -257,6 +412,7 @@ const Audit = () => {
                         </div>
                         )
                     }
+                    
 
                     {/* <MajorTest majors={majors} coursesList={coursesList}/> */}
 
