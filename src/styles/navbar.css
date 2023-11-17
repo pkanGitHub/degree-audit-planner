@@ -15,6 +15,10 @@
   align-items: center;
 }
 
+.profileSection {
+    align-items: center; /* Center items vertically */
+}
+
 #mizLogo {
     width: 40px;
     height: 40px;
@@ -45,12 +49,12 @@
 }
 
 #universityTitle {
-    font-style: bold;
     color: white;
     text-align: center;
     text-decoration: none;
-    padding: 15px;
-    font-size: 17px;
+    padding: 0px;
+    font-size: 19px;
+    font-family: 'Kameron', serif;
 }
 
 #pfpButton {
@@ -68,3 +72,37 @@
 .navbarlink.active {
     background-color: #04AA6D;
 }
+
+.editButton {
+    background-color: #F1B82D;
+    border-radius: 2px;
+    width: 100px;
+}
+
+.editButton:hover {
+    background-color: #F7D88D;
+}
+
+.profileSection {
+    display: flex;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+  }
+  
+  /* Add this style to center the form content */
+  #profileDesign {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileSection .userInfo {
+    font-weight: normal;
+    width: 350px;
+  }
+
+#userPFP {
+    width: 200px;
+    height: auto;
+  }
