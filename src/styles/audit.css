@@ -1,12 +1,11 @@
 #contents
 {
-    background-color: white;
     padding: 20px;
-    box-shadow: 5px 10px 8px #c3c3c3;
     width: 80%;
     align-items: center;
     margin: auto;
 }
+
 #orClasses{
     display: flex;
 }
@@ -36,7 +35,6 @@
 #addedSectionEnroll label{
     font-weight: bold;
 }
-
 
 button{
     border: none;
@@ -86,7 +84,6 @@ button{
     padding: 5px;
 
 }
-
 
 .courseTable {
     border: 1px solid gray;
