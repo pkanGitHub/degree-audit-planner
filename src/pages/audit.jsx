@@ -10,6 +10,15 @@ import TranscriptUpload from "../components/transcriptUpload";
 
 const Audit = () => {
 
+    const [userCredits, setUserCredits] = useState(0);
+    const [userCreditsNeeded, setUserCreditsNeeded] = useState(0);
+    const [userCreditsRemaining, setUserCreditsRemaining] = useState(0);
+    const [userCreditsElectives, setUserCreditsElectives] = useState(0);
+    const [userCreditsGenEds, setUserCreditsGenEds] = useState(0);
+    const [userCreditsMajor, setUserCreditsMajor] = useState(0);
+    const [userCreditsMinor, setUserCreditsMinor] = useState(0);
+    const [userCreditsCertificate, setUserCreditsCertificate] = useState(0);
+    const [userCreditsTransfer, setUserCreditsTransfer] = useState(0);
 
     const [selectType, setType] = useState("");
     const handleTypeChange = (e, index) => {
@@ -85,6 +94,7 @@ const Audit = () => {
 
     let userType = null;
     let options = null;
+    let yearOptions = null;
 
     if (selectType === "majors"){
         userType = majors
@@ -97,11 +107,121 @@ const Audit = () => {
     }
 
     if (userType) { 
+        yearOptions = userType.map(option => <option key={option?.title}>{option?.title}</option>)
         options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
     }
 
+/* //------------------------------------------------------------------------------------------
+    const calculateUserCredits = () => {
 
-    // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
+        let credits = 0;
+        let creditsNeeded = 0;
+        let creditsRemaining = 0;
+        let creditsElectives = 0;
+        let creditsGenEds = 0;
+        let creditsMajor = 0;
+        let creditsMinor = 0;
+        let creditsCertificate = 0;
+        let creditsTransfer = 0;
+
+        let userCredits = 0;
+        let userCreditsNeeded = 0;
+        let userCreditsRemaining = 0;
+        let userCreditsElectives = 0;
+        let userCreditsGenEds = 0;
+        let userCreditsMajor = 0;
+        let userCreditsMinor = 0;
+        let userCreditsCertificate = 0;
+        let userCreditsTransfer = 0;
+        
+      
+        // calculates credits for each category
+        userCatalog.forEach((category) => {
+          if (category.type === "majors") {
+            const major = majors.find((major) => major.title === category.category);
+            creditsMajor += major?.credits || 0;
+          } else if (category.type === "minors") {
+            const minor = minors.find((minor) => minor.title === category.category);
+            creditsMinor += minor?.credits || 0;
+          } else if (category.type === "certificates") {
+            const certificate = certificates.find((cert) => cert.title === category.category);
+            creditsCertificate += certificate?.credits || 0;
+          }
+        });
+      
+        // calculates credits for gen eds
+        genEds.forEach((genEd) => {
+          if (genEd.type === "genEds") {
+            creditsGenEds += genEd.credits || 0;
+          }
+        });
+      
+        // calculates credits for electives
+        creditsElectives += userCredits - creditsMajor - creditsMinor - creditsCertificate - creditsGenEds - creditsTransfer;
+      
+        // calculates credits needed
+        creditsNeeded += creditsGenEds + creditsMajor + creditsMinor + creditsCertificate;
+      
+        // calculates credits remaining
+        creditsRemaining += creditsNeeded - userCredits;
+      
+        // calculates credits from transfer courses
+        creditsTransfer += userCreditsTransfer || 0;
+      
+        return {
+          credits,
+          creditsNeeded,
+          creditsRemaining,
+          creditsElectives,
+          creditsGenEds,
+          creditsMajor,
+          creditsMinor,
+          creditsCertificate,
+          creditsTransfer,
+        };
+      };
+      
+      // useEffect for initial load and updates
+      useEffect(() => {
+        const {
+          credits,
+          creditsNeeded,
+          creditsRemaining,
+          creditsElectives,
+          creditsGenEds,
+          creditsMajor,
+          creditsMinor,
+          creditsCertificate,
+          creditsTransfer,
+        } = calculateUserCredits();
+      
+        setUserCredits(credits);
+        setUserCreditsNeeded(creditsNeeded);
+        setUserCreditsRemaining(creditsRemaining);
+        setUserCreditsElectives(creditsElectives);
+        setUserCreditsGenEds(creditsGenEds);
+        setUserCreditsMajor(creditsMajor);
+        setUserCreditsMinor(creditsMinor);
+        setUserCreditsCertificate(creditsCertificate);
+        setUserCreditsTransfer(creditsTransfer);
+      }, [userCatalog, userCredits, userCreditsNeeded, userCreditsRemaining, userCreditsElectives, userCreditsGenEds, userCreditsMajor, userCreditsMinor, userCreditsCertificate, userCreditsTransfer]);
+      
+       
+      const calculateCategoryCredits = (categoryItem, type) => {
+        if (type === "majors") {
+          return categoryItem?.credits || 0;
+        } else if (type === "minors") {
+          return categoryItem?.credits || 0;
+        } else if (type === "certificates") {
+          return categoryItem?.credits || 0;
+        }
+        return 0;
+      };
+
+
+      //------------------------------------------------------------------------------------------ */
+    
+      // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
     
     function getCourses(type, category, index){
         let selectedType = [];
@@ -118,14 +238,20 @@ const Audit = () => {
             category = "default"
         }
 
-
+        //const selectedItem = selectedType.find((item) => item.title === category);
         return(
             <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
-        )
-
+        ) 
+        /* return (
+            <div key={index}>
+              <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)} />
+              <div>Total Credits for {category}: {calculateCategoryCredits(selectedItem, type)}</div>
+            </div>
+          ); */
     }
-
-    return (
+    
+    
+        return (
         <body id="fullpage">
             <div id="header">
                 <TranscriptUpload set={addCatalog}/>
