@@ -6,6 +6,36 @@ import image from "../profilephoto.png";
 import { Link } from 'react-router-dom';
 import mizzouLogo from "../MU-StackedMU-4C.png";
 
+// import can delete later
+import "../styles/audit.css";
+import CatalogItems from "../components/catalog";
+import GenEdsModel from "../components/genEds";
+import ExtraCourses from "../components/extraCourses";
+import TransferCourse from "../components/transferCourses";
+import SemesterPlan from "../components/semesterplan";
+import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
+import TranscriptUpload from "../components/transcriptUpload";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import Cookies from "universal-cookie";
+
+
+// this is testing for user information, may want to use this to query data, can do this in use effect!
+
+const cookies = new Cookies(null);
+const cookieData =  cookies.get("user")
+
+let testAuth = null;
+try{
+    testAuth = cookies.get("user2")
+    if(testAuth === undefined){
+        testAuth = "";
+    }
+}
+catch(err){
+    console.log(err)
+}
+
 const NavBar = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -66,22 +96,20 @@ const NavBar = () => {
             {(close) => (
               <div className="profileSection">
                 <div id="profileDesign">
-                  <h1>Create Your Account</h1>
+                  <h1>Your Profile</h1>
+                  <img src={image} alt='profilephoto' id='userPFP'></img>
                   <form onSubmit={handleSubmit}>
                     <div id="profileContent">
                       <label>Email
-                        <input type="text" name="email" placeholder="user email" value={formData.email} onChange={handleChange}/>
+                        <input type="text" className='userInfo'name="Email" value={testAuth.email} readonly='true'/>
                       </label>
                       <br/>
                       <label>Password
-                        <input type="text" name="password" placeholder="current password" value={formData.password} onChange={handleChange}/>
+                        <input type="text" className='userInfo' name="Password" value={testAuth.password} readonly='true'/>
                       </label>
                       <br/>
-                      <label>Enter Password Again
-                        <input type="text" name="confirmPassword" placeholder="enter new password" value={formData.confirmPassword} onChange={handleChange}/>
-                      </label>
                     </div>
-                    <button className="submitButton" type="submit">Save Changes</button>
+                    <button className="editButton" type="submit">Edit</button>
                   </form>
                 </div>
               </div>
