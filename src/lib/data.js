@@ -1,5 +1,4 @@
-const url = "http://localhost:4001/api/"
-
+const url = process.env.REACT_APP_API_ROUTE || "http://localhost:4001/api/";
 var Majors;
 var Minors;
 var Certificates;
@@ -86,14 +85,19 @@ export async function getCourseList(pull) {
 
 export function getCourseById(id) {
     if (!id) return;
+    id = id.toUpperCase();
     const area = id.slice(0, id.lastIndexOf("_"))
-    const regex = new RegExp(`\\(${area}\\)$`)
+    const regex = new RegExp(`\\(${area}\\)$`, "i")
 
     if (!Courses) return;
+
+    // console.log(Courses.filter(doc => doc.area?.match(regex) != null)[0].courses)
 
     const course = Courses
     .filter(doc => doc.area?.match(regex) != null)[0]?.courses
     .filter(course => course.courseID === id)[0];
+
+    // console.log(course);
 
     return course;
 }

@@ -7,6 +7,7 @@ import TransferCourse from "../components/transferCourses";
 import SemesterPlan from "../components/semesterplan";
 import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
+import * as User from "../lib/user";
 
 const Audit = () => {
 
@@ -23,11 +24,6 @@ const Audit = () => {
     };
 
     const [selectTerm, setTerm] = useState(null);
-    const term = {
-        FS21: "Fall 2021",
-        SP22: "Spring 2022",
-        SM22: "Summer 2022",
-    };
     const handleTermChange = (e, index) => {
         setTerm(e.target.value);
     };
@@ -133,12 +129,22 @@ const Audit = () => {
         setState(state+1)
     }
 
+    const [userCourses, setUserCourses] = useState(User.getCourses());
+
+    const addCourse = (course) => {
+        User.addCourse(course)
+        setUserCourses(userCourses);
+    }
+    const addCourses = (courses) => {
+        User.concatCourses(courses);
+        setUserCourses([...userCourses])
+    }
 
   
     return (
         <div id="fullpage">
             <div id="header">
-                <TranscriptUpload set={addCatalog}/>
+                <TranscriptUpload set={addCatalog} setCourses={addCourses}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
@@ -158,7 +164,7 @@ const Audit = () => {
                                             {/* {Object.keys(term).map((key, index) => 
                                             <option value={key}>{term[key]}</option>)} */}
 
-                                            { Object.keys( majors ).sort().reverse().map(key => <option value={ key } >{ key }</option> )}
+                                            { Object.keys( majors ).sort().reverse().map(key => <option key={ key } value={ key } >{ key }</option> )}
 
                                         </select>
                                     </label>
@@ -239,7 +245,7 @@ const Audit = () => {
                 </div>
                 <hr/>
 
-                <SemesterPlan data={userCatalog}/>
+                <SemesterPlan data={userCatalog} courses={userCourses}/>
 
             </div>
         </div>

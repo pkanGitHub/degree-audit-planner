@@ -2,7 +2,6 @@ import { useState } from "react";
 import "../styles/audit.css";
 import ClassInfo from "./classInfoPopup";
 import RequiredChoice from "./requiredChoice";
-import { get } from "mongoose";
 
 const MassSelectCourse = ({coursesList, categories}) => {
     const [selectCourseType, setCourseType] = useState('');
@@ -18,11 +17,11 @@ const MassSelectCourse = ({coursesList, categories}) => {
     const handleLargeCourseClick = () => {
         const courseInfo = selectCourse
        
-        {getOptions.filter(singleClass => singleClass.courseID.match(courseInfo)).map(filteredClass => (
+        getOptions.filter(singleClass => singleClass.courseID.match(courseInfo)).map(filteredClass => (
             
             setSelectedCourses([...selectedCourses, {key: filteredClass._id, classId: filteredClass.courseID, creditHours: filteredClass.credit, preReq: filteredClass.prerequisites}])
             
-            ))}
+            ))
         
 
     }
@@ -64,7 +63,7 @@ const MassSelectCourse = ({coursesList, categories}) => {
                 <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
                     <option value=""></option>
                     {filteredCategory.map((key) => 
-                    <option value={key.id}>{key.name}</option>)}
+                    <option key={key.id} value={key.id}>{key.name}</option>)}
                 </select>
             </label>
 
