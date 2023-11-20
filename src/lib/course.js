@@ -1,5 +1,12 @@
 import { getCourseById } from "./data";
 
+export const STATUS = {
+    COMPLETED: "completed",
+    PLANNED: "planned",
+    INPROGRESS: "in-progress",
+    SUGGESTED: "suggested"
+}
+Object.freeze(STATUS);
 export class Course {
 
     constructor(id, year, semester, credits) {
@@ -9,15 +16,17 @@ export class Course {
 
         this.name = course?.name;
         this.description = course?.description;
-        this.credits = (credits || course?.credit).replace(".0", "");
-        this.status = "planned";
+        this.credits = (credits || course?.credit)?.replace(".0", "");
+        this.status = STATUS.PLANNED;
         this.unique = generateUniqueID();
     }
 
     // Done this way so I don't have to worry about using the right string or number value everywhere.
-    completed() { this.status = "completed"; return this;}
-    planned() { this.status = "planned"; return this;}
-    inProgress() { this.status = "in-progress"; return this;}
+    setStatus(status) { this.status = status; return this; }
+    completed() { this.status = STATUS.COMPLETED; return this; }
+    planned() { this.status = STATUS.PLANNED; return this; }
+    inProgress() { this.status = STATUS.INPROGRESS; return this; }
+    suggested() { this.status = STATUS.SUGGESTED; return this; }
 
 
 }

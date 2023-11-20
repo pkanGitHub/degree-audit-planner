@@ -29,3 +29,7 @@ export function removeCourse(course) {
 export function addMajor(major) {
     majors.push(major);
 }
+
+export function print() {
+    console.log(courses);
+}

@@ -238,7 +238,7 @@ const Audit = () => {
 
 
                     <div id='optionButtons'>
-                        <button id='saveButton'>Save</button>
+                        <button id='saveButton' onClick={User.print}>Save</button>
                         <button id='exportButton'>Export</button>
                         <button id='deleteButton' onClick={refreshPage}>Delete</button>
                     </div>

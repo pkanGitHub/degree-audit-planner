@@ -88,8 +88,7 @@ export default function TranscriptUpload({set, setCourses}) {
                                     return [total, year, semester[0][0], ++semCnt]; 
                                 }), [[], -1, 3, 0]))
 
-            setFile(null);
-            setPreview(null);
+            closeModal(null);
         })
         .catch(error => {
             console.error(error);
@@ -104,7 +103,7 @@ export default function TranscriptUpload({set, setCourses}) {
     }
 
     const closeModal = e => {
-        if (e.target.id !== "uploadModal" && e.target.id !== "close") return;
+        if (e != null && e.target.id !== "uploadModal" && e.target.id !== "close") return;
         setHidden(true);
         setConsent(false);
         setFile(null);
