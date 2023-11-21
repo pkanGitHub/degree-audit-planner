@@ -12,11 +12,11 @@ const ResetPassword = () => {
                     
                     <div id="formContent">
                         <label>New Password
-                            <input type="text"/>
+                            <input type="password"/>
                         </label>
                         <br/>
                         <label>Confirm New Password
-                            <input type="text"/>
+                            <input type="password"/>
                         </label>
                     </div>
                     
