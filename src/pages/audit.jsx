@@ -161,7 +161,7 @@ const Audit = () => {
     })
     }
     const cookies = new Cookies(null);
-    const cookieData =  cookies.get("user")
+    const cookieData =  cookies.get("user2")
 
     let calendarHeading = "" // this is the banner over the calendar
     let testCatalog = [];
@@ -185,7 +185,7 @@ const Audit = () => {
 
     let testAuth = null;
     try{
-        testAuth = cookies.get("user2")
+        testAuth = cookies.get("user")
         if(testAuth === undefined){
             testAuth = "";
         }

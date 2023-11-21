@@ -6,6 +6,8 @@ const ResetPassword = () => {
             <div id="formDesign">
 
                 <h1>Reset Password</h1>
+
+                <p>For user: some_username_here, use cookies</p>
                 <form>
                     
                     <div id="formContent">
