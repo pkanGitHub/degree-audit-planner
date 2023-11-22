@@ -49,7 +49,12 @@ app.use((req, res, next) => {
     next();
 });
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session({
+  sessionID: 'session',
+  maxAge: 3600  
+}));
+
+// login sessions last 1 hour
 require('./passport-config')(passport);
 app.use('/', authRoute);
 

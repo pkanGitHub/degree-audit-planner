@@ -38,7 +38,7 @@ const SignUp = () => {
             
             if (response.status === 201) {
                 console.log('User sign up successfully');
-                window.location.href = '/login'
+                window.location.href = '/mfa'
             } else {
                 const data = await response.json();
                 console.error(data.message);

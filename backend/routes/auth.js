@@ -3,6 +3,7 @@ const passport = require('passport')
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const User = require('../Models/user')
+const { sendVerificationCode } = require('../nodemailer-config')
 
 async function retrieveUserData() {
     try {
@@ -39,12 +40,18 @@ router.post('/signup', async (req, res) => {
         if (existUser) {
             return res.status(400).json({ msg: 'User already exists' })
         }
+        // Generate a verification code
+        const verificationCode = Math.floor(100000 + Math.random() * 900000);
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
-        const newUser = new User({ email, password: hashedPassword })
-
+        const newUser = new User({ email, password: hashedPassword, verificationCode })
         await newUser.save()
-        res.status(201).json({ msg: 'Sign up successfully' })
+
+        console.log('Before sending verification code email');
+        const emailResult = await sendVerificationCode(email, verificationCode);
+        console.log(emailResult);
+
+        res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.' })
         
     } catch (error) {
         console.error(error)
