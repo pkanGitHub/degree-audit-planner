@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const mongoose = require('mongoose')
 const session = require("express-session");
+const cookieParser = require('cookie-parser')
 // const plannerRoute = require('./routes/planner')
 const authRoute = require('./routes/auth')
 const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'Major2']
@@ -31,14 +32,14 @@ app.use((req, res, next)=>{
   );
   next();
 });
-
+app.use(cookieParser());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     // save if nothing is changed
     resave: false,
     // save empty value in the session if there is no value
-    saveUninitialized: false,
+    saveUninitialized: true,
   })
 );
 

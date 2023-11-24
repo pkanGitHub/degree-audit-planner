@@ -26,34 +26,36 @@ router.get("/users", (req, res) => {
     })
   })
 
-// create user
-router.post('/signup', async (req, res) => {
+  // create user
+  router.post('/signup', async (req, res) => {
     // console.log(req.body)
     const {email, password} = req.body
     
     if (!email || !password) {
-        return res.status(400).json({ msg: 'Please provide a email and password' })
+      return res.status(400).json({ msg: 'Please provide a email and password' })
     }
     try {
-        // check if user already exists
-        const existUser = await User.findOne({ email })
-        if (existUser) {
-            return res.status(400).json({ msg: 'User already exists' })
-        }
-        // Generate a verification code
-        const verificationCode = Math.floor(100000 + Math.random() * 900000);
-        // Store the verification code in the session
-        req.session.verificationCode = verificationCode
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
-        const newUser = new User({ email, password: hashedPassword, verificationCode })
-        await newUser.save()
+      // check if user already exists
+      const existUser = await User.findOne({ email })
+      if (existUser) {
+        return res.status(400).json({ msg: 'User already exists' })
+      }
+      // Generate a verification code
+      const verificationCode = Math.floor(100000 + Math.random() * 900000)
+      // Store the verification code in the session
+      req.session.verificationCode = verificationCode
+      console.log(`what should be stored: ${req.session.verificationCode}`)
+      req.session.save()
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(password, salt)
+      const newUser = new User({ email, password: hashedPassword, verificationCode })
+      await newUser.save()
 
-        console.log('Before sending verification code email');
-        const emailResult = await sendVerificationCode(email, verificationCode);
-        console.log(emailResult);
+      // console.log('Before sending verification code email')
+      const emailResult = await sendVerificationCode(email, verificationCode)
+      console.log(emailResult)
 
-        res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.' })
+      res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.' })
         
     } catch (error) {
         console.error(error)
@@ -62,38 +64,37 @@ router.post('/signup', async (req, res) => {
 })
 
 router.post('/verify-email', async(req, res) => {
-  const userInputCode = req.body.verificationCode;
+  const userInputCode = req.body.verificationCode
+  console.log(`user inputted: ${userInputCode}`)
 
-  // Retrieve the stored verification code from the session
-  const storedVerificationCode = req.session.verificationCode;
-
+  // Retrieve the stored verification code from session
+  console.log("Verfication code listed below")
+  const storedVerificationCode = req.session.verificationCode
+  console.log(storedVerificationCode)
   if (userInputCode === storedVerificationCode) {
-    // Code is correct
-    // Proceed with email verification
+    // Email verification
     try {
-      // Update the user's status to indicate email verification
       const user = await User.findOneAndUpdate(
         { /* Your query to find the user, e.g., { email: req.body.email } */ },
         { $set: { emailVerified: true } },
         { new: true }
-      );
+      )
       if (user) {
-        // Optionally, clear the verification code from the session
-        delete req.session.verificationCode;
-        return res.status(200).json({ msg: 'Email successfully verified' });
+        // remove verification code from session
+        delete req.session.verificationCode
+        return res.status(200).json({ msg: 'Email successfully verified' })
       } else {
-        // Handle the error and inform the user
-        return res.status(404).json({ error: 'User not found' });
+        // Handle error and inform the user
+        return res.status(404).json({ error: 'User not found' })
       }
     } catch (error) {
       // Handle database update error
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.error(error)
+      return res.status(500).json({ error: 'Internal Server Error' })
     }
   } else {
-    // Code is incorrect
-    // Handle the error and inform the user
-    return res.status(400).json({ error: 'Incorrect verification code' });
+    // Handle error and inform the user
+    return res.status(400).json({ error: 'Incorrect verification code' })
   }
 })
 
