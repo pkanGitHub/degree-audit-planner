@@ -73,6 +73,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
         console.log('Mongo connection successful on port', process.env.BACKEND_PORT);
     });
      // Start the cron job
+     // Schedule a task to run everyday every 3 mins for now
      let task = cron.schedule('*/3 * * * *', async () => {
       console.log('Cron job scheduled. Running now...');
       await removeEmail();
