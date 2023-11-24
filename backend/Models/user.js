@@ -20,7 +20,8 @@ const userSchema = mongoose.Schema({
         completed: { type: Boolean, default: false },
         courses: [String],
         creditHours: Number
-    }]
+    }],
+    emailVerified: { type: Boolean, default: false } // Add this field for email verification
 })
 
 module.exports = mongoose.model('User', userSchema)

@@ -7,19 +7,24 @@ import axios from 'axios'
 
 const MFA = () => {
     const [verificationCode, setVerificationCode] = useState('')
+    const [verificationRequestInProgress, setVerificationRequestInProgress] = useState(false)
 
     const handleVerification = async () => {
         try {
-        const response = await axios.post('http://localhost:4001/verify-email', { verificationCode })
+            setVerificationRequestInProgress(true);
+            const response = await axios.post('http://localhost:4001/verify-email', { verificationCode })
             if (response.data.success) {
-                alert('Email verification successful!')
+                alert(response.data.message)
+                // alert('Email verification successful!')
                 // window.location.href = '/audit'
             } else {
-                alert('Invalid verification code. Please try again.')
+                alert(response.data.message || 'Invalid verification code. Please try again.')
             }
         } catch (error) {
             console.error(error)
             alert('Failed to verify email. Please try again.')
+        } finally {
+            setVerificationRequestInProgress(false);
         }
     }
 
@@ -30,18 +35,20 @@ const MFA = () => {
                 <h2>Please confirm this is you. We sent a verification code to your email.</h2>
                 <form>
                     <div id="formContent">
-                        <label for="code">Enter Code</label>
+                        <label htmlFor="code">Enter Code</label>
                         <input type="text" name="code" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-                        <button onClick={handleVerification}>Verify Email</button>
+                        <button onClick={handleVerification} disabled={verificationRequestInProgress}>
+                            {verificationRequestInProgress ? 'Verifying...' : 'Verify Email'}
+                        </button>
                     </div>
                     <br/>
-                    {/* <a href="/resetpassword" className="submitButton" id="mfabutton">Submit</a>
-                    <br/>
-                    <a href="/forgotpassword">Cancel</a> */}
                 </form>
             </div>
         </div>
     )
 }
+                /* <a href="/resetpassword" className="submitButton" id="mfabutton">Submit</a>
+                    <br/>
+                    <a href="/forgotpassword">Cancel</a> */
 
 export default MFA;

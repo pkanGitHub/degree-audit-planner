@@ -42,6 +42,8 @@ router.post('/signup', async (req, res) => {
         }
         // Generate a verification code
         const verificationCode = Math.floor(100000 + Math.random() * 900000);
+        // Store the verification code in the session
+        req.session.verificationCode = verificationCode
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
         const newUser = new User({ email, password: hashedPassword, verificationCode })
@@ -57,6 +59,42 @@ router.post('/signup', async (req, res) => {
         console.error(error)
         return res.status(500).json({ error: 'Sign up failed' })
     }
+})
+
+router.post('/verify-email', async(req, res) => {
+  const userInputCode = req.body.verificationCode;
+
+  // Retrieve the stored verification code from the session
+  const storedVerificationCode = req.session.verificationCode;
+
+  if (userInputCode === storedVerificationCode) {
+    // Code is correct
+    // Proceed with email verification
+    try {
+      // Update the user's status to indicate email verification
+      const user = await User.findOneAndUpdate(
+        { /* Your query to find the user, e.g., { email: req.body.email } */ },
+        { $set: { emailVerified: true } },
+        { new: true }
+      );
+      if (user) {
+        // Optionally, clear the verification code from the session
+        delete req.session.verificationCode;
+        return res.status(200).json({ msg: 'Email successfully verified' });
+      } else {
+        // Handle the error and inform the user
+        return res.status(404).json({ error: 'User not found' });
+      }
+    } catch (error) {
+      // Handle database update error
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  } else {
+    // Code is incorrect
+    // Handle the error and inform the user
+    return res.status(400).json({ error: 'Incorrect verification code' });
+  }
 })
 
 // login

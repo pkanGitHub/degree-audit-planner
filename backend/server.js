@@ -14,6 +14,8 @@ modelNames.forEach(modelName => {
   const Model = require(`./Models/${modelName}`)
   models[modelName] = Model
 })
+const cron = require('node-cron')
+const removeEmail = require('./cron/removeUnverifiedEmailFromDatabase')
 
 /**
  * Set up CORS
@@ -70,6 +72,13 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     app.listen(process.env.BACKEND_PORT, () => {
         console.log('Mongo connection successful on port', process.env.BACKEND_PORT);
     });
+     // Start the cron job
+     let task = cron.schedule('*/3 * * * *', async () => {
+      console.log('Cron job scheduled. Running now...');
+      await removeEmail();
+    })
+    task.start()
+     
 })
 .catch((error) => {
     console.log(error);
