@@ -3,8 +3,6 @@ import "../styles/formStyle.css"
 import React, { useState } from 'react'
 import axios from 'axios'
 
-
-
 const MFA = () => {
     const [verificationCode, setVerificationCode] = useState('')
     const [verificationRequestInProgress, setVerificationRequestInProgress] = useState(false)
@@ -14,15 +12,14 @@ const MFA = () => {
             setVerificationRequestInProgress(true);
             const response = await axios.post('http://localhost:4001/verify-email', { verificationCode })
             if (response.data.success) {
-                alert(response.data.message)
-                // alert('Email verification successful!')
+                console.log(response.data.message)
                 // window.location.href = '/audit'
             } else {
-                alert(response.data.message || 'Invalid verification code. Please try again.')
+                console.log(response.data.message || 'Invalid verification code. Please try again.')
             }
         } catch (error) {
             console.error(error)
-            alert('Failed to verify email. Please try again.')
+            console.log('Failed to verify email. Please try again.')
         } finally {
             setVerificationRequestInProgress(false);
         }
