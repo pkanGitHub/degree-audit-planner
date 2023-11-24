@@ -28,7 +28,7 @@
     margin: auto;
     text-align: left;
 }
-#formContent label, input[type=text]{
+#formContent label, input[type=text], input[type=password]{
     display: block;
     font-weight: bold;
     font-size:large;
@@ -38,7 +38,7 @@
     text-align: left;
 }
 
-#formContent input[type=text]{
+#formContent input[type=text], input[type=password]{
     margin: auto;
     width: 100%;
     padding: 10px;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Popup from 'reactjs-popup';
 import '../styles/navbar.css';
@@ -20,23 +20,53 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import Cookies from "universal-cookie";
 
 
-// this is testing for user information, may want to use this to query data, can do this in use effect!
-
-const cookies = new Cookies(null);
-const cookieData =  cookies.get("user")
-
-let testAuth = null;
-try{
-    testAuth = cookies.get("user2")
-    if(testAuth === undefined){
-        testAuth = "";
-    }
-}
-catch(err){
-    console.log(err)
-}
-
 const NavBar = () => {
+  const [showLogin, setShowLogin] = useState(false)
+
+  const handleSignOut = () => {
+    window.location.href = '/'
+    cookies.remove("user")
+  }
+
+  
+
+
+  // this is testing for user information, may want to use this to query data, can do this in use effect!
+
+
+  const cookies = new Cookies(null);
+
+
+  let testAuth = null;
+    try{
+        testAuth = cookies.get("user")
+        if(testAuth === undefined){
+            testAuth = ""
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+  
+
+  useEffect(()=> {
+    try{
+      testAuth = cookies.get("user")
+      // checks if has cookie, if does, does not render login and sign up, else does render login and sign up
+      if(testAuth !== undefined){
+        setShowLogin(false)
+      }
+      else{
+        setShowLogin(true)
+        testAuth = ""
+      }
+    }catch(err){
+      console.log(err)
+    }
+  }, [showLogin])
+
+  
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -86,9 +116,10 @@ const NavBar = () => {
 
       <div className='rightItems'>
         <Link to="/" className='navbarlink'>Home</Link>
-        <Link to="/login" className='navbarlink'>Login</Link>
-        <Link to="/signup" className='navbarlink'>Sign Up</Link>
-          <Popup
+        {showLogin ? <Link to="/login" className='navbarlink'>Login</Link> : null}
+        {showLogin ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
+
+        {showLogin ? null : <Popup
             contentStyle={{ borderRadius: '3px', width: '40%', height: '80%' }}
             trigger={<button id='pfpButton' onClick={() => handleButtonClick()}><img src={image} alt='profilephoto' id='userprofile' /></button>}
             modal nested
@@ -96,6 +127,10 @@ const NavBar = () => {
             {(close) => (
               <div className="profileSection">
                 <div id="profileDesign">
+                <button id='close' onClick=
+                      {() => close()}>
+                          Close
+                  </button>
                   <h1>Your Profile</h1>
                   <img src={image} alt='profilephoto' id='userPFP'></img>
                   <form onSubmit={handleSubmit}>
@@ -111,10 +146,12 @@ const NavBar = () => {
                     </div>
                     <button className="editButton" type="submit">Edit</button>
                   </form>
+                  <button className='editButton' onClick={handleSignOut}>Sign Out</button>
                 </div>
               </div>
             )}
-          </Popup>
+          </Popup>}
+          
         </div>
       </div>
   );

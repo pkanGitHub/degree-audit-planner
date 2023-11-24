@@ -22,7 +22,7 @@ const Login = () => {
         
             if (response.ok) {
                 console.log('Login successful on the frontend')
-                cookies.set("user2", {email: formData.email, password: formData.password, programs: []}, {expires: tomorrow}) // takes data and adds it to cookie
+                cookies.set("user", {email: formData.email, password: formData.password}, {expires: tomorrow}) // takes data and adds it to cookie
                 // Redirect
                 window.location.href = '/audit'
             } else {
@@ -49,7 +49,7 @@ const Login = () => {
     const cookies = new Cookies(null);
 
     // this is a test to see how information from that works, DELETE WHEN COMPLETED
-    cookies.set("user", {email: "test", password: "password", testCategories: [{type: "majors", category: "BS in Information Technology"}, {type: "majors", category: "BS in Information Technology"}]}, {expires: tomorrow})
+    cookies.set("user2", {email: "test", password: "password", testCategories: [{type: "majors", category: "BS in Information Technology"}, {type: "majors", category: "BS in Information Technology"}]}, {expires: tomorrow})
 
     return (
         <div className="formSection">
@@ -64,7 +64,7 @@ const Login = () => {
                         <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange}/>
                         <br/>
                         <label>Password</label>
-                        <input type="text" name="password" placeholder="Enter password here..." value={formData.password} onChange={handleChange}/>
+                        <input type="password" name="password" placeholder="Enter password here..." value={formData.password} onChange={handleChange}/>
         
                         <a href="/forgotpassword">Forgot Password?</a>
                     </div>
