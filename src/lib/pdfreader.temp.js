@@ -78,14 +78,19 @@ export function GetInfo(file) {
 
             var term = "";
             var onTerm = false;
+            var year = "";
+            var allPrograms = [];
         
             for (var line of data) {
                 // console.log(line);
                 if (line.match(/.*Local Campus Credits.*/)) {
                     var text = line.split(" ");
                     term = text[0] + "_" + text[1];
-                    userData.CourseWork[term] = [];
+                    year = Number(text[1]);
+                    if (year % 2 === 0) year -= 1;
+                    year = `${year}-${year - 2000 + 1}`;
                     userData.Programs = [];
+                    userData.CourseWork[term] = [];
                     onTerm = true;
                     continue;
                 }
@@ -97,7 +102,7 @@ export function GetInfo(file) {
                     const program = line.match(/^[a-zA-Z&\s]+-\w+$/);
                     if (program) {
                         userData.Programs.push(program[0])
-                        continue;
+                        if (!allPrograms.some(program => program.title === program[0])) allPrograms.push({title: program[0], year: year})
                     }
                     // const course = line.match(/^\w*\s*\d*/);
                     const course = line.match(/^([a-zA-Z_\s]+)\s+(\d+).*(\d\.\d).*$/)
@@ -108,6 +113,8 @@ export function GetInfo(file) {
                 }
             };
             if (userData.Major === "" && Object.keys(userData.CourseWork) <= 0) reject("Invalid Formatting");
+
+            userData.Programs = userData.Programs.map(program => allPrograms.find(p => p.title === program))
             resolve(userData);
         })
         .catch(error => {

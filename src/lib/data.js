@@ -49,10 +49,10 @@ export function getProgramByExactName(name) {
 export function getProgramsBySearch(name_segment, year, category=undefined) {
 
     if (category === undefined) {
-        const programs = [];
-        programs.concat(getProgramsBySearch(name_segment, year, "major"))
-        programs.concat(getProgramsBySearch(name_segment, year, "minor"))
-        programs.concat(getProgramsBySearch(name_segment, year, "cert"))
+        var programs = [];
+        programs = programs.concat(getProgramsBySearch(name_segment, year, "major"))
+        programs = programs.concat(getProgramsBySearch(name_segment, year, "minor"))
+        programs = programs.concat(getProgramsBySearch(name_segment, year, "cert"))
         return programs;
     }
     var list;

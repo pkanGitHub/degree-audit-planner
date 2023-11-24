@@ -3,15 +3,17 @@ import { getCourseById, getProgramsBySearch } from "../lib/data";
 import { Course, STATUS } from "../lib/course";
 import { getCourses } from "../lib/user";
 import { useState, memo } from "react";
+import Popup from "reactjs-popup";
 
 export const SemesterPlan = memo(({data, courses}) => {
     console.log(data);
     const [change, callChange] = useState(1);
     const update = () => callChange(change + 1);
+    console.log("updated")
 
     var years = [];
     addFromUser(years, courses);
-    addProgramPlans(years, data);
+    // addProgramPlans(years, data);
     years = DeleteDuplicates(years);
 
     if (JSON.stringify(years[years.length -1 ]?.semesters) === "[[],[]]") years.pop();
@@ -23,13 +25,11 @@ export const SemesterPlan = memo(({data, courses}) => {
                 {years?.map((year, index) => {
                     const rows = year?.semesters.reduce((max, semester) => max > semester.length ? max : semester.length, 0)
 
-                    const totals = Array(year?.semesters.length).fill(0);
-
                     return (
                         <table key={index} id={"Year" + (index + 1)} className="planTable">
                             <thead>
                                 <tr>
-                                    <th colSpan={year.semesters.length * 2} id='tableHeading'>Year {index + 1}</th>
+                                    <th colSpan={year.semesters.length * 2} className='tableHeading'>Year {index + 1}</th>
                                 </tr>
                                 <tr>
 
@@ -39,7 +39,7 @@ export const SemesterPlan = memo(({data, courses}) => {
                                         )
                                     }
                                 </tr>
-                                <tr className="courseTableInfo" id="tableDataHeading">
+                                <tr className="courseTableInfo tableDataHeading">
 
                                     {
                                         year.semesters.map(() => 
@@ -59,19 +59,9 @@ export const SemesterPlan = memo(({data, courses}) => {
 
                                     return (
                                         <tr className="courseTableInfo" key={r}>
-                                            { year.semesters.map((semester, index) => {
-                                                const course = semester[r];
-                                                return (
-                                                <>
-                                                    <td className={"courseLabel " + course?.status}>{ course?.id.replace(/_/g, " ") }</td>
-                                                    <td>{ (() => {
-                                                            const credit = course?.credits
-                                                            totals[index] += !isNaN(Number(credit)) ? Number(credit) : 0;
-                                                            return credit;
-                                                        })()}
-                                                    </td>
-                                                </>)
-                                            })}
+                                            { year.semesters.map(semester => 
+                                                <CourseCell course={semester[r]} update={update} />
+                                            )}
                                         </tr>
                                     )
                                 }, year)}
@@ -80,11 +70,11 @@ export const SemesterPlan = memo(({data, courses}) => {
 
 
                             <tfoot>
-                                <tr id='tableSummary'>
+                                <tr className='tableSummary'>
                                     { year.semesters.map((semester, index) => 
                                     <>
                                         <td><b>Status:</b> <SetStatus semester={semester} update={update} /></td>
-                                        <td><b>Total Credit Hours: </b>{ totals[index] }</td>
+                                        <td><b>Total Credit Hours: </b>{ calcCredits(semester) }</td>
                                     </>
                                     )}
                                 </tr>
@@ -102,28 +92,71 @@ export const SemesterPlan = memo(({data, courses}) => {
     )
 })
 
-function calcStatus(semester) {
-    if (semester.every(course => course?.status ? course.status === STATUS.COMPLETED : true)) return STATUS.COMPLETED;
-    if (semester.every(course => course?.status ? course.status === STATUS.INPROGRESS : true)) return STATUS.INPROGRESS;
-    if (semester.every(course => course?.status ? course.status === STATUS.PLANNED : true)) return STATUS.PLANNED;
+function CourseCell({course, update}) {
 
-    return undefined;
+    const check = (status) => {
+        course.status = status;
+        update();
+    }
+
+    if (course) return (
+        <>
+            <td >
+            <Popup contentStyle={{height: "fit-content", width: "fit-content", margin: 'auto', padding: "10px"}} position={'top left'} 
+                trigger={ <button className={"courseLabel " + course?.status}>{ course?.id.replace(/_/g, " ") }</button> } > {
+                    <div>
+                        { course?.status === STATUS.SUGGESTED ? <span>This course was suggested based on the programs you selected.</span> : null}
+                        <div className="statusSet">
+                            <span className={course?.status === STATUS.PLANNED ? "checked" : null} onClick={() => check(STATUS.PLANNED)} >Planned</span>
+                                -
+                            <span className={course?.status === STATUS.INPROGRESS ? "checked" : null} onClick={() => check(STATUS.INPROGRESS)} >In Progress</span>
+                                -
+                            <span className={course?.status === STATUS.COMPLETED ? "checked" : null} onClick={() => check(STATUS.COMPLETED)} >Completed</span>
+                        </div>
+
+                    </div>
+                }
+            </Popup>
+            </td>
+            <td>{ (() => {
+                    const credit = course?.credits
+                    return credit;
+                })()}
+            </td>
+        </>
+    )
 }
+
+function calcStatus(semester) {
+    semester = semester.filter(course => course?.status);                                               // Removes any empty cells
+    if (semester.every(course => course.status === STATUS.COMPLETED)) return STATUS.COMPLETED;          // These check if all courses share a status
+    if (semester.every(course => course.status === STATUS.INPROGRESS)) return STATUS.INPROGRESS;
+    if (semester.every(course => course.status === STATUS.PLANNED)) return STATUS.PLANNED;
+
+    if (semester.some(course => course.status === STATUS.PLANNED)) return STATUS.PLANNED;               // If they dont share a single status
+    if (semester.some(course => course.status === STATUS.INPROGRESS)) return STATUS.INPROGRESS;         // Check what the lowest level status is (Planned -> InProgress) Completed must be all elements
+
+    return STATUS.PLANNED;                                                                              // By default it will be Planned, because its a plan
+}
+
 
 function SetStatus({semester, update}) {
     const manualChange = e => {
         semester.forEach(course => course.setStatus(e.target.value));
         update();
-        console.log(semester);
     }
 
     return (
-        <select defaultValue={ calcStatus } onChange={manualChange}>
+        <select value={ calcStatus(semester) } onChange={manualChange} >
             <option value={ STATUS.PLANNED }>Planned</option>
             <option value={ STATUS.INPROGRESS }>In Progress</option>
             <option value={ STATUS.COMPLETED }>Completed</option>
         </select>
     )
+}
+
+function calcCredits(semester) {
+    return semester.reduce((total, course) => total + Number(course?.credits), 0);
 }
 
 function DeleteDuplicates(years) {
@@ -151,7 +184,6 @@ function addProgramPlans(years, data) {
             if (!YEARS[i]?.semesters) YEARS[i] = {semesters: []};
 
             for (var s in year?.semesters) {
-                console.log(year?.semesters[s].courses);
                 if (YEARS[i]?.semesters[s] === undefined) { YEARS[i].semesters[s] = [];}
                 YEARS[i].semesters[s] = YEARS[i].semesters[s].concat(year?.semesters[s]?.courses
                                      .filter(course => course?.id).map(course => new Course(course.id, i, 0).planned()));

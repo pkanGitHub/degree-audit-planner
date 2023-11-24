@@ -63,8 +63,8 @@ const Audit = () => {
     const [userCatalog, setUserCatalog] = useState([{type: "", category: "", year: ""}])
 
     const handleUserCategories = () => {
-       setUserCatalog([...userCatalog, {type: selectType, category: selectCategory, year: selectTerm}])
-
+        User.addPlan(selectCategory, selectTerm, selectType);
+        setUserCatalog([...userCatalog, {type: selectType, category: selectCategory, year: selectTerm}])
     }
 
     const removeCatalog = (index) =>{
@@ -131,10 +131,6 @@ const Audit = () => {
 
     const [userCourses, setUserCourses] = useState(User.getCourses());
 
-    const addCourse = (course) => {
-        User.addCourse(course)
-        setUserCourses(userCourses);
-    }
     const addCourses = (courses) => {
         User.concatCourses(courses);
         setUserCourses([...userCourses])
@@ -238,7 +234,7 @@ const Audit = () => {
 
 
                     <div id='optionButtons'>
-                        <button id='saveButton' onClick={User.print}>Save</button>
+                        <button id='saveButton' onClick={()=> User.save('655f96b827fb470cd02a3e1b')}>Save</button>
                         <button id='exportButton'>Export</button>
                         <button id='deleteButton' onClick={refreshPage}>Delete</button>
                     </div>

@@ -2,9 +2,10 @@ import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone"
 import { useCallback } from 'react';
 import { GetInfo } from "../lib/pdfreader.temp";
-import { concatCourses, addMajor } from "../lib/user";
+import { concatCourses } from "../lib/user";
 import { Course } from "../lib/course";
 import "../styles/transcriptUpload.css"
+import { getProgramsBySearch } from "../lib/data";
 // https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 
 // https://spacejelly.dev/posts/uploading-files-in-react-from-a-form-with-drag-and-drop/
 
@@ -16,6 +17,7 @@ export default function TranscriptUpload({set, setCourses}) {
     const [preview, setPreview] = useState(null);
     const [userConsents, setConsent] = useState(false);
     const [error, setError] = useState(null);
+    const [programs, setPrograms] = useState([]);
 
     // === Variables from React Dropzone === //
     // const onDrop = 
@@ -40,7 +42,8 @@ export default function TranscriptUpload({set, setCourses}) {
             return;
         };
         GetInfo(uploadedFile).then(data => {
-            addMajor(data.Major);
+            console.log(data);
+            addPrograms(data.Programs);
             setCourses(Object.entries(data.CourseWork)
                                 .map(term => {
                                         const formatted = term[0].split("_");
@@ -86,15 +89,25 @@ export default function TranscriptUpload({set, setCourses}) {
                                         return course;
                                     }));          
                                     return [total, year, semester[0][0], ++semCnt]; 
-                                }), [[], -1, 3, 0]))
-
-            closeModal(null);
+                                }), [[], -1, 3, 0])
+                                [0])
+            // closeModal(null);
         })
         .catch(error => {
             console.error(error);
             setError("Please upload accepted file.");
         });;
         // .then(data => props.set("Major", data.Major.split("-")[0]));
+    }
+
+    const addPrograms = programs => {
+        const list = programs.map(program => {
+            var [name, type] = program.title.split("-");
+            const search = getProgramsBySearch(name, program.year, undefined);
+            return {original: program.title, year: program.year, results: search}
+        })
+
+        setPrograms(list);
     }
 
     const openModal = () => {
@@ -109,15 +122,15 @@ export default function TranscriptUpload({set, setCourses}) {
         setFile(null);
         setPreview(null);
         setError(null);
-        document.getElementsByTagName("body")[0].style.overflowY = "scroll";
+        document.getElementsByTagName("body")[0].style.overflowY = "scroll"; 
     }
-    
 
     return (
         <>
             <button id="transcriptButton" onClick={openModal}>Upload Unoffical Transcript</button>
             { hideModal ? null :        
                 <div id="uploadModal" onClick={closeModal}>
+                { programs.length === 0 ? 
                     <div id="modalContent">
                         <h3>Upload your file here:</h3>
                         <span id="close">X</span>
@@ -152,7 +165,30 @@ export default function TranscriptUpload({set, setCourses}) {
                         </div>
                         <button type="button" disabled={!userConsents} onClick={readFile}>Upload</button>
                         { error ? <p className="error">{ error }</p> : <p>&nbsp;</p> }
+                        
                     </div>
+                :
+                    <div id="modalContent">
+                        {console.log(programs)}
+                        <h3>
+                            We were able to recognize the following programs.
+                        </h3>
+                        { programs.map(program => (
+                            <>
+                                <p>{ program.original } | { program.year }</p>
+                                { program.results.length > 1 ?
+                                <select>
+                                    { program.results?.map(result => (
+                                        <option>{result.title}</option>
+                                    ))}
+                                </select>
+                                : 
+                                    <span>We were unable to recognize the above program and it must be added manualy.</span>
+                                }
+                            </>
+                        ))}
+                    </div>
+                }
                 </div>
             }
 

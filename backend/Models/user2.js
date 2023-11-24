@@ -13,4 +13,4 @@ const userSchema = mongoose.Schema({
     generalEducationCompleted: { type: Boolean, default: false }
 })
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User2', userSchema)

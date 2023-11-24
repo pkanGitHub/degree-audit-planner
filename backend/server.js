@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 const session = require("express-session");
 // const plannerRoute = require('./routes/planner')
 const authRoute = require('./routes/auth')
-const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'Major2']
+const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'User2']
 const models = {}
 modelNames.forEach(modelName => {
   const Model = require(`./Models/${modelName}`)
@@ -69,6 +69,28 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 .catch((error) => {
     console.log(error);
 });
+
+
+app.post("/api/save", (req, res) => {
+    models['User2'].findOneAndUpdate(
+        { _id: req.body.id },
+        { 
+            courses: req.body.courses,
+            major: req.body.major,
+            minor: req.body.minor,
+            certificates: req.body.cert,
+            generalEducationComplete: req.body.genEd
+        }
+    )
+    .then(user => res.status(200).json({
+        message: "User data updated",
+        data: user
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not update user data",
+        error: err
+    }))
+})
 
 // Get from all schemes
 
@@ -273,79 +295,6 @@ app.post("/addMajor/:year", (req, res) => {
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-  })
-
-  app.post("/addMajor2/:year", (req, res) => {
-
-    // models['Major2'].updateOne({
-    //     year: req.params.year,
-    //     "programs.title": req.body.title
-    // },{
-    //     $set: { "programs.$": { 
-    //         title: req.body.title ,
-    //         years: req.body.years,
-    //         url: req.body.url
-    //     }}
-    // },{
-    //     upsert: true
-    // })
-
-    // models['Major2'].updateOne(
-    //     {
-    //         year: req.params.year,
-    //         "programs.title": req.body.title
-    //     },
-    //     {
-    //         $setOnInsert: {
-    //             programs: []
-    //         },
-    //         $set: {
-    //             "programs.$[elem].title": req.body.title,
-    //             "programs.$[elem].years": req.body.years,
-    //             "programs.$[elem].url": req.body.url
-    //         }
-    //     },
-    //     {
-    //         upsert: true,
-    //         arrayFilters: [
-    //             {"elem.title": req.body.title}
-    //         ]
-    //     }
-    // )
-
-    models['Major2'].updateOne({
-        year: req.params.year
-        },{
-        $addToSet: { programs: { title: req.body.title }}
-        },{
-        upsert: true
-    })
-    .then(() => models['Major2'].updateOne({
-        year: req.params.year,
-        programs: {
-            $elemMatch: {
-                title: req.body.title
-            }
-        }}, {
-        $set: {
-            "programs.$.requirements": req.body.requirements,
-            "programs.$.years": req.body.years,
-            "programs.$.url": req.body.url
-        }}, {
-        upsert: true      
-    }))
-    .then(result => {
-      res.status(201).json({
-        message: "Major created!",
-        result: result
-      });
-    })
-    .catch(err => {
-        console.log(err);
       res.status(500).json({
         error: err
       });
