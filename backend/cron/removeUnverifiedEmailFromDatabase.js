@@ -3,7 +3,7 @@ const User = require('../Models/user')
 
 module.exports = async function () {
     try {
-        console.log('Cron job function running...')
+        // console.log('Cron job function running...')
         // Calculate the timestamp 3 minutes ago (adjust based on the verification code expiration)
         const timeZone = 'America/Chicago'
         const threeMinutesAgo = new Date(Date.now() - 3 * 60 * 1000).toLocaleString('en-US', { timeZone })
