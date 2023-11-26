@@ -1,5 +1,6 @@
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 import{ saveAs } from 'file-saver';
+import { jsPDF } from "jspdf";
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 import * as PDFWorker from 'pdfjs-dist/build/pdf.worker.mjs'
 GlobalWorkerOptions.workerSrc = PDFWorker;
 
@@ -123,3 +124,133 @@ export function GetInfo(file) {
     })
 }
 
+export function exportData() {
+    const fileName = Math.random().toString(16).slice(2) + ".pdf";
+    const doc = new jsPDF();
+
+    const style = 
+    `<style>
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 90%;
+            margin-bottom: 10px;
+            text-indent: initial;
+            border-spacing: 2px;
+        }
+        .yearHeading {
+            text-align: center;
+            background-color: #F1B82D;
+            border-bottom: 1px solid black;
+            padding: 10px;
+        }
+        .semesterHeading {
+            background-color: lightgray;
+            font-weight: bold;
+            border-bottom: 1px solid black;
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+        }
+        th, td {
+            padding: 5px;
+            text-align: left;
+            background-color: white;
+        }
+        tr {
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+        }
+        td:nth-child(2), td:nth-child(4), th:nth-child(2), th:nth-child(4) {
+            border-right: 1px solid black;
+        }
+    </style>`
+
+    // const years = [];
+
+    // for (var course of plan) {
+    //     const y = course.plan[0];
+    //     const s = course.plan[1];
+
+    //     if (!years[y]) years[y] = {semesters: []}
+    //     if (!years[y].semesters[s]) years[y].semesters[s] = [];
+
+    //     years[y].semesters[s].push(course);
+    // }
+
+    // years.map((year, yearIndex) => {
+    //     var thead = `<thead>`
+    //     thead += 
+    //     `<tr>
+    //         <th colspan="4" class="yearHeading">Year ${yearIndex}</th>
+    //     </tr>`
+
+
+    // })
+
+    var html = 
+    `<div style="width: 100%;">
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="4" class="yearHeading">Year 1</th>
+                </tr>
+                <tr>
+                    <th colspan="2" class="semesterHeading">Semester 1</th>
+                    <th colspan="2" class="semesterHeading">Semester 2</th>
+                </tr>    
+                <tr>
+                    <th>Course</th>
+                    <th>Credits</th>
+                    <th>Course</th>
+                    <th>Credits</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>3</td>
+                    <td>Name</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>3</td>
+                    <td>Name</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>3</td>
+                    <td>Name</td>
+                    <td>3</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr className='tableSummary'>
+                    <td colspan="2"><b>Status: </b>Completed</td>
+                    <td colspan="2"><b>Total Credit Hours: </b>9</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>`
+
+    const table = document.getElementById("planner");
+    if (!table) return;
+
+    doc.html(table, {    
+        callback: function(doc) {
+        // Save the PDF
+        doc.save(fileName);
+    },
+    x: 0,
+    y: 0,
+    width: 170, //target width in the PDF document
+    windowWidth: 1080 //window width in CSS pixels})
+
+    // const blob = new Blob([data], { type: 'text/plain;charset=utf-8' });
+
+    // saveAs(blob, fileName)
+    });
+}

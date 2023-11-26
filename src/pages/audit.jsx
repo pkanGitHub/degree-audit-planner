@@ -7,6 +7,8 @@ import TransferCourse from "../components/transferCourses";
 import SemesterPlan from "../components/semesterplan";
 import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
+import * as User from "../lib/user";
+import { exportData } from "../lib/filehandling";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Cookies from "universal-cookie";
@@ -23,12 +25,7 @@ const Audit = () => {
         setCategory(e.target.value);
     };
 
-    const [selectTerm, setTerm] = useState("");
-    const term = {
-        FS21: "Fall 2021",
-        SP22: "Spring 2022",
-        SM22: "Summer 2022",
-    };
+    const [selectTerm, setTerm] = useState(null);
     const handleTermChange = (e, index) => {
         setTerm(e.target.value);
     };
@@ -48,28 +45,32 @@ const Audit = () => {
 
     // gets database data and turns it into a list of objects
 
-    const [minors, setMinors] = useState([]);
-    const [majors, setMajors] = useState([]);
-    const [certificates, setCertificates] = useState([]);
+    const [minors, setMinors] = useState({});
+    const [majors, setMajors] = useState({});
+    const [certificates, setCertificates] = useState({});
     const [coursesList, setCourses] = useState([]);
     const [genEds, setGenEds] = useState([])
 
     useEffect(() => {
         getMajors(true).then(val => setMajors(val));
+
+        getCourseList(true).then(val => setCourses(val))
+        // .then(() => User.read('655f96b827fb470cd02a3e1b'))
+        // .then(() => setUserCourses([...User.getCourses()]));
+
         getMinors(true).then(val => setMinors(val));
         getCerts(true).then(val => setCertificates(val));
-        getCourseList(true).then(val => setCourses(val));
         getGenEds(true).then(val => setGenEds(val));
     }, []);
 
 
     // this is the user catalog section. this is a list of the type and category that the user has chosen. this is used to loop through database data
 
-    const [userCatalog, setUserCatalog] = useState([{type: "", category: ""}])
+    const [userCatalog, setUserCatalog] = useState([{type: "", category: "", year: ""}])
 
     const handleUserCategories = () => {
-        setUserCatalog([...userCatalog, {type: selectType, category: selectCategory}])
-
+        User.addPlan(selectCategory, selectTerm, selectType);
+        setUserCatalog([...userCatalog, {type: selectType, category: selectCategory, year: selectTerm}])
     }
 
     const removeCatalog = (index) =>{
@@ -78,8 +79,8 @@ const Audit = () => {
         setUserCatalog(data)
     }
     
-    const addCatalog = (type, category) => {
-        setUserCatalog([...userCatalog, {type: type, category: category}])
+    const addCatalog = (type, category, year) => {
+        setUserCatalog([...userCatalog, {type: type, category: category, year: year}])
     }
 
     // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
@@ -98,29 +99,33 @@ const Audit = () => {
         userType = certificates
     }
 
-    if (userType) { 
-        yearOptions = userType.map(option => <option key={option?.title}>{option?.title}</option>)
-        options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
+    if (selectTerm && userType) { 
+        options = userType[selectTerm].map((option) => <option key={option?.title}>{option?.title}</option>); 
+    // if (userType) { 
+    //     yearOptions = userType.map(option => <option key={option?.title}>{option?.title}</option>)
+    //     options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
     }
 
 
     // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
     
-    function getCourses(type, category, index){
+    function getCourses(type, category, year, index){
         let selectedType = [];
-        if (type === "majors"){
-            selectedType = majors
+        if (type === "majors" || type === "major"){
+            if (!majors[year]) return;
+            selectedType = majors[year]
         }
-        else if (type === "minors"){
-            selectedType = minors
+        else if (type === "minors" || type === "minor"){
+            if (!minors[year]) return;
+            selectedType = minors[year]
         }
-        else if (type === "certificates"){
-            selectedType = certificates
+        else if (type === "certificates" || type === "certificate"){
+            if (!certificates[year]) return;
+            selectedType = certificates[year]
         }
         else if (category === ""){
             category = "default"
         }
-
 
         return(
             <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
@@ -136,6 +141,7 @@ const Audit = () => {
         setState(state+1)
     }
 
+    const [userCourses, setUserCourses] = useState(User.getCourses());
     const deleteAlert = () => {
         confirmAlert({
             customUI: ({ onClose }) => {
@@ -197,9 +203,9 @@ const Audit = () => {
 
   
     return (
-        <body id="fullpage">
+        <div id="fullpage">
             <div id="header">
-                <TranscriptUpload set={addCatalog}/>
+                <TranscriptUpload setCatalog={setUserCatalog} setCourses={(courses) => {User.setCourses(courses);setUserCourses([...User.getCourses()]);}} hasData={userCourses.length > 0}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
@@ -214,19 +220,24 @@ const Audit = () => {
                             return(
                                 <div key={index} id="addedSectionEnroll">
                                     <label>
+                                        Year:&nbsp;&nbsp;
+                                        <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
+                                            {/* {Object.keys(term).map((key, index) => 
+                                            <option value={key}>{term[key]}</option>)} */}
+
+                                            { Object.keys( majors ).sort().reverse().map(key => <option key={ key } value={ key } >{ key }</option> )}
+
+                                        </select>
+                                    </label>
+
+                                    <label>
                                         Type:&nbsp;&nbsp;
                                         <select name='type' value={input.type} onChange={(e) => {handleTypeChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
                                             <option value="majors">Major</option>
                                             <option value="minors">Minor</option>
                                             <option value="certificates">Certificate</option>
-                                        </select>
-                                    </label>
-                                    <label>
-                                        Year:&nbsp;&nbsp;
-                                        <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
-                                            <option value="default"></option>
-                                            { yearOptions }
                                         </select>
                                     </label>
                                     <label>
@@ -252,7 +263,7 @@ const Audit = () => {
                     { userCatalog.map((key, index) =>
                         <div key={index}>
 
-                            { getCourses(key.type, key.category, index) }    
+                            { getCourses(key.type, key.category, key.year, index) }    
             
                         </div>
                         )
@@ -289,17 +300,18 @@ const Audit = () => {
 
 
                     <div id='optionButtons'>
-                        <button id='saveButton'>Save</button>
-                        <button id='exportButton'>Export</button>
+                        {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
+                        <button id='saveButton' >Save</button>
+                        <button id='exportButton' onClick={exportData}>Export</button>
                         <button id='deleteButton' onClick={deleteAlert}>Delete</button>
                     </div>
                 </div>
                 <hr/>
 
-                <SemesterPlan data={userCatalog} user={calendarHeading}/>
+                <SemesterPlan data={userCatalog} courses={userCourses} user={calendarHeading}/>
 
             </div>
-        </body>
+        </div>
        
     )
 };

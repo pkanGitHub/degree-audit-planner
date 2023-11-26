@@ -37,6 +37,22 @@
 
 #addedSectionEnroll label{
     font-weight: bold;
+    display: flex;
+    padding:  0 2%;
+}
+
+#addedSectionEnroll select {
+    padding: 5px;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+#addedSectionEnroll label:first-child, #addedSectionEnroll label:nth-child(2) {
+    width: 25%;
+}
+
+#addedSectionEnroll label:nth-child(3) {
+    width: 50%;
 }
 
 button{
