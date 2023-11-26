@@ -119,11 +119,14 @@ const NavBar = () => {
 
       <div className='rightItems'>
         <Link to="/" className='navbarlink'>Home</Link>
+
         {showLogin ? <Link to="/login" className='navbarlink'>Login</Link> : null}
         {showLogin ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
+        {showLogin ? <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link> : null}
+
 
         {showLogin ? null : <Popup
-            contentStyle={{ borderRadius: '3px', width: '40%', height: '80%' }}
+            contentStyle={{ borderRadius: '3px', width: '40%', height: '50%' }}
             trigger={<button id='pfpButton' onClick={() => handleButtonClick()}><img src={image} alt='profilephoto' id='userprofile' /></button>}
             modal nested
           >
@@ -146,8 +149,7 @@ const NavBar = () => {
               >
                 <CloseOutlined />
               </button>
-
-                  <img src={image} alt='profilephoto' id='userPFP'></img>
+              
                   <form onSubmit={handleSubmit}>
                     
                       <label>Email
@@ -156,6 +158,7 @@ const NavBar = () => {
                             value={testAuth.email}
                             type="text"
                             placeholder={testAuth.email}
+                            readOnly={true}
                           />
                           </div>
                       </label>
@@ -167,6 +170,7 @@ const NavBar = () => {
                           <input className="userInfo"
                             value={testAuth.password}
                             type={visible ? "text" : "password"}
+                            readOnly={true}
                           />
                           <div className="eye-icon" onClick={() => setVisible(!visible)}>
                             {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
@@ -175,9 +179,9 @@ const NavBar = () => {
                       </label>
 
                       <br/>
-                    <button className="editButton" type="submit">Edit</button>
+                    <button className="editButton" type="submit">Forgot Password</button>
+
                   </form>
-                  <button className='editButton' onClick={handleSignOut}>Sign Out</button>
                 </div>
             )}
           </Popup>}

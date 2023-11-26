@@ -72,7 +72,7 @@
 .editButton {
     background-color: #F1B82D;
     border-radius: 2px;
-    width: 100px;
+    width: 30%;
 }
 
 .editButton:hover {
