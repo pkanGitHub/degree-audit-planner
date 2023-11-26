@@ -71,7 +71,7 @@ export function getProgramsBySearch(name_segment, year, category=undefined) {
         default: return undefined;
     }
 
-    const program = list?.filter(program => program.title.match(new RegExp(name_segment, "g")));
+    const program = list?.filter(program => program.title.match(new RegExp(name_segment, "g")))?.map(program => { program.type = category; return program; });
     return program;
 }
 

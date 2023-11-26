@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone"
 import { useCallback } from 'react';
-import { GetInfo } from "../lib/pdfreader.temp";
+import { GetInfo } from "../lib/filehandling";
 import { concatCourses } from "../lib/user";
 import { Course } from "../lib/course";
 import "../styles/transcriptUpload.css"
@@ -9,7 +9,7 @@ import { getProgramsBySearch } from "../lib/data";
 // https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 
 // https://spacejelly.dev/posts/uploading-files-in-react-from-a-form-with-drag-and-drop/
 
-export default function TranscriptUpload({set, setCourses}) {    
+export default function TranscriptUpload({setCatalog, setCourses, hasData}) {    
 
     // === State Variables === //
     const [uploadedFile, setFile] = useState(null);
@@ -18,6 +18,7 @@ export default function TranscriptUpload({set, setCourses}) {
     const [userConsents, setConsent] = useState(false);
     const [error, setError] = useState(null);
     const [programs, setPrograms] = useState([]);
+    const [overwrite, setOverwrite] = useState(false);
 
     // === Variables from React Dropzone === //
     // const onDrop = 
@@ -110,19 +111,119 @@ export default function TranscriptUpload({set, setCourses}) {
         setPrograms(list);
     }
 
+    const finalize = e => {
+        e.preventDefault();
+        const selects = e.target.getElementsByTagName("select");
+        const values = Array.from(selects).map(s => s.value)
+
+        setCatalog(
+            values.map(v => {
+                const program = programs.find(p => p.results.find(r => r.title === v));
+                return {type: program.results.find(r => r.title === v).type, category: v, year: program.year};
+        }));
+        closeModal("close");
+    }
+
     const openModal = () => {
         setHidden(false)
         document.getElementsByTagName("body")[0].style.overflowY = "hidden";
     }
 
     const closeModal = e => {
-        if (e != null && e.target.id !== "uploadModal" && e.target.id !== "close") return;
+        if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close") return;
         setHidden(true);
         setConsent(false);
         setFile(null);
         setPreview(null);
         setError(null);
+        setOverwrite(false);
+        setPrograms([]);
         document.getElementsByTagName("body")[0].style.overflowY = "scroll"; 
+    }
+
+    const MainContent = () => {
+        if (!overwrite) setOverwrite(true);
+        return (
+            <div id="modalContent">
+                <h3>Upload your file here:</h3>
+                <span id="close">X</span>
+                <div {...getRootProps()} id="fileDrop">
+                    <input {...getInputProps()} />
+                    {
+                        preview ? 
+                        <>
+                            <p>&nbsp;</p>
+                            <p>{ preview }</p>
+                            <p>&nbsp;</p>
+                        </> 
+                        :
+                        isDragActive ?
+                        <>
+                            <p>&nbsp;</p>
+                            <p>Drop the files here ...</p>
+                            <p>&nbsp;</p>
+                        </>
+                            :
+                        <>
+                            <p>Drag files here</p>
+                            <p>or</p>
+                            <p>Click to select files</p>
+                        </>
+                    }
+                </div>
+                <a href="/tutorial#uploading">What can I upload?</a>
+                <div id="consent">
+                    <input type="checkbox" name="consentCheck" onChange={consentCheck}/>
+                    <p>I consent to the collection and processing of essential information and understand it will be handled confidentially, used solely for the intended purpose.</p>
+                </div>
+                <button type="button" disabled={!userConsents} onClick={readFile}>Upload</button>
+                { error ? <p className="error">{ error }</p> : <p>&nbsp;</p> }
+                
+            </div>
+        )
+    }
+
+    const PostProcess = () => {
+        return (
+            <div id="modalContent">
+                <h3>
+                    We were able to recognize the following programs.
+                </h3>
+                <form id="foundPrograms" onSubmit={finalize}>
+                { programs.map(program => (
+                    <>
+                        <p>{ program.original } | { program.year }</p>
+                        { program.results.length > 1 ?
+                            <select>
+                                { program.results?.map(result => (
+                                    <option>{result.title}</option>
+                                ))}
+                            </select>
+                        : 
+                            <p style={{fontSize: "small"}}>We were unable to recognize the above program and it must be added manually.</p>
+                        }
+                    </>
+                ))}
+                <button type="submit">
+                    Finalize
+                </button>
+                </form>
+            </div>
+        )
+    }
+
+    const PreWarning = () => {
+        return (
+            <div id="modalContent">
+                <h3>Uploading a file will overwrite your current plan</h3>
+                <button onClick={() => setOverwrite(true)}>
+                    Continue
+                </button>
+                <button onClick={() => closeModal("close")}>
+                    Cancel
+                </button>
+            </div>
+        )
     }
 
     return (
@@ -130,64 +231,12 @@ export default function TranscriptUpload({set, setCourses}) {
             <button id="transcriptButton" onClick={openModal}>Upload Unoffical Transcript</button>
             { hideModal ? null :        
                 <div id="uploadModal" onClick={closeModal}>
-                { programs.length === 0 ? 
-                    <div id="modalContent">
-                        <h3>Upload your file here:</h3>
-                        <span id="close">X</span>
-                        <div {...getRootProps()} id="fileDrop">
-                            <input {...getInputProps()} />
-                            {
-                                preview ? 
-                                <>
-                                    <p>&nbsp;</p>
-                                    <p>{ preview }</p>
-                                    <p>&nbsp;</p>
-                                </> 
-                                :
-                                isDragActive ?
-                                <>
-                                    <p>&nbsp;</p>
-                                    <p>Drop the files here ...</p>
-                                    <p>&nbsp;</p>
-                                </>
-                                 :
-                                <>
-                                    <p>Drag files here</p>
-                                    <p>or</p>
-                                    <p>Click to select files</p>
-                                </>
-                            }
-                        </div>
-                        <a href="/tutorial#uploading">What can I upload?</a>
-                        <div id="consent">
-                            <input type="checkbox" name="consentCheck" onChange={consentCheck}/>
-                            <p>I consent to the collection and processing of essential information and understand it will be handled confidentially, used solely for the intended purpose.</p>
-                        </div>
-                        <button type="button" disabled={!userConsents} onClick={readFile}>Upload</button>
-                        { error ? <p className="error">{ error }</p> : <p>&nbsp;</p> }
-                        
-                    </div>
+                { hasData && !overwrite ? 
+                    PreWarning()
+                : programs.length === 0 ? 
+                    MainContent()
                 :
-                    <div id="modalContent">
-                        {console.log(programs)}
-                        <h3>
-                            We were able to recognize the following programs.
-                        </h3>
-                        { programs.map(program => (
-                            <>
-                                <p>{ program.original } | { program.year }</p>
-                                { program.results.length > 1 ?
-                                <select>
-                                    { program.results?.map(result => (
-                                        <option>{result.title}</option>
-                                    ))}
-                                </select>
-                                : 
-                                    <span>We were unable to recognize the above program and it must be added manualy.</span>
-                                }
-                            </>
-                        ))}
-                    </div>
+                    PostProcess()
                 }
                 </div>
             }

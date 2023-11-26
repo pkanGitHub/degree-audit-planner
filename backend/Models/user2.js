@@ -9,7 +9,8 @@ const userSchema = mongoose.Schema({
     courses: [{
         id: String,
         plan: [Number],
-        status: String
+        status: String,
+        credits: String
     }],
     generalEducationCompleted: { type: Boolean, default: false }
 })

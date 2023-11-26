@@ -24,6 +24,10 @@ export function concatCourses(courseArr) {
     console.log(courses);
 }
 
+export function setCourses(courseArr) {
+    clearAndFill(courses, courseArr);
+}
+
 export function addPlan(name, year, type) {
     const program = getProgramsBySearch(name, year, type);
     if (!program) return;
@@ -49,10 +53,6 @@ export function addPlan(name, year, type) {
 
 export function getCourses() {
     return courses;
-}
-
-export function removeCourse(course) {
-    
 }
 
 export function addMajor(major) {
@@ -87,7 +87,7 @@ export function save(id) {
         },
         body: JSON.stringify({
             id: id,
-            courses: courses.map(course => ({id: course.id, plan: course.plan})),
+            courses: courses.map(course => ({id: course.id, plan: course.plan, status: course.status, credits: course.credits})),
             major: majors,
             minor: minors,
             cert: certificates,
@@ -114,12 +114,11 @@ export async function read(id) {
     .then(response => response.json())
     .then(response => { console.log(response); return response; })
     .then(response => {
-        const courseMap = response.courses.map(course => new Course(course.id, course.plan[0], course.plan[1]).setStatus(course.status));
+        const courseMap = response.courses.map(course => new Course(course.id, course.plan[0], course.plan[1], course.credits).setStatus(course.status));
         clearAndFill(courses, courseMap);
         clearAndFill(majors, response.major);
         clearAndFill(minors, response.minor);
         clearAndFill(certificates, response.certificates);
-        console.log(courses, majors, minors, certificates);
         return true;
     })
     .catch(error => console.error(error));

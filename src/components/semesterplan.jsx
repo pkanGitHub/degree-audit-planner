@@ -6,10 +6,8 @@ import { useState, memo } from "react";
 import Popup from "reactjs-popup";
 
 export const SemesterPlan = memo(({data, courses}) => {
-    console.log(data);
     const [change, callChange] = useState(1);
     const update = () => callChange(change + 1);
-    console.log("updated")
 
     var years = [];
     addFromUser(years, courses);
@@ -51,9 +49,6 @@ export const SemesterPlan = memo(({data, courses}) => {
                                     }
                                 </tr>
                             </thead> 
-
-
-
                             <tbody>
                                 {[...Array(rows).keys()].map(r => {
 
@@ -66,9 +61,6 @@ export const SemesterPlan = memo(({data, courses}) => {
                                     )
                                 }, year)}
                             </tbody>
-
-
-
                             <tfoot>
                                 <tr className='tableSummary'>
                                     { year.semesters.map((semester, index) => 
@@ -79,8 +71,6 @@ export const SemesterPlan = memo(({data, courses}) => {
                                     )}
                                 </tr>
                             </tfoot>
-
-
                         </table>
                     )
                 })}
@@ -118,10 +108,12 @@ function CourseCell({course, update}) {
                 }
             </Popup>
             </td>
-            <td>{ (() => {
-                    const credit = course?.credits
-                    return credit;
-                })()}
+            <td>
+                { course?.credits && course?.credits?.match("-", "g") ?
+                    <CreditSlider course={course} />
+                :
+                course?.credits
+                }
             </td>
         </>
     )
@@ -157,6 +149,26 @@ function SetStatus({semester, update}) {
 
 function calcCredits(semester) {
     return semester.reduce((total, course) => total + Number(course?.credits), 0);
+}
+
+function CreditSlider({course}) {
+    const creditVals = course.credits.split("-");
+    const [currentVal, setCredits] = useState(Number(creditVals[0]))
+
+    return (
+        <Popup contentStyle={{height: "fit-content", width: "fit-content", margin: 'auto', padding: "10px"}} position={'top left'} 
+        trigger={ 
+            <button className={"courseLabel"}>{ currentVal }</button> 
+        }> 
+        {
+            <div>
+                { creditVals[0] }
+                <input type="range" min={ Number(creditVals[0]) } max={ Number(creditVals[1]) } defaultValue={creditVals[0]} onChange={e => setCredits(e.target.value)} />
+                { creditVals[1] }
+            </div>
+        }
+        </Popup>
+    )
 }
 
 function DeleteDuplicates(years) {
@@ -205,8 +217,7 @@ function addProgramPlans(years, data) {
 
 function addFromUser(years, courses) {
     if (courses.length < 1) return courses;
-    // console.log("From User pre formatting: ");
-    // console.log(courses);
+
     for (var course of courses) {
         const y = course.plan[0];
         const s = course.plan[1];
@@ -216,8 +227,6 @@ function addFromUser(years, courses) {
 
         years[y].semesters[s].push(course);
     }
-    // console.log("From User post formatting: ")
-    // console.log(years);
 }
 
 export default SemesterPlan;

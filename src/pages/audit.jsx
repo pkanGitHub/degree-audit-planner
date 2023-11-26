@@ -8,9 +8,11 @@ import SemesterPlan from "../components/semesterplan";
 import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
 import * as User from "../lib/user";
+import { exportData } from "../lib/filehandling";
 
 const Audit = () => {
 
+    
 
     const [selectType, setType] = useState("");
     const handleTypeChange = (e, index) => {
@@ -51,9 +53,13 @@ const Audit = () => {
 
     useEffect(() => {
         getMajors(true).then(val => setMajors(val));
+
+        getCourseList(true).then(val => setCourses(val))
+        // .then(() => User.read('655f96b827fb470cd02a3e1b'))
+        // .then(() => setUserCourses([...User.getCourses()]));
+
         getMinors(true).then(val => setMinors(val));
         getCerts(true).then(val => setCertificates(val));
-        getCourseList(true).then(val => setCourses(val));
         getGenEds(true).then(val => setGenEds(val));
     }, []);
 
@@ -99,16 +105,16 @@ const Audit = () => {
 
     // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
     
-    function getCourses(type, category, index){
+    function getCourses(type, category, year, index){
         let selectedType = [];
-        if (type === "majors"){
-            selectedType = majors[selectTerm]
+        if (type === "majors" || type === "major"){
+            selectedType = majors[year]
         }
-        else if (type === "minors"){
-            selectedType = minors[selectTerm]
+        else if (type === "minors" || type === "minor"){
+            selectedType = minors[year]
         }
-        else if (type === "certificates"){
-            selectedType = certificates[selectTerm]
+        else if (type === "certificates" || type === "certificate"){
+            selectedType = certificates[year]
         }
         else if (category === ""){
             category = "default"
@@ -131,22 +137,11 @@ const Audit = () => {
 
     const [userCourses, setUserCourses] = useState(User.getCourses());
 
-    const addCourses = (courses) => {
-        User.concatCourses(courses);
-        setUserCourses([...userCourses])
-    }
-
-    const load = async () => {
-        await User.read('655f96b827fb470cd02a3e1b');
-        setUserCourses([...User.getCourses()]);
-        console.log(userCourses);
-    }
-
   
     return (
         <div id="fullpage">
             <div id="header">
-                <TranscriptUpload set={addCatalog} setCourses={addCourses}/>
+                <TranscriptUpload setCatalog={setUserCatalog} setCourses={(courses) => {User.setCourses(courses);setUserCourses([...User.getCourses()]);}} hasData={userCourses.length > 0}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
@@ -203,7 +198,7 @@ const Audit = () => {
                     { userCatalog.map((key, index) =>
                         <div key={index}>
 
-                            { getCourses(key.type, key.category, index) }    
+                            { getCourses(key.type, key.category, key.year, index) }    
             
                         </div>
                         )
@@ -240,8 +235,9 @@ const Audit = () => {
 
 
                     <div id='optionButtons'>
-                        <button id='saveButton' onClick={()=> User.save('655f96b827fb470cd02a3e1b')}>Save</button>
-                        <button id='exportButton' onClick={load}>Export</button>
+                        {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
+                        <button id='saveButton' >Save</button>
+                        <button id='exportButton' onClick={exportData}>Export</button>
                         <button id='deleteButton' onClick={refreshPage}>Delete</button>
                     </div>
                 </div>
