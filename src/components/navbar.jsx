@@ -122,8 +122,7 @@ const NavBar = () => {
 
         {showLogin ? <Link to="/login" className='navbarlink'>Login</Link> : null}
         {showLogin ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
-        {showLogin ? <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link> : null}
-
+        {showLogin ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
 
         {showLogin ? null : <Popup
             contentStyle={{ borderRadius: '3px', width: '40%', height: '50%' }}
