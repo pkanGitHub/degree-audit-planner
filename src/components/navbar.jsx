@@ -5,6 +5,7 @@ import '../styles/navbar.css';
 import image from "../profilephoto.png";
 import { Link } from 'react-router-dom';
 import mizzouLogo from "../MU-StackedMU-4C.png";
+import { EyeInvisibleOutlined, EyeOutlined, CloseOutlined } from "@ant-design/icons";
 
 // import can delete later
 import "../styles/audit.css";
@@ -22,6 +23,8 @@ import Cookies from "universal-cookie";
 
 const NavBar = () => {
   const [showLogin, setShowLogin] = useState(false)
+  const [password, setPassword] = useState("");
+  const [visible, setVisible] = useState(false);
 
   const handleSignOut = () => {
     window.location.href = '/'
@@ -116,39 +119,69 @@ const NavBar = () => {
 
       <div className='rightItems'>
         <Link to="/" className='navbarlink'>Home</Link>
+
         {showLogin ? <Link to="/login" className='navbarlink'>Login</Link> : null}
         {showLogin ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
+        {showLogin ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
 
         {showLogin ? null : <Popup
-            contentStyle={{ borderRadius: '3px', width: '40%', height: '80%' }}
+            contentStyle={{ borderRadius: '3px', width: '40%', height: '50%' }}
             trigger={<button id='pfpButton' onClick={() => handleButtonClick()}><img src={image} alt='profilephoto' id='userprofile' /></button>}
             modal nested
           >
             {(close) => (
-              <div className="profileSection">
-                <div id="profileDesign">
-                <button id='close' onClick=
-                      {() => close()}>
-                          Close
-                  </button>
-                  <h1>Your Profile</h1>
-                  <img src={image} alt='profilephoto' id='userPFP'></img>
+              <div className="popup">
+
+              <button
+                id='close'
+                onClick={() => close()}
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  color: '#555',
+                }}
+              >
+                <CloseOutlined />
+              </button>
+              
                   <form onSubmit={handleSubmit}>
-                    <div id="profileContent">
+                    
                       <label>Email
-                        <input type="text" className='userInfo'name="Email" value={testAuth.email} readonly='true'/>
+                        <div id="formContent">
+                          <input className="userInfo"
+                            value={testAuth.email}
+                            type="text"
+                            placeholder={testAuth.email}
+                            readOnly={true}
+                          />
+                          </div>
                       </label>
+                      
                       <br/>
+
                       <label>Password
-                        <input type="text" className='userInfo' name="Password" value={testAuth.password} readonly='true'/>
+                        <div className="password-input" id="formContent">
+                          <input className="userInfo"
+                            value={testAuth.password}
+                            type={visible ? "text" : "password"}
+                            readOnly={true}
+                          />
+                          <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                            {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                          </div>
+                        </div>
                       </label>
+
                       <br/>
-                    </div>
-                    <button className="editButton" type="submit">Edit</button>
+                    <button className="editButton" type="submit">Forgot Password</button>
+
                   </form>
-                  <button className='editButton' onClick={handleSignOut}>Sign Out</button>
                 </div>
-              </div>
             )}
           </Popup>}
           

@@ -15,10 +15,6 @@
   align-items: center;
 }
 
-.profileSection {
-    align-items: center; /* Center items vertically */
-}
-
 #mizLogo {
     width: 40px;
     height: 40px;
@@ -76,17 +72,16 @@
 .editButton {
     background-color: #F1B82D;
     border-radius: 2px;
-    width: 100px;
+    width: 30%;
 }
 
 .editButton:hover {
     background-color: #F7D88D;
 }
 
-.profileSection {
-    display: flex;
-    justify-content: center; /* Center items horizontally */
-    align-items: center; /* Center items vertically */
+.popup {
+    text-align: center;
+    padding-top: 50px;
   }
   
   /* Add this style to center the form content */
@@ -97,12 +92,19 @@
     align-items: center;
   }
 
-  .profileSection .userInfo {
-    font-weight: normal;
-    width: 350px;
-  }
-
 #userPFP {
     width: 200px;
     height: auto;
   }
+
+  .password-input {
+    position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px; /* Adjust the value to position it as needed */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
