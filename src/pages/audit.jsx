@@ -45,9 +45,9 @@ const Audit = () => {
 
     // gets database data and turns it into a list of objects
 
-    const [minors, setMinors] = useState([]);
-    const [majors, setMajors] = useState([]);
-    const [certificates, setCertificates] = useState([]);
+    const [minors, setMinors] = useState({});
+    const [majors, setMajors] = useState({});
+    const [certificates, setCertificates] = useState({});
     const [coursesList, setCourses] = useState([]);
     const [genEds, setGenEds] = useState([])
 
@@ -112,18 +112,20 @@ const Audit = () => {
     function getCourses(type, category, year, index){
         let selectedType = [];
         if (type === "majors" || type === "major"){
+            if (!majors[year]) return;
             selectedType = majors[year]
         }
         else if (type === "minors" || type === "minor"){
+            if (!minors[year]) return;
             selectedType = minors[year]
         }
         else if (type === "certificates" || type === "certificate"){
+            if (!certificates[year]) return;
             selectedType = certificates[year]
         }
         else if (category === ""){
             category = "default"
         }
-
 
         return(
             <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
@@ -172,7 +174,7 @@ const Audit = () => {
 
     // testing for adding existing courses to page on load DELETE AFTER FINISH TESTING
     useEffect(()=> {
-        // setUserCatalog(testCatalog)
+        setUserCatalog(testCatalog)
     }, [])
 
     if (cookieData !== undefined){
