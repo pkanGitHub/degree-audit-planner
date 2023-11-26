@@ -6,15 +6,17 @@ const ResetPassword = () => {
             <div id="formDesign">
 
                 <h1>Reset Password</h1>
+
+                <p>For user: some_username_here, use cookies</p>
                 <form>
                     
                     <div id="formContent">
                         <label>New Password
-                            <input type="text"/>
+                            <input type="password"/>
                         </label>
                         <br/>
                         <label>Confirm New Password
-                            <input type="text"/>
+                            <input type="password"/>
                         </label>
                     </div>
                     

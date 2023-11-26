@@ -2,10 +2,11 @@ import { useRef, useState } from "react";
 import { useDropzone } from "react-dropzone"
 import { useCallback } from 'react';
 import { GetInfo } from "../lib/filehandling";
-import { concatCourses } from "../lib/user";
 import { Course } from "../lib/course";
 import "../styles/transcriptUpload.css"
 import { getProgramsBySearch } from "../lib/data";
+import TermsCondition from "./termsConditions";
+import { confirmAlert } from "react-confirm-alert";
 // https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 
 // https://spacejelly.dev/posts/uploading-files-in-react-from-a-form-with-drag-and-drop/
 
@@ -130,7 +131,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
     }
 
     const closeModal = e => {
-        if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close") return;
+        if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close" && e.target.id != "no") return;
         setHidden(true);
         setConsent(false);
         setFile(null);
@@ -200,10 +201,11 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                                 ))}
                             </select>
                         : 
-                            <p style={{fontSize: "small"}}>We were unable to recognize the above program and it must be added manually.</p>
+                            <span style={{fontSize: "small"}}>We were unable to recognize the above program and it must be added manually.</span>
                         }
                     </>
                 ))}
+                <br></br>
                 <button type="submit">
                     Finalize
                 </button>
@@ -226,12 +228,38 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         )
     }
 
+
+    const TermsAlert = () => {
+        
+        return (
+            <div className='confirmButton'>
+            <h1>Upload Notice</h1>
+            <p>By clicking Yes, you are agreeing to the <TermsCondition/>. If you do not agree, hit no and return to the audit page.</p>
+                    
+            <div id="confirmButtonsDiv">
+                <button id="no" onClick={closeModal}>No</button>
+                <button id="yes"
+                onClick={() => {
+                    setConsent(true);
+                }}
+                >
+                Yes
+                </button>
+            </div>
+            
+            </div>
+        );
+    }
+
     return (
         <>
             <button id="transcriptButton" onClick={openModal}>Upload Unoffical Transcript</button>
             { hideModal ? null :        
                 <div id="uploadModal" onClick={closeModal}>
-                { hasData && !overwrite ? 
+                { !userConsents ? 
+                    TermsAlert()
+                :
+                hasData && !overwrite ? 
                     PreWarning()
                 : programs.length === 0 ? 
                     MainContent()

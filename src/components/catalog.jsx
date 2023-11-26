@@ -15,7 +15,11 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
         type.filter(option => option.title.match(category)).map((selectedOption, index)=> {if(index===0){return(
             // this first if basically says take the first filtered option. did this because would grab names that match but have extra. for example, minor in social justice would also return minor in social justice for educators
             <div key={selectedOption?._id}>
-                <h2>{selectedOption?.title}</h2>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <h2>{selectedOption?.title}</h2>
+                    <button className="programDelete" onClick={removeCatalog}>Delete</button>
+                </div>
+                
                 {selectedOption?.requirements && selectedOption.requirements.map((course)=> {if(course.required === "true"){return(
                     // this section if filters based on if the course section is required or not, if not, will do a mass select type of thing
                     <div key={course?._id}>
@@ -157,7 +161,7 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
 
                     )
                 }})}
-               <button onClick={removeCatalog}>Delete</button>
+               
             </div>
 
         )}

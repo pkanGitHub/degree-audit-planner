@@ -5,7 +5,7 @@ import { getCourses } from "../lib/user";
 import { useState, memo } from "react";
 import Popup from "reactjs-popup";
 
-export const SemesterPlan = memo(({data, courses}) => {
+export const SemesterPlan = memo(({data, courses, user}) => {
     const [change, callChange] = useState(1);
     const update = () => callChange(change + 1);
 
@@ -19,7 +19,7 @@ export const SemesterPlan = memo(({data, courses}) => {
 
     if (years.length > 0 && change) return (
         <div id="planner">
-            <h2 id='userPlanner'>User's Degree Planner</h2>
+            <h2 id='userPlanner'>{user}</h2>
                 {years?.map((year, index) => {
                     const rows = year?.semesters.reduce((max, semester) => max > semester.length ? max : semester.length, 0)
 

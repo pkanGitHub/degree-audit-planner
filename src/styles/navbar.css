@@ -1,61 +1,108 @@
-.navbar
-{
+.navbar {
     font-size: larger;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #F1B82D;
+    background-color: black;
     display: flex;
     justify-content: space-between;
+    align-items: center; /* Center items vertically */
+  }
+
+#userprofile {
+  width: 30px;
+  display: flex;
+  align-items: center;
 }
 
-#userprofile{
-    width: 30px;
+.profileSection {
+    align-items: center; /* Center items vertically */
 }
 
 #mizLogo {
     width: 40px;
     height: 40px;
-    padding-left: 10px;
-    padding-top: 10px;
+    padding-left: 150px;
 }
 
-
-
-#title{
-    padding-left: 2%;
-    font-weight: bold;
+.rightItems {
     display: flex;
+    align-items: center; /* Center items vertically */
+    padding-right: 150px;
 }
-  
 
-.rightItems{
+.leftItems {
     display: flex;
+    align-items: center; /* Center items vertically */
 }
 
-#imagespace{
-    height:auto;
-    width:auto;
-    padding-left: 2%;
-    margin: 0 auto; 
-    padding: 15px 15px 0px 15px;
+#pfpButton {
+    background: white;
 }
 
 .navbarlink {
-    color: black;
+    color: #F1B82D;
     text-align: center;
     text-decoration: none;
     padding: 15px;
+    font-size: 17px;
+}
+
+#universityTitle {
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    padding: 0px;
+    font-size: 19px;
+    font-family: 'Kameron', serif;
+}
+
+#pfpButton {
+    background: transparent;
 }
 
 .navbarlink:hover:not(.active) {
-    background-color: #ffd670;
+    background-color: #3E321A;
 }
 
-#title:hover:not(.active) {
-    background-color: #F1B82D;
+#universityTitle:hover:not(.active) {
+    color: #F1B82D;
 }
 
 .navbarlink.active {
     background-color: #04AA6D;
 }
+
+.editButton {
+    background-color: #F1B82D;
+    border-radius: 2px;
+    width: 100px;
+}
+
+.editButton:hover {
+    background-color: #F7D88D;
+}
+
+.profileSection {
+    display: flex;
+    justify-content: center; /* Center items horizontally */
+    align-items: center; /* Center items vertically */
+  }
+  
+  /* Add this style to center the form content */
+  #profileDesign {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profileSection .userInfo {
+    font-weight: normal;
+    width: 350px;
+  }
+
+#userPFP {
+    width: 200px;
+    height: auto;
+  }

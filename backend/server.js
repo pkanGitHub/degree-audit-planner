@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const mongoose = require('mongoose')
 const session = require("express-session");
+const cookieParser = require('cookie-parser')
 // const plannerRoute = require('./routes/planner')
 const authRoute = require('./routes/auth')
 const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'User2']
@@ -14,6 +15,8 @@ modelNames.forEach(modelName => {
   const Model = require(`./Models/${modelName}`)
   models[modelName] = Model
 })
+const cron = require('node-cron')
+const removeEmail = require('./cron/removeUnverifiedEmailFromDatabase')
 
 /**
  * Set up CORS
@@ -29,14 +32,14 @@ app.use((req, res, next)=>{
   );
   next();
 });
-
+app.use(cookieParser());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     // save if nothing is changed
     resave: false,
     // save empty value in the session if there is no value
-    saveUninitialized: false,
+    saveUninitialized: true,
   })
 );
 
@@ -49,7 +52,12 @@ app.use((req, res, next) => {
     next();
 });
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session({
+  sessionID: 'session',
+  maxAge: 3600  
+}));
+
+// login sessions last 1 hour
 require('./passport-config')(passport);
 app.use('/', authRoute);
 
@@ -65,6 +73,14 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     app.listen(process.env.BACKEND_PORT, () => {
         console.log('Mongo connection successful on port', process.env.BACKEND_PORT);
     });
+     // Start the cron job
+     // Schedule a task to run everyday every 3 mins for now
+     let task = cron.schedule('*/3 * * * *', async () => {
+      console.log('Cron job scheduled. Running now...');
+      await removeEmail();
+    })
+    task.start()
+     
 })
 .catch((error) => {
     console.log(error);
