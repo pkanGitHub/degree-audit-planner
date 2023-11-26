@@ -136,6 +136,12 @@ const Audit = () => {
         setUserCourses([...userCourses])
     }
 
+    const load = async () => {
+        await User.read('655f96b827fb470cd02a3e1b');
+        setUserCourses([...User.getCourses()]);
+        console.log(userCourses);
+    }
+
   
     return (
         <div id="fullpage">
@@ -235,7 +241,7 @@ const Audit = () => {
 
                     <div id='optionButtons'>
                         <button id='saveButton' onClick={()=> User.save('655f96b827fb470cd02a3e1b')}>Save</button>
-                        <button id='exportButton'>Export</button>
+                        <button id='exportButton' onClick={load}>Export</button>
                         <button id='deleteButton' onClick={refreshPage}>Delete</button>
                     </div>
                 </div>

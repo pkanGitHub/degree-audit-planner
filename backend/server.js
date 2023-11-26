@@ -71,7 +71,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 });
 
 
-app.post("/api/save", (req, res) => {
+app.post("/api/user/save", (req, res) => {
     models['User2'].findOneAndUpdate(
         { _id: req.body.id },
         { 
@@ -88,6 +88,23 @@ app.post("/api/save", (req, res) => {
     }))
     .catch(err => res.status(500).json({
         message: "Could not update user data",
+        error: err
+    }))
+})
+
+app.post("/api/user/load", (req, res) => {
+    models['User2'].findOne(
+        { _id: req.body.id }
+    )
+    .then(user => res.status(200).json({
+        message: "User data fetched",
+        courses: user.courses,
+        major: user.major,
+        minor: user.minor,
+        certificate: user.certificate
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not fetch user data",
         error: err
     }))
 })

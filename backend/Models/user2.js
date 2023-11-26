@@ -8,7 +8,8 @@ const userSchema = mongoose.Schema({
     certificate: [String],
     courses: [{
         id: String,
-        plan: [Number]
+        plan: [Number],
+        status: String
     }],
     generalEducationCompleted: { type: Boolean, default: false }
 })
