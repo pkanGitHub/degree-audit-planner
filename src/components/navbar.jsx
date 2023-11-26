@@ -5,7 +5,7 @@ import '../styles/navbar.css';
 import image from "../profilephoto.png";
 import { Link } from 'react-router-dom';
 import mizzouLogo from "../MU-StackedMU-4C.png";
-import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { EyeInvisibleOutlined, EyeOutlined, CloseOutlined } from "@ant-design/icons";
 
 // import can delete later
 import "../styles/audit.css";
@@ -128,15 +128,25 @@ const NavBar = () => {
             modal nested
           >
             {(close) => (
-              <div className="profileSection">
-                <div id="profileDesign">
+              <div className="popup">
 
-                <button id='close' onClick=
-                      {() => close()}>
-                          Close
-                  </button>
+              <button
+                id='close'
+                onClick={() => close()}
+                style={{
+                  position: 'absolute',
+                  top: '10px',
+                  right: '10px',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  color: '#555',
+                }}
+              >
+                <CloseOutlined />
+              </button>
 
-                  <h1>Your Profile</h1>
                   <img src={image} alt='profilephoto' id='userPFP'></img>
                   <form onSubmit={handleSubmit}>
                     
@@ -169,7 +179,6 @@ const NavBar = () => {
                   </form>
                   <button className='editButton' onClick={handleSignOut}>Sign Out</button>
                 </div>
-              </div>
             )}
           </Popup>}
           
