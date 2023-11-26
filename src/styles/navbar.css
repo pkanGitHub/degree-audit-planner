@@ -99,10 +99,22 @@
 
   .profileSection .userInfo {
     font-weight: normal;
-    width: 350px;
+    width: 100%;
   }
 
 #userPFP {
     width: 200px;
     height: auto;
   }
+
+  .password-input {
+    position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px; /* Adjust the value to position it as needed */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%);
+  cursor: pointer;
+}

@@ -5,6 +5,7 @@ import '../styles/navbar.css';
 import image from "../profilephoto.png";
 import { Link } from 'react-router-dom';
 import mizzouLogo from "../MU-StackedMU-4C.png";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 // import can delete later
 import "../styles/audit.css";
@@ -22,6 +23,8 @@ import Cookies from "universal-cookie";
 
 const NavBar = () => {
   const [showLogin, setShowLogin] = useState(false)
+  const [password, setPassword] = useState("");
+  const [visible, setVisible] = useState(false);
 
   const handleSignOut = () => {
     window.location.href = '/'
@@ -127,23 +130,41 @@ const NavBar = () => {
             {(close) => (
               <div className="profileSection">
                 <div id="profileDesign">
+
                 <button id='close' onClick=
                       {() => close()}>
                           Close
                   </button>
+
                   <h1>Your Profile</h1>
                   <img src={image} alt='profilephoto' id='userPFP'></img>
                   <form onSubmit={handleSubmit}>
-                    <div id="profileContent">
+                    
                       <label>Email
-                        <input type="text" className='userInfo'name="Email" value={testAuth.email} readonly='true'/>
+                        <div id="formContent">
+                          <input className="userInfo"
+                            value={testAuth.email}
+                            type="text"
+                            placeholder={testAuth.email}
+                          />
+                          </div>
                       </label>
+                      
                       <br/>
+
                       <label>Password
-                        <input type="text" className='userInfo' name="Password" value={testAuth.password} readonly='true'/>
+                        <div className="password-input" id="formContent">
+                          <input className="userInfo"
+                            value={testAuth.password}
+                            type={visible ? "text" : "password"}
+                          />
+                          <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                            {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                          </div>
+                        </div>
                       </label>
+
                       <br/>
-                    </div>
                     <button className="editButton" type="submit">Edit</button>
                   </form>
                   <button className='editButton' onClick={handleSignOut}>Sign Out</button>
