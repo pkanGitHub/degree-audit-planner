@@ -2,6 +2,8 @@ import { useState } from "react";
 import ClassInfo from "./classInfoPopup";
 import RequiredChoice from "./requiredChoice";
 import "../styles/audit.css"
+import { userRequirments } from "./catalog";
+
 const AddCourses = ({courses, orCourses}) => {
 
     const totalCourses = []
@@ -32,13 +34,29 @@ const AddCourses = ({courses, orCourses}) => {
         setCourse(e.target.value)
     }
 
+    const [userCreditInputs, setUserCreditInputs] = useState([]);
+
+    const handleUserInput = (courseId, credits) => {
+      const existingCourse = userCreditInputs.find(course => course.courseId === courseId);
+    
+      if (existingCourse) {
+        setUserCreditInputs(prevInputs =>
+          prevInputs.map(course =>
+            course.courseId === courseId ? { ...course, credits } : course
+          )
+        );
+      } else {
+        setUserCreditInputs(prevInputs => [...prevInputs, { courseId, credits }]);
+      }
+    };
+    
 
     const handleAddCourse = () => {
         const courseInfo = course
         {totalCourses.filter((course) => course.classId.match(courseInfo)).map((selectedCourse)=> 
             setUserCourses([...userCourses, selectedCourse
             ]))}
-        
+            handleUserInput(course.courseId , course.creditHours);
 
     }
 

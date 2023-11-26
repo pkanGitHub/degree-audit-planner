@@ -23,6 +23,22 @@ const Audit = () => {
     const [userCreditsCertificate, setUserCreditsCertificate] = useState(0);
     const [userCreditsTransfer, setUserCreditsTransfer] = useState(0);
 
+
+    const [userCreditInputs, setUserCreditInputs] = useState([]);
+    const UserCreditInputs = (courseId, credits) => {
+        const existingCourse = userCreditInputs.find(course => course.courseId === courseId);
+    
+        if (existingCourse) {
+        setUserCreditInputs(prevInputs =>
+            prevInputs.map(course =>
+            course.courseId === courseId ? { ...course, credits } : course
+            )
+        );
+        } else {
+        setUserCreditInputs(prevInputs => [...prevInputs, { courseId, credits }]);
+        }
+    };
+
     const [selectType, setType] = useState("");
     const handleTypeChange = (e, index) => {
         setType(e.target.value);
@@ -81,6 +97,9 @@ const Audit = () => {
     const handleUserCategories = () => {
         setUserCatalog([...userCatalog, {type: selectType, category: selectCategory}])
 
+        const updatedUserCredits = calculateUserCredits();
+        setUserCredits(updatedUserCredits);
+
     }
 
     const removeCatalog = (index) =>{
@@ -116,7 +135,7 @@ const Audit = () => {
 
     //------------------------------------------------------------------------------------------
     
-    const calculateUserCredits = () => {
+    /* const calculateUserCredits = () => {
 
         let credits = 0;
         let creditsNeeded = 0;
@@ -139,7 +158,6 @@ const Audit = () => {
         let userCreditsTransfer = 0;
         
       
-        // calculates credits for each category
         userCatalog.forEach((category) => {
           if (category.type === "majors") {
             const major = majors.find((major) => major.title === category.category);
@@ -156,7 +174,6 @@ const Audit = () => {
           }
         });
       
-        // calculates credits for gen eds
         genEds.forEach((genEd) => {
           if (genEd.type === "genEds") {
             creditsGenEds += genEd.credits || 0;
@@ -225,7 +242,6 @@ const Audit = () => {
         return 0;
       };
 
-//write all these totals to the console showing the title and value
         console.log("Credits: ", userCredits);
         console.log("Credits Needed: ", userCreditsNeeded);
         console.log("Credits Remaining: ", userCreditsRemaining);
@@ -236,7 +252,38 @@ const Audit = () => {
         console.log("Credits Certificate: ", userCreditsCertificate);
         console.log("Credits Transfer: ", userCreditsTransfer);
 
+ */
 
+        const calculateUserCredits = () => {
+            let userCredits = 0;
+          
+            userCreditInputs.forEach((input) => {
+              const { courseId, credits } = input;
+              const selectedCourse = coursesList.find((course) => course.courseId === courseId);
+          
+              if (selectedCourse) {
+                const courseCredits = parseInt(credits, 10) || 0;
+                userCredits += courseCredits;
+              }
+            });
+          
+            return userCredits;
+          };
+
+        //   const handleUserCategories = () => {
+        //     setUserCatalog([...userCatalog, { type: selectType, category: selectCategory }]);
+          
+        //     // Update userCredits when a course is added
+        //     const updatedUserCredits = calculateUserCredits();
+        //     setUserCredits(updatedUserCredits);
+        //   };
+          
+          useEffect(() => {
+            const updatedUserCredits = calculateUserCredits();
+            setUserCredits(updatedUserCredits);
+          
+            // Other state updates or side effects
+          }, [userCreditInputs, /* other dependencies */]);
 
       //------------------------------------------------------------------------------------------
 
@@ -266,10 +313,10 @@ const Audit = () => {
  //refresh when courses are added, deleted, set to in progress, or set to taken
         return(
             <div>
-                <div id="catalogCredits">
+                {/* <div id="catalogCredits">
                     <p>Credits Required: {calculateCategoryCredits(selectedType.find((item) => item.title === category), type)}</p>
                     <p>Credits Taken: {calculateCategoryCredits(selectedType.find((item) => item.title === category), type)}</p>
-                </div>
+                </div> */}
                 <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
             </div>
         )
@@ -350,8 +397,7 @@ const Audit = () => {
         console.log(err)
     }
     
-
-  
+ 
     return (
         <body id="fullpage">
             <div id="header">

@@ -3,22 +3,49 @@ import React, { useState, useEffect } from "react";
 import RequiredCourse from "./requiredCourse";
 import "../styles/audit.css"
 import AddCourses from "./addCourses";
+//import { userRequirments } from "./catalog";
+
 
 
 const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
     const [isOrOpen, setIsOrOpen] = useState(false)
 
     const [totalRequiredCredits, setTotalRequiredCredits] = useState(0);
-    
+    const [userRequirments, setUserRequirments] = useState([])
+  
+    //need to add create user requirements to the use effect
     useEffect(() => {
-        calculateTotalRequiredCredits();
-      }, [type, category, coursesList]);
+        createUserRequirments()
+        calculateTotalRequiredCredits()
+    }, [type, category, coursesList]); 
     
-
     const toggleOrCourses = () => {
         setIsOrOpen(!isOrOpen)
     }
 
+    const createUserRequirments = () => {
+        let userRequirments = []
+        type.filter(option => option.title.match(category)).map((selectedOption, index) => {
+            if (index === 0) {
+                selectedOption?.requirements && selectedOption.requirements.map((course) => {
+                    if (course.required === "true" && course.list.lenght !== 0 && course.label !== "Internship" && course.label !== "# Internship") {
+                        //i need to add this information to the user requirements array
+                        userRequirments.push(
+                            { id: course._id, label: course.label, credits: course.credits, list: course.list, userCreditsTitle: course.label, userCredits: 2 })
+                    }
+                    else {
+                        return null;
+                    }
+                })
+               
+            }
+            setUserRequirments(userRequirments)
+        })
+    }
+
+
+
+                
     const calculateTotalRequiredCredits = () => {
         let totalCredits = 0;
     
@@ -27,13 +54,8 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
             .forEach((selectedOption) => {
                 selectedOption?.requirements &&
                     selectedOption.requirements.forEach((course) => {
-                        if (course?.label === "Total Minimum"
-                            /* course.list.length > 0 && 
-                            course?.label !== "Total Minimum" &&
-                            course?.label !== "Accountancy Elective" &&
-                            course?.label !== "Free Elective" &&
-                            course?.label !== "General Education"  */
-                        ) {
+                        if (course?.label === "Total Minimum") 
+                        {
                             const credits = parseInt(course?.credits, 10) || 0;
                             totalCredits += credits;
                         }
@@ -42,6 +64,8 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
     
         setTotalRequiredCredits(totalCredits);
     };
+
+
 
     return(
         type.filter(option => option.title.match(category)).map((selectedOption, index)=> {if(index===0){return(
@@ -52,13 +76,15 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
                     <button className="programDelete" onClick={removeCatalog}>Delete</button>
                 </div>
                 
-                {selectedOption?.requirements && selectedOption.requirements.map((course)=> {if(course.required === "true" && course.list.lenght !== 0){return(
+                {selectedOption?.requirements && selectedOption.requirements.map((course)=> {                   
+                    if(course.required === "true" && course.list.lenght !== 0 && course.label !== "Internship" && course.label !== "# Internship"){
+                        return(
                     // this section if filters based on if the course section is required or not, if not, will do a mass select type of thing
                     <div key={course?._id}>
                         <ul className="accordion">
                             <li>
                             <input type="checkbox" name="accordion" id={course?._id} />
-                            <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</label>
+                            <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - (Required Credit Hours: {course?.credits})  (Credits Taken:  {userRequirments?.userCredits}) (Credits Selected: {userRequirments?.userCredits} )</label>
                             
                                 <div className="classHistory">
                                     {/* <p><b>Credits hours needed:</b> {course.credits}</p> */}
@@ -136,13 +162,22 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
                 )}
                 // else if(course.list.length !== 0){
                 else{
-                    if(course.list.length === 0){
+                    const UnNeededTitlesArray = [
+                        "Graduate Level Coursework",
+                        "General Education",
+                        "Free Elective",
+                        "Total Minimum"
+                      ];
+                    if(course.list.length === 0 || course.label === "Internship" || course.label === "# Internship"){
+                        if(!UnNeededTitlesArray.includes(course.label)){
                         return(
-                                        <label htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</label>
+                            <ul>
+                                <p className="accordion" htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</p>
+                            </ul>
                         )
+                        }
                     }
                     else{
-                    // this section is for courses that are not required but need a sort of user input to add the courses to the degree accordingly
                     let manySelect = []
                     let orClasses = []
                     return(
