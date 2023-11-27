@@ -2,8 +2,11 @@ import React, {useState} from 'react';
 import "../styles/formStyle.css";
 import Cookies from 'universal-cookie';
 import CookiePopup from '../components/cookiepopup';
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import "../styles/login.css";
 
 const Login = () => {
+    const [visible, setVisible] = useState(false);
     const [formData, setFormData] = useState({ email: '', password: '' })
     const [errorMsg, setErrorMsg] = useState(null)
     const handleSubmit = async (e) => {
@@ -60,13 +63,24 @@ const Login = () => {
                 <h1>Login</h1>
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
-                        <label >Email</label>          
+                        <label>Email</label>          
                         <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange}/>
                         <br/>
                         <label>Password</label>
-                        <input type="password" name="password" placeholder="Enter password here..." value={formData.password} onChange={handleChange}/>
-        
+                            <div className="password-input">
+                              <input
+                                type={visible ? "text" : "password"}
+                                name="password"
+                                placeholder="Enter password here..."
+                                value={formData.password}
+                                onChange={handleChange}
+                              />
+                              <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                                {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                              </div>
+                            </div>
                         <a href="/forgotpassword">Forgot Password?</a>
+
                     </div>
                     
                     <br/>

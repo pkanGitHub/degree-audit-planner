@@ -165,7 +165,7 @@ const NavBar = () => {
                       <br/>
 
                       <label>Password
-                        <div className="password-input" id="formContent">
+                        <div id="formContent">
                           <input className="userInfo"
                             value={testAuth.password}
                             type={visible ? "text" : "password"}
