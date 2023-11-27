@@ -128,4 +128,42 @@ router.post("/login", (req, res, next) => {
     })(req, res, next)
   })
 
+router.post("/api/user/save", (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.body.id },
+        { 
+            courses: req.body.courses,
+            major: req.body.major,
+            minor: req.body.minor,
+            certificates: req.body.cert,
+            generalEducationComplete: req.body.genEd
+        }
+    )
+    .then(user => res.status(200).json({
+        message: "User data updated",
+        data: user
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not update user data",
+        error: err
+    }))
+})
+
+router.post("/api/user/load", (req, res) => {
+    User.findOne(
+        { _id: req.body.id }
+    )
+    .then(user => res.status(200).json({
+        message: "User data fetched",
+        courses: user.courses,
+        major: user.major,
+        minor: user.minor,
+        certificate: user.certificate
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not fetch user data",
+        error: err
+    }))
+})
+
 module.exports = router

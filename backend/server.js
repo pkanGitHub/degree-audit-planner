@@ -86,45 +86,6 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     console.log(error);
 });
 
-
-app.post("/api/user/save", (req, res) => {
-    models['User2'].findOneAndUpdate(
-        { _id: req.body.id },
-        { 
-            courses: req.body.courses,
-            major: req.body.major,
-            minor: req.body.minor,
-            certificates: req.body.cert,
-            generalEducationComplete: req.body.genEd
-        }
-    )
-    .then(user => res.status(200).json({
-        message: "User data updated",
-        data: user
-    }))
-    .catch(err => res.status(500).json({
-        message: "Could not update user data",
-        error: err
-    }))
-})
-
-app.post("/api/user/load", (req, res) => {
-    models['User2'].findOne(
-        { _id: req.body.id }
-    )
-    .then(user => res.status(200).json({
-        message: "User data fetched",
-        courses: user.courses,
-        major: user.major,
-        minor: user.minor,
-        certificate: user.certificate
-    }))
-    .catch(err => res.status(500).json({
-        message: "Could not fetch user data",
-        error: err
-    }))
-})
-
 // Get from all schemes
 
 app.get("/api/certificates", (req, res) => {
