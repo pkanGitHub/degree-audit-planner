@@ -3,81 +3,146 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const passport = require('passport')
 const mongoose = require('mongoose')
-const plannerRoute = require('./routes/planner')
-const modelNames = ['User', 'Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
+const session = require("express-session");
+const cookieParser = require('cookie-parser')
+// const plannerRoute = require('./routes/planner')
+const authRoute = require('./routes/auth')
+const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'User2']
 const models = {}
 modelNames.forEach(modelName => {
-    const Model = require(`./Models/${modelName}`)
-    models[modelName] = Model
+  const Model = require(`./Models/${modelName}`)
+  models[modelName] = Model
 })
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:false}));
-
-//middleware
-app.use((req, res, next) => {
-    console.log(req.path, req.method)
-    next()
-})
-
-app.use('/api/home', plannerRoute)
-
-// connect to db
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>{
-    //listen for request
-    app.listen(process.env.SERVER_PORT, () => {
-        console.log('Mongo connection successful on port', process.env.SERVER_PORT)
-    })
-})
-.catch((error) => {
-    console.log(error)
-})
+const cron = require('node-cron')
+const removeEmail = require('./cron/removeUnverifiedEmailFromDatabase')
 
 /**
  * Set up CORS
  */
 app.use((req, res, next)=>{
-    res.setHeader("Access-Control-Allow-Origin","*");
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Origin, X-Requested-With, Content-Type, Accept"
-    );
-    res.setHeader("Access-Control-Allow-Methods",
-      "GET, POST, PATCH, DELETE, OPTIONS"
-    );
+  res.setHeader("Access-Control-Allow-Origin","*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader("Access-Control-Allow-Methods",
+    "GET, POST, PATCH, DELETE, OPTIONS"
+  );
+  next();
+});
+app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    // save if nothing is changed
+    resave: false,
+    // save empty value in the session if there is no value
+    saveUninitialized: true,
+  })
+);
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:false}));
+
+//middlewares
+app.use((req, res, next) => {
+    console.log(req.path, req.method);
     next();
+});
+app.use(passport.initialize());
+app.use(passport.session({
+  sessionID: 'session',
+  maxAge: 3600  
+}));
+
+// login sessions last 1 hour
+require('./passport-config')(passport);
+app.use('/', authRoute);
+
+app.use('/', (err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+// app.use('/api/home', plannerRoute)
+// connect to db
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+.then(()=>{
+    //listen for request
+    app.listen(process.env.BACKEND_PORT, () => {
+        console.log('Mongo connection successful on port', process.env.BACKEND_PORT);
+    });
+     // Start the cron job
+     // Schedule a task to run everyday every 3 mins for now
+     let task = cron.schedule('*/3 * * * *', async () => {
+      console.log('Cron job scheduled. Running now...');
+      await removeEmail();
+    })
+    task.start()
+     
+})
+.catch((error) => {
+    console.log(error);
 });
 
 
-//  This will need to be moved into a separate file and hashed.
+app.post("/api/user/save", (req, res) => {
+    models['User2'].findOneAndUpdate(
+        { _id: req.body.id },
+        { 
+            courses: req.body.courses,
+            major: req.body.major,
+            minor: req.body.minor,
+            certificates: req.body.cert,
+            generalEducationComplete: req.body.genEd
+        }
+    )
+    .then(user => res.status(200).json({
+        message: "User data updated",
+        data: user
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not update user data",
+        error: err
+    }))
+})
 
-app.post("/signup", (req, res) => {
-    const user = new models['User']({
-        email: 'test@test.com',
-        password: 'password',
-        major: 'Information Technology',
-    })
-
-    user
-      .save()
-      .then(result => {
-        res.status(201).json({
-          message: "User created!",
-          result: result
-        });
-      })
-      .catch(err => {
-        res.status(500).json({
-          error: err
-        });
-      });
+app.post("/api/user/load", (req, res) => {
+    models['User2'].findOne(
+        { _id: req.body.id }
+    )
+    .then(user => res.status(200).json({
+        message: "User data fetched",
+        courses: user.courses,
+        major: user.major,
+        minor: user.minor,
+        certificate: user.certificate
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not fetch user data",
+        error: err
+    }))
 })
 
 // Get from all schemes
+
 app.get("/api/certificates", (req, res) => {
-  retrieveCertificateData().then((certificates) => {
+    // res.redirect('/api/certificates/2023-24')
+    models['Certificate'].find()
+    .then((certificates) => {
+        res.status(200).json({
+            message: "Certificate List",
+            certificates: certificates
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Certificates" });
+      });;
+});
+
+app.get("/api/certificates/:year", (req, res) => {
+  retrieveCertificateData(req.params.year).then((certificates) => {
     res.status(200).json({
       message: "Certificate List",
       certificates: certificates
@@ -89,7 +154,21 @@ app.get("/api/certificates", (req, res) => {
 });
 
 app.get("/api/majors", (req, res) => {
-  retrieveMajorData().then((majors) => {
+    // res.redirect('/api/majors/2023-24')
+    models['Major'].find()
+    .then((majors) => {
+        res.status(200).json({
+            message: "Major List",
+            majors: majors
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Majors" });
+      });;
+});
+
+app.get("/api/majors/:year", (req, res) => {
+  retrieveMajorData(req.params.year).then((majors) => {
     res.status(200).json({
       message: "Major List",
       majors: majors
@@ -101,7 +180,20 @@ app.get("/api/majors", (req, res) => {
 });
 
 app.get("/api/minors", (req, res) => {
-  retrieveMinorData().then((minors) => {
+    models['Minor'].find()
+    .then((minors) => {
+        res.status(200).json({
+            message: "Minor List",
+            minors: minors
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Minors" });
+      });;
+});
+
+app.get("/api/minors/:year", (req, res) => {
+  retrieveMinorData(req.params.year).then((minors) => {
     res.status(200).json({
       message: "Minor List",
       minors: minors
@@ -109,18 +201,6 @@ app.get("/api/minors", (req, res) => {
   })
   .catch((error) => {
     res.status(500).json({ error: "Failed to retrieve Minors" });
-  });
-});
-
-app.get("/api/users", (req, res) => {
-  retrieveUserData().then((users) => {
-    res.status(200).json({
-      message: "User List",
-      users: users
-    });
-  })
-  .catch((error) => {
-    res.status(500).json({ error: "Failed to retrieve Users" });
   });
 });
 
@@ -136,63 +216,27 @@ app.get("/api/courses", (req, res) => {
   });
 });
 
-
-app.post("/addMinor", (req, res) => {
-  models['Minor'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      title: req.body.title,
-      courses: req.body.courses,
-      url: req.body.url
-    }},
-    { upsert: true }
-    )
-  .then(result => {
-    res.status(201).json({
-      message: "Minor created!",
-      result: result
+app.get("/api/genEds", (req, res) => {
+  retrieveGenEds().then((genEds) => {
+    res.status(200).json({
+      message: "Gen Eds",
+      genEds: genEds
     });
   })
-  .catch(err => {
-    res.status(500).json({
-      error: err
-    });
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Gen Eds" });
   });
-})
-
-app.post("/addUser", (req, res) => {
-  const user = new models['User']({
-    email: req.body.email,
-    password: req.body.password,
-    major: req.body.major,
-    coursePlan: req.body.coursePlan,
-    url: req.body.url
-  })
-
-  user
-    .save()
-    .then(result => {
-      res.status(201).json({
-        message: "User created!",
-        result: result
-      });
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-})
+});
 
 app.post("/addCourseArea", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
         { $set: { courses: req.body.courses }},
         { upsert: true }
     )
     .then(result => {
         res.status(201).json({
-          message: "Course added!",
+          message: "Course area added!",
           result: result
         });
       })
@@ -204,9 +248,9 @@ app.post("/addCourseArea", (req, res) => {
   })
 
   app.post("/addCourse", (req, res) => {
-    models['Courses'].findOneAndUpdate(
+    models['Courses'].updateOne(
         { area: req.body.area },
-        { $set: { courses: req.body.courses }})
+        { $push: { courses: req.body.course }})
       .then(result => {
         res.status(201).json({
           message: "Course added!",
@@ -221,20 +265,30 @@ app.post("/addCourseArea", (req, res) => {
   })
 
 
-
-app.post("/addMajor", (req, res) => {
-  models['Major'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      courses: req.body.courses,
-      semesters: req.body.semesters,
-      credits: req.body.credits
-    }},
-    { upsert: true }
-  )
+app.post("/addMinor/:year", (req, res) => {
+    models['Minor'].updateOne({
+        year: req.params.year
+        },{
+        $addToSet: { programs: { title: req.body.title }}
+        },{
+        upsert: true
+    })
+    .then(() => models['Minor'].updateOne({
+        year: req.params.year,
+        programs: {
+            $elemMatch: {
+                title: req.body.title
+            }
+        }}, {
+        $set: {
+            "programs.$.requirements": req.body.requirements,
+            "programs.$.url": req.body.url
+        }}, {
+        upsert: true      
+    }))
   .then(result => {
     res.status(201).json({
-      message: "Major created!",
+      message: "Minor created!",
       result: result
     });
   })
@@ -245,15 +299,63 @@ app.post("/addMajor", (req, res) => {
   });
 })
 
-app.post("/addCert", (req, res) => {
-  models['Certificate'].findOneAndUpdate(
-    { title: req.body.title },
-    { $set: {
-      url: req.body.url,
-      courses: req.body.courses,
-      credits: req.body.credits
-    }},{ upsert: true }
-  )
+app.post("/addMajor/:year", (req, res) => {
+    models['Major'].updateOne({
+        year: req.params.year
+        },{
+        $addToSet: { programs: { title: req.body.title }}
+        },{
+        upsert: true
+    })
+    .then(() => models['Major'].updateOne({
+        year: req.params.year,
+        programs: {
+            $elemMatch: {
+                title: req.body.title
+            }
+        }}, {
+        $set: {
+            "programs.$.requirements": req.body.requirements,
+            "programs.$.years": req.body.years,
+            "programs.$.url": req.body.url
+        }}, {
+        upsert: true      
+    }))
+    .then(result => {
+      res.status(201).json({
+        message: "Major created!",
+        result: result
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+  })
+
+app.post("/addCert/:year", (req, res) => {
+    models['Certificate'].updateOne({
+        year: req.params.year
+        },{
+        $addToSet: { programs: { title: req.body.title }}
+        },{
+        upsert: true
+    })
+    .then(() => models['Certificate'].updateOne({
+        year: req.params.year,
+        programs: {
+            $elemMatch: {
+                title: req.body.title
+            }
+        }}, {
+        $set: {
+            "programs.$.requirements": req.body.requirements,
+            "programs.$.years": req.body.years,
+            "programs.$.url": req.body.url
+        }}, {
+        upsert: true      
+    }))
   .then(result => {
     res.status(201).json({
       message: "Major created!",
@@ -289,37 +391,29 @@ app.post('/addGenEds', (req, res) => {
 })
 
 //Retrieve data functions
-async function retrieveCertificateData() {
+async function retrieveCertificateData(year) {
   try {
-    const certificates = await models['Certificate'].find({}); 
-    return certificates;
+    const certificates = await models['Certificate'].findOne({ year: year }); 
+    return certificates.programs;
   } catch (error) {
     throw error;
   }
 }
 
-async function retrieveMajorData() {
+async function retrieveMajorData(year) {
+    console.log(year);
   try {
-    const majors = await models['Major'].find({}); 
-    return majors;
+    const majors = await models['Major'].findOne({ year: year });
+    return majors.programs;
   } catch (error) {
     throw error;
   }
 }
 
-async function retrieveMinorData() {
+async function retrieveMinorData(year) {
   try {
-    const minors = await models['Minor'].find({}); 
-    return minors;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function retrieveUserData() {
-  try {
-    const users = await models['User'].find({}); 
-    return users;
+    const minors = await models['Minor'].findOne({ year: year }); 
+    return minors.programs;
   } catch (error) {
     throw error;
   }
@@ -329,6 +423,15 @@ async function retrieveCourseData() {
   try {
     const courses = await models['Course'].find({}); 
     return courses;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveGenEds() {
+  try {
+    const genEds = await models['GenEds'].find({}); 
+    return genEds;
   } catch (error) {
     throw error;
   }

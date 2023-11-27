@@ -1,0 +1,91 @@
+.planTable{
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid black;
+    border-collapse: collapse;
+    width: 90%;
+    margin-bottom: 10px;
+}
+.planTable th{
+    text-align: center;
+    background-color: #F1B82D;
+    border-bottom: 1px solid black;
+    padding: 10px;
+}
+
+/* .planTable td {
+    max-width: 25%;
+    width: max-content;
+} */
+
+.semesterHeading{
+    background-color: lightgray;
+    font-weight: bold;
+    border-bottom: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+
+}
+.courseTableInfo td{
+    background-color: white;
+}
+
+.courseTableInfo td:nth-child(2), .courseTableInfo td:nth-child(4){
+    border-right: 1px solid black;
+}
+
+.tableDataHeading td{
+    font-weight: bold;
+}
+
+.tableSummary td{
+    border-top: 1px solid black;
+    background-color: #F1B82D;
+}
+
+.tableSummary td:nth-child(2), .tableSummary td:nth-child(4){
+    border-right: 1px solid black;
+}
+
+#userPlanner{
+    text-align: center;
+}
+
+.courseLabel {
+    color: #545454;
+    border: none;
+    background-color: transparent;
+    font-weight: normal;
+    padding: 0;
+}
+
+
+.completed {
+    color: green;
+}
+
+.in-progress {
+    color: blue;
+}
+
+.planned {
+    color: black;
+}
+
+.tableSummary select {
+    background: rgba(0,0,0,0);
+    border: none;
+    font-size: 16px;
+}
+
+.checked {
+    font-weight: bold !important;
+}
+
+.statusSet span {
+    margin: 0 3px;
+    color: #545454;
+    font-weight: normal;
+    cursor: pointer;
+}
+

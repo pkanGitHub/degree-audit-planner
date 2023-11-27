@@ -1,153 +1,218 @@
 import "../styles/audit.css";
-import RequiredChoice from "../components/requiredChoice";
-import RequiredCourse from "../components/requiredCourse";
-import ClassInfo from "../components/classInfoPopup";
-import { useState } from "react";
+import CatalogItems from "../components/catalog";
+import { useState, useEffect } from "react";
+import GenEdsModel from "../components/genEds";
+import ExtraCourses from "../components/extraCourses";
+import TransferCourse from "../components/transferCourses";
+import SemesterPlan from "../components/semesterplan";
+import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
+import TranscriptUpload from "../components/transcriptUpload";
+import * as User from "../lib/user";
+import { exportData } from "../lib/filehandling";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import Cookies from "universal-cookie";
 
 const Audit = () => {
-    const [selectCourseType, setCourseType] = useState('');
-    const handleSelect=(e)=>{
-        setCourseType(e.target.value)
-    }
-
-    const [selectNumber, setNumber] = useState('');
-    const handleNumberSelect=(e)=>{
-        setNumber(e.target.value)
-    }
-    const courseNumber = [1000, 2011, 2270, 2271, 2200, 2000, 2201]
-
-
     const [selectType, setType] = useState("");
-    const typeOptions = ["Major", "Minor", "Certificate"];
-    const handleTypeChange = (e) => {
+    const handleTypeChange = (e, index) => {
         setType(e.target.value);
     };
 
     const [selectCategory, setCategory] = useState("");
-    const category = {
-        INFOTC: "Information Technology - BS",
-        BIOMED: "Biomedical Engineering - BMEBS",
-        COMPS: "Computer Science - BS",
-    };
-    const handleCategoryChange = (e) => {
+    
+    const handleCategoryChange = (e, index) => {
         setCategory(e.target.value);
     };
 
-    const [selectTerm, setTerm] = useState("");
-    const term = {
-        FS21: "Fall 2021",
-        SP22: "Spring 2022",
-        SM22: "Summer 2022",
-    };
-    const handleTermChange = (e) => {
+    const [selectTerm, setTerm] = useState(null);
+    const handleTermChange = (e, index) => {
         setTerm(e.target.value);
     };
 
-    //dynamic categories
-    const categories = {MATH: "Math", ENG: "English"}
 
-    //dynamic required courses
-    const requiredCourseData = [{classId: "MATH 1500", creditHours: 5, preReq: "N/A"}, {classId: "MATH 2500", creditHours: 5, preReq: "MATH 2500"}, {classId: "ENG 3000", creditHours: 3, preReq: "ENG 2000"}]
-
-    //dynamic course choice
-    const classData = [{classId: "MATH 1500", creditHours: 5, preReq: "N/A"}, {classId: "BME 1000", creditHours: 3, preReq: "PHYSICS 1000"}]
-
-    //delete entry
-    //https://stackoverflow.com/questions/61661526/react-delete-one-children-without-rendering-the-parent-again
-    const removeClass = (index) => {
-        let data = [...classData]
-        data.splice(index, 1)
-
-    }
-
-    //class type select dynamic
-
-    const classSelect = {"INFOTC": "Information Technology", "ENGINR": "Engineering", "CMP_SC": "Computer Science", "MAE": "Mechanical Engineering"}
-
-    const popupClasses = [{className: "INFOTC 1000", classTitle: "Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "ENGINR 2011", classTitle: "Engineering Leadership and Strategic Communication", classDescript: "This course is inspired by the experience and writings of CEO and world-renowned leader David Novak. It is designed to introduce engineering students to the concepts, theory, and practice of engineering leadership. Topics include; effective written and oral communications, presentations, engineering leadership characteristics, individual differences and self-awareness, and developing and building teams. Graded on A-F basis only.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}, {className: "CMP_SC 2270", classTitle: "Introduction to Logic Systems", classDescript: "(same as ECE 2210). Basic tools, methods and procedures to design combinational and sequential digital circuits and systems, including number systems, boolean algebra, logic minimization, circuit design, memory elements, and finite state machine design.", creditHours: "3", preReq: "C or higher in CMP_SC 1050 or INFOTC 1040", lastOffered: "Summer 2021"}, {className: "MAE 2200", classTitle: "Engineering Materials", classDescript: "The nature of the structure of engineering materials. The relationship of material structure to physical properties. Mechanical behavior of engineering materials. Graded on A-F basis only.", creditHours: "3", preReq: "Grade of C- or better in ENGINR 1200 and CHEM 1320.", lastOffered: "Spring 2022"}, {className: "CMP_SC 2271", classTitle: "Introduction to Logic Systems", classDescript: "(same as ECE 2210). Basic tools, methods and procedures to design combinational and sequential digital circuits and systems, including number systems, boolean algebra, logic minimization, circuit design, memory elements, and finite state machine design.", creditHours: "3", preReq: "C or higher in CMP_SC 1050 or INFOTC 1040", lastOffered: "Summer 2021"}, {className: "MAE 2201", classTitle: "Engineering Materials", classDescript: "The nature of the structure of engineering materials. The relationship of material structure to physical properties. Mechanical behavior of engineering materials. Graded on A-F basis only.", creditHours: "3", preReq: "Grade of C- or better in ENGINR 1200 and CHEM 1320.", lastOffered: "Spring 2022"}, {className: "INFOTC 2000", classTitle: "Introduction to Information Technology", classDescript: "Introduction to Information Technology introduces the field of Information Technology including foundation experiences and knowledge, the history of digital technologies, emphasis areas in the  program, software engineering, computer networks and the internet, web development, current trends  in technology, career opportunities, and ethical/social issues. Students participate in activities  that introduce students to digital media, digital systems, and software engineering. Students learn to use distributed version control systems and how to work on collaborative teams.", creditHours: "3", preReq: "N/A", lastOffered: "Fall 2023"}];
-
-
+    
     // testing add function! this is applied to the mass select, will need to get this to work on the top and other select course
     const [enrollFields, setEnrollFields] = useState([{type: "", category: "", year: ""}])
-    const addEnrollFields = () => {
-        let newField = {type: "", category: "", year: ""}
-        setEnrollFields([...enrollFields, newField])
-    }
-
-    const removeEnrollFields = (index) =>{
-        let data = [...enrollFields]
-        data.splice(index, 1)
-        setEnrollFields(data)
-    }
-
-    // on click, add course to top of section to show you have added it
     
-    const [selectedCourses, setSelectedCourses] = useState([])
-    const handleLargeCourseClick = () => {
-        const courseInfo = selectCourseType + " " + selectNumber
-        // find course info for selected course type and number in the pop up classes information. this will have to be chanegd when the data base is working, but this is the idea of it all
-        {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
-            
-            setSelectedCourses([...selectedCourses, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
-            
-            ))}
-        
-
+    const handleEnrollFieldChange = (i, e) =>{
+        let newFormValues = [...enrollFields];
+        newFormValues[i][e.target.name] = e.target.value;
+        setEnrollFields(enrollFields);
     }
 
-    const removeCourse = (index) =>{
-        let data = [...selectedCourses]
+    
+
+    // gets database data and turns it into a list of objects
+
+    const [minors, setMinors] = useState({});
+    const [majors, setMajors] = useState({});
+    const [certificates, setCertificates] = useState({});
+    const [coursesList, setCourses] = useState([]);
+    const [genEds, setGenEds] = useState([])
+
+    useEffect(() => {
+        getMajors(true).then(val => setMajors(val));
+
+        getCourseList(true).then(val => setCourses(val))
+        // .then(() => User.read('655f96b827fb470cd02a3e1b'))
+        // .then(() => setUserCourses([...User.getCourses()]));
+
+        getMinors(true).then(val => setMinors(val));
+        getCerts(true).then(val => setCertificates(val));
+        getGenEds(true).then(val => setGenEds(val));
+    }, []);
+
+
+    // this is the user catalog section. this is a list of the type and category that the user has chosen. this is used to loop through database data
+
+    const [userCatalog, setUserCatalog] = useState([{type: "", category: "", year: ""}])
+
+    const handleUserCategories = () => {
+        User.addPlan(selectCategory, selectTerm, selectType);
+        setUserCatalog([...userCatalog, {type: selectType, category: selectCategory, year: selectTerm}])
+    }
+
+    const removeCatalog = (index) =>{
+        let data = [...userCatalog]
         data.splice(index, 1)
-        setSelectedCourses(data)
+        setUserCatalog(data)
+    }
+    
+    const addCatalog = (type, category, year) => {
+        setUserCatalog([...userCatalog, {type: type, category: category, year: year}])
     }
 
-    const [majorElectCourse, setMajorElectCourse] = useState([])
-    const [selectMajorNumber, setMajorNumber] = useState('');
-    const handleMajorNumberSelect=(e)=>{
-        setMajorNumber(e.target.value)
+    // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
+
+    let userType = null;
+    let options = null;
+    let yearOptions = null;
+
+    if (selectType === "majors"){
+        userType = majors
     }
-    const majorCourseNumber = [1000, 2011, 2270, 2271, 2200, 2000, 2201]
-
-
-    const handleAddMajorElective = () => {
-        const courseInfo = "INFOTC " + selectMajorNumber
-        {popupClasses.filter(singleClass => singleClass.className.match(courseInfo)).map(filteredClass => (
-            
-            setMajorElectCourse([...majorElectCourse, {key: filteredClass, classId: filteredClass.className, creditHours: filteredClass.creditHours, preReq: filteredClass.preReq}])
-            
-            ))}
-        
-
+    else if (selectType === "minors"){
+        userType = minors
+    }
+    else if (selectType === "certificates"){
+        userType = certificates
     }
 
-    const removeMajorCourse = (index) =>{
-        let data = [...majorElectCourse]
-        data.splice(index, 1)
-        setMajorElectCourse(data)
-    }
-
-    // working on data transfer
-
-    const [courseStatus, setCourseStatus] = useState([{classId: "", creditHours: "", progressSelect: "", semesterSelect: ""}])
-    const handleClassCallback = (classData) => {
-        let newStatus = {classId: classData.classId, creditHours: classData.creditHours, progressSelect: classData.progressSelect, semesterSelect: classData.semesterSelect}
-        setCourseStatus([...courseStatus, newStatus])
-
+    if (selectTerm && userType) { 
+        options = userType[selectTerm].map((option) => <option key={option?.title}>{option?.title}</option>); 
+    // if (userType) { 
+    //     yearOptions = userType.map(option => <option key={option?.title}>{option?.title}</option>)
+    //     options = userType.map((option) => <option key={option?.title}>{option?.title}</option>); 
     }
 
 
+    // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
+    
+    function getCourses(type, category, year, index){
+        let selectedType = [];
+        if (type === "majors" || type === "major"){
+            if (!majors[year]) return;
+            selectedType = majors[year]
+        }
+        else if (type === "minors" || type === "minor"){
+            if (!minors[year]) return;
+            selectedType = minors[year]
+        }
+        else if (type === "certificates" || type === "certificate"){
+            if (!certificates[year]) return;
+            selectedType = certificates[year]
+        }
+        else if (category === ""){
+            category = "default"
+        }
+
+        return(
+            <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
+        )
+
+    }
+
+    // delete button/refresh page button
+
+    const [state, setState] = useState(0) // when clicked, refreshes state on the gen eds, transfer, and elective courses
+    const refreshPage=()=> {
+        setUserCatalog([{type: "", category: ""}])
+        setState(state+1)
+    }
+
+    const [userCourses, setUserCourses] = useState(User.getCourses());
+    const deleteAlert = () => {
+        confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                  <div className='confirmButton'>
+                    <h1>Confirm Delete</h1>
+                    <p>Are you sure you want to delete your progress? No programs or classes will be saved.</p>
+                    <div id="confirmButtonsDiv">
+                        <button id="no" onClick={onClose}>No</button>
+                        <button id="yes"
+                        onClick={() => {
+                            refreshPage();
+                            onClose();
+                        }}
+                        >
+                        Yes
+                        </button>
+                    </div>
+                    
+                  </div>
+                );
+              }
+    })
+    }
+    const cookies = new Cookies(null);
+    const cookieData =  cookies.get("user2")
+
+    let calendarHeading = "" // this is the banner over the calendar
+    let testCatalog = [];
+
+    // testing for adding existing courses to page on load DELETE AFTER FINISH TESTING
+    useEffect(()=> {
+        setUserCatalog(testCatalog)
+    }, [])
+
+    if (cookieData !== undefined){
+        calendarHeading = `${cookieData.email} Degree Planner`
+        if(cookieData.testCategories!== undefined){
+            cookieData.testCategories.map(item => testCatalog.push(item))
+        }
+    }
+    else{
+        calendarHeading = "Degree Planner"
+    }
+
+    // this is testing for user information, may want to use this to query data, can do this in use effect!
+
+    let testAuth = null;
+    try{
+        testAuth = cookies.get("user")
+        if(testAuth === undefined){
+            testAuth = "";
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+    
+
+  
     return (
-        <body id="fullpage">
+        <div id="fullpage">
             <div id="header">
-                {/* https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 */}
-                <button id="transcriptButton">Upload Unoffical Transcript</button>
-                <input type="file" id="uploadFile"/>
+                <TranscriptUpload setCatalog={setUserCatalog} setCourses={(courses) => {User.setCourses(courses);setUserCourses([...User.getCourses()]);}} hasData={userCourses.length > 0}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
             <div id='contents'>
             
                 <div id="audit">
+                    <p>{testAuth.email}{testAuth.password}</p>
 
                     <div id="enrollmentSelection">
                         {/* https://www.youtube.com/watch?v=XtS14dXwvwE */}
@@ -155,290 +220,98 @@ const Audit = () => {
                             return(
                                 <div key={index} id="addedSectionEnroll">
                                     <label>
-                                        Type:
-                                        <select name='type' onChange={handleTypeChange}>
-                                            <option value=""></option>
-                                            {typeOptions.map((typeOptions) => (
-                                            <option value={typeOptions}>{typeOptions}</option>))}
+                                        Year:&nbsp;&nbsp;
+                                        <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
+                                            {/* {Object.keys(term).map((key, index) => 
+                                            <option value={key}>{term[key]}</option>)} */}
+
+                                            { Object.keys( majors ).sort().reverse().map(key => <option key={ key } value={ key } >{ key }</option> )}
+
+                                        </select>
+                                    </label>
+
+                                    <label>
+                                        Type:&nbsp;&nbsp;
+                                        <select name='type' value={input.type} onChange={(e) => {handleTypeChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
+                                            <option value="majors">Major</option>
+                                            <option value="minors">Minor</option>
+                                            <option value="certificates">Certificate</option>
                                         </select>
                                     </label>
                                     <label>
-                                        Category:
-                                        <select name='category' onChange={handleCategoryChange}>
-                                            <option value=""></option>
-                                            {Object.keys(category).map((key, index) => 
-                                            <option value={key}>{category[key]}</option>)}
+                                        Category:&nbsp;&nbsp;
+                                        <select name='category' value={input.category} onChange={(e)=> {handleCategoryChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
+                                            { options }
                                         </select>
                                     </label>
-                                    
-                                    <label>
-                                        Year:
-                                        <select name='year' onChange={handleTermChange}>
-                                            <option value=""></option>
-                                            {Object.keys(term).map((key, index) => 
-                                            <option value={key}>{term[key]}</option>)}
-                                        </select>
-                                    </label>
-                                    <button onClick={removeEnrollFields}>Delete</button>
+                                
                                 </div>
                             )
                         })}
-                        <button onClick={addEnrollFields}>Add</button>
+                        <button id="programButton" onClick={handleUserCategories}>Add Program</button>
                     </div>
                     <hr/>
 
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="first" />
-                            <label id="genReqLabel" htmlFor="first">General Requirements</label>
-                            <div className="classHistory">
-                                <div id="requiredCourses">
-                                    {Object.keys(categories).map((key, index)=> (
-                                        <div>
-                                            <p>{categories[key]}</p>
-                                            {requiredCourseData.map((key, index) => <RequiredCourse key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} />)}
-                                        </div>
-                                        
-                                    ))}
-                                </div>
-
-                            </div>
-                        </li>
-                    </ul>
-                    <hr/>
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="second" />
-                            <label id="genReqLabel" htmlFor="second">General Electives</label>
-                            <div className="classHistory">
-                                <div id='chooseCourse'>
-                                    {classData.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq}/>)}
-
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    <hr/>
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="third" />
-                            <label id='genReqLabel' htmlFor="third">Sample large class select</label>
-                            <div className="classHistory">
-                                <div id='largeClassSelect'>
-                                    
-                              
-                                    { selectedCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeCourse}/>) }
-
-                                   
-                                    
-                                    <label>
-                                        Course type:
-                                        <select id='chooseCourseType' name="courseType" onChange={handleSelect}>
-                                            <option value=""></option>
-                                            {Object.keys(classSelect).map((key, index) => 
-                                            <option value={key}>{classSelect[key]}</option>)}
-                                        </select>
-                                    </label>
-
-                                    {/* will want to find a way to pass information through to the pop up, will have to use query based on selection above*/}
-                                    {/* https://www.telerik.com/blogs/how-to-programmatically-add-input-fields-react-forms might want this later*/}
-                                    <p>
-                                        Choose from {selectCourseType} courses below:
-                                    </p>
-                                    <div id="popupDiv">
-
-                                        {popupClasses.filter(item => {
-                                            if (!selectCourseType) return false
-                                            if (item.className.includes(selectCourseType)) {
-                                                return true
-                                            }
-                                        }).map(item => (
-                                            <div>
-                                                <ClassInfo key={item} className={item.className} classTitle={item.classTitle} classDescript={item.classDescript} creditHours={item.creditHours} preReq={item.preReq} lastOffered={item.lastOffered}/>
-                                            </div>
-                                        ))
-                                        }
-                                    </div>
-
-
-                                    <label>
-                                        Course Number: 
-                                        <select name="courseNumber" onChange={handleNumberSelect}>
-                                            <option value=""></option>
-                                            {courseNumber.map((courseNumber) => (
-                                            <option value={courseNumber}>{courseNumber}</option>))}
-                                        </select>
-                                    </label>
-                                        
-                                  
-                                    <button onClick={handleLargeCourseClick} id='addCourseButton'>Add Course</button>
-
-                                    
-                                    
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-
-                
-                    <hr/>
-                    <ul className="accordion">
-                        <li>
-                            <input type="checkbox" name="accordion" id="fourth" />
-                            <label id="genReqLabel" htmlFor="fourth">Major Electives</label>
-                            <div className="classHistory">
-                                <div id='specifcElective'>
-
-                                    { majorElectCourse.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeMajorCourse}/>) }
-                                    <p>Information Technology electives</p>
-                                    <label>
-                                        Course number:
-                                        <select id='chooseNumber' name='course' onChange={handleMajorNumberSelect}>
-                                            <option value=""></option>
-                                            {majorCourseNumber.map((majorCourseNumber) => (
-                                            <option value={majorCourseNumber}>{majorCourseNumber}</option>))}
-                                        </select>
-                                    </label>
-
-                                    <button id='addCourseButton' onClick={handleAddMajorElective}>Add Course</button>
-                                    
-                                </div>
-                            </div>
-
-                        </li>
-                    </ul>
                     
+                    <GenEdsModel key={state} genEds={genEds} coursesList={coursesList}/>
+
+            
+                    {/* this is a map that gets all user input programs here, user can delete or add programs */}
+                    { userCatalog.map((key, index) =>
+                        <div key={index}>
+
+                            { getCourses(key.type, key.category, key.year, index) }    
+            
+                        </div>
+                        )
+                    }
+
+                    {/* <MajorTest majors={majors} coursesList={coursesList}/> */}
+
+                    <div>
+                        <h2>Elective Courses</h2>
+                        <p>If you have other courses you have taken that are outside of your major or transfer courses, enter them here:</p>
+                        <ul className="accordion">
+                            <li>
+                                <input type="checkbox" name="accordion" id="elective" />
+                                <label id="genReqLabel" htmlFor="elective">Mizzou Courses:</label>
+                                <div className="classHistory">
+
+                                    <ExtraCourses key={state} coursesList={coursesList}/>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <ul className="accordion">
+                            <li>
+                                <input type="checkbox" name="accordion" id="transfer" />
+                                <label id="genReqLabel" htmlFor="transfer">Transfer Courses:</label>
+                                <div className="classHistory">
+
+                                    <TransferCourse key={state}/>
+                                </div>
+                            </li>
+                        </ul>
+
+                    </div>
+
 
                     <div id='optionButtons'>
-                        <button id='saveButton'>Save</button>
-                        <button id='exportButton'>Export</button>
-                        <button id='deleteButton'>Delete</button>
+                        {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
+                        <button id='saveButton' >Save</button>
+                        <button id='exportButton' onClick={exportData}>Export</button>
+                        <button id='deleteButton' onClick={deleteAlert}>Delete</button>
                     </div>
                 </div>
                 <hr/>
 
-                {/* This is all hardcoded, will make it dynamic when we get test data */}
-                <div id='planner'>
-                    <h2 id='userPlanner'>User's Degree Planner</h2>
-                    <table id='twoSemesterPlan'>
-                        <tr>
-                            <th colSpan={4} id='tableHeading'>Academic Year Test 2020-2021</th>
-                        </tr>
-                        <tr>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 1
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 2
-                            </td>
-                        </tr>
-                        <tr className="courseTableInfo" id="tableDataHeading">
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>INFOTC 1000</td>
-                            <td>3</td>
-                            <td>BIO 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr id='tableSummary'>
-                            <td><b>Status:</b> Complete</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> In Progress</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                        </tr>
+                <SemesterPlan data={userCatalog} courses={userCourses} user={calendarHeading}/>
 
-
-                    </table>
-
-                    <table id='threeSemesterPlan'>
-                        <tr>
-                            <th colSpan={6} id='tableHeading'>Academic Year Test 2021-2022</th>
-                        </tr>
-                        <tr>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 1
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 2
-                            </td>
-                            <td colSpan={2} className="semesterHeading">
-                            Semester 3
-                            </td>
-                        </tr>
-                        <tr className="courseTableInfo" id="tableDataHeading">
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                            <td>Course name</td>
-                            <td>Credit hours</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr className="courseTableInfo">
-                            <td>BIOME 1000</td>
-                            <td>3</td>
-                            <td>ENGL 1500</td>
-                            <td>3</td>
-                            <td>MATH 1500</td>
-                            <td>3</td>
-                        </tr>
-                        <tr id='tableSummary'>
-                            <td><b>Status:</b> Complete</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> In Progress</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                            <td><b>Status:</b> Planned</td>
-                            <td><b>Total Credit Hours:</b> 12</td>
-                        </tr>
-                    </table>
-                </div>
             </div>
-        </body>
+        </div>
        
     )
 };

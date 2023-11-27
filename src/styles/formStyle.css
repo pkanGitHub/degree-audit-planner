@@ -5,6 +5,8 @@
     text-align: center;
     width: 100%;
     height: 100%;
+    background-color:#D7D7D7;
+    position: absolute;
 }
 #formDesign
 {
@@ -12,7 +14,7 @@
     background-color: white;
     padding: 50px;
     width: 50%;
-    height: 50%;
+    max-height: fit-content;
     box-shadow: 5px 10px 8px #c3c3c3;
     display: inline-block;
     margin-left: auto;
@@ -26,7 +28,7 @@
     margin: auto;
     text-align: left;
 }
-#formContent label, input[type=text]{
+#formContent label, input[type=text], input[type=password]{
     display: block;
     font-weight: bold;
     font-size:large;
@@ -36,7 +38,7 @@
     text-align: left;
 }
 
-#formContent input[type=text]{
+#formContent input[type=text], input[type=password]{
     margin: auto;
     width: 100%;
     padding: 10px;
@@ -121,4 +123,7 @@
 #mfabutton{
     background-color: #69901D;
     width: 25%;
+}
+#errorMessage{
+    color: red;
 }

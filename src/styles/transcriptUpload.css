@@ -1,0 +1,69 @@
+#uploadModal {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, .5);
+}
+
+#uploadModal #modalContent {
+    margin: 5% 30% ;
+    padding: 1%;
+    height: fit-content;
+    background-color: #fff;
+    border-radius: 5px;
+    position: relative;
+}
+
+#modalContent button {
+    width: 25%;
+    margin: 3% 15%;
+}
+
+#fileDrop {
+    /* border: #000 solid 1px; */
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.3) inset;
+    margin: 0 10% 1% 10%;
+    height: 30%;
+    padding: 10% 5%;
+    border-radius: 5px;
+}
+
+#fileDrop:hover {
+    cursor: pointer;
+}
+
+#consent input[type="checkbox"] {
+    display: block;
+}
+
+#consent {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    font-size: small;
+    justify-content: center;
+    align-items: start;
+    width: 80%;
+    padding: 5% 10%;
+}
+
+
+#consent p {
+    text-align: left;
+    margin: 0;
+}
+
+#close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5%;
+    color: #565656;
+    cursor: pointer;
+}
+
+.error {
+    margin: 1% 0;
+    color: red;
+}

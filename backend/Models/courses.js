@@ -6,13 +6,12 @@ const courseListSchema = mongoose.Schema({
         courseID: { type: String, required: true },
         name: { type: String, required: true },
         credit: String,
-        category: String,
+        categories: [ String ],
         prerequisites: String,
         description: String,
-        available: Boolean,
-        pastTerms: {type: [{type: String}]}
-    }],
-    required: true}
+        pastTerms: [ String ],
+        available: Boolean
+    }], required: true}
 })
 
 module.exports = mongoose.model('Courses', courseListSchema)
