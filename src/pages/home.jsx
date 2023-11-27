@@ -122,6 +122,9 @@ const Home = () => {
 
             <div className="bodyText">
                 <h1 id="welcomeTitle">Welcome!</h1>
+                    <div id="hyperlinkDirectory">
+                        
+                    </div>
                 <h1 id="startingTitle">Getting Started</h1>
             </div>
 
