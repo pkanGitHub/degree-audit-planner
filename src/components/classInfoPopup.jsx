@@ -7,6 +7,9 @@ import "../styles/classInfoPopup.css"
 //contentStyle={{maxWidth: '100vh', width: '30%', overflowX: "scroll", overflowX: 'scroll', maxHeight: '100vh', margin: 'auto'}}
 
 const ClassInfo = ({key, className, classTitle, classDescript, creditHours, preReq, lastOffered}) => {
+    if (!preReq){
+        preReq = "None"
+    }
     
     return(
         <Popup contentStyle={{overflowX: "scroll", overflowY: 'scroll', height: "40%", width: "40%", margin: 'auto', padding: "10px"}} trigger=

@@ -128,7 +128,7 @@ const Audit = () => {
         }
 
         return(
-            <CatalogItems type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
+            <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
         )
 
     }
@@ -220,6 +220,15 @@ const Audit = () => {
                             return(
                                 <div key={index} id="addedSectionEnroll">
                                     <label>
+                                        Type:&nbsp;&nbsp;
+                                        <select name='type' value={input.type} onChange={(e) => {handleTypeChange(e); handleEnrollFieldChange(index, e)}}>
+                                            <option value="default"></option>
+                                            <option value="majors">Major</option>
+                                            <option value="minors">Minor</option>
+                                            <option value="certificates">Certificate</option>
+                                        </select>
+                                    </label>
+                                    <label>
                                         Year:&nbsp;&nbsp;
                                         <select name='year' value={input.year} onChange={(e)=>{handleTermChange(e); handleEnrollFieldChange(index, e)}}>
                                             <option value="default"></option>
@@ -228,16 +237,6 @@ const Audit = () => {
 
                                             { Object.keys( majors ).sort().reverse().map(key => <option key={ key } value={ key } >{ key }</option> )}
 
-                                        </select>
-                                    </label>
-
-                                    <label>
-                                        Type:&nbsp;&nbsp;
-                                        <select name='type' value={input.type} onChange={(e) => {handleTypeChange(e); handleEnrollFieldChange(index, e)}}>
-                                            <option value="default"></option>
-                                            <option value="majors">Major</option>
-                                            <option value="minors">Minor</option>
-                                            <option value="certificates">Certificate</option>
                                         </select>
                                     </label>
                                     <label>
