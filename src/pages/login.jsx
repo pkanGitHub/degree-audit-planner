@@ -3,7 +3,6 @@ import "../styles/formStyle.css";
 import Cookies from 'universal-cookie';
 import CookiePopup from '../components/cookiepopup';
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import "../styles/login.css";
 
 const Login = () => {
     const [visible, setVisible] = useState(false);
