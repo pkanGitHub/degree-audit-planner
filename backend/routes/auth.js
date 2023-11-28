@@ -42,16 +42,15 @@ router.get("/users", (req, res) => {
       }
       // Generate a verification code
       const verificationCode = Math.floor(100000 + Math.random() * 900000)
-      // Store the verification code in the session
-      req.session.verificationCode = verificationCode
-      console.log(`what should be stored: ${req.session.verificationCode}`)
+      // Set the expiration time for the verification code for 3 mins
+      const expirationTime = new Date(Date.now() + 3 * 60 * 1000);
+
       req.session.save()
       const salt = await bcrypt.genSalt(10)
       const hashedPassword = await bcrypt.hash(password, salt)
-      const newUser = new User({ email, password: hashedPassword, verificationCode })
+      const newUser = new User({ email, password: hashedPassword, verificationCode, verificationCodeExpires: expirationTime })
       await newUser.save()
 
-      // console.log('Before sending verification code email')
       const emailResult = await sendVerificationCode(email, verificationCode)
       console.log(emailResult)
 
@@ -64,41 +63,29 @@ router.get("/users", (req, res) => {
 })
 
 router.post('/verify-email', async(req, res) => {
-  const userInputCode = req.body.verificationCode
-  console.log(`user inputted: ${userInputCode}`)
-
-  // Retrieve the stored verification code from session
-  console.log("Verfication code listed below")
-  const storedVerificationCode = req.session.verificationCode
-  console.log(storedVerificationCode)
-  if (userInputCode === storedVerificationCode) {
-    // Email verification
-    try {
-      const user = await User.findOneAndUpdate(
-        { /* Your query to find the user, e.g., { email: req.body.email } */ },
-        { $set: { emailVerified: true } },
-        { new: true }
-      )
-      if (user) {
-        // remove verification code from session
-        delete req.session.verificationCode
-        return res.status(200).json({ msg: 'Email successfully verified' })
-      } else {
-        // Handle error and inform the user
-        return res.status(404).json({ error: 'User not found' })
-      }
-    } catch (error) {
-      // Handle database update error
-      console.error(error)
-      return res.status(500).json({ error: 'Internal Server Error' })
+  const { verificationCode } = req.body
+  try {
+    const user = await User.findOne({ verificationCode })
+    if (!user) {
+      return res.status(404).json({ error: 'User not found or invalid verification code' })
     }
-  } else {
-    // Handle error and inform the user
-    return res.status(400).json({ error: 'Incorrect verification code' })
+    // Check if the verification code matches and is not expired
+    if (user.verificationCodeExpires && user.verificationCodeExpires > new Date()) {
+      // Update the user to mark email as verified
+      user.emailVerified = true
+      await user.save()
+
+      res.status(200).json({ success: true, msg: 'Email verification successful' })
+    } else {
+        res.status(400).json({ success: false, msg: 'Invalid verification code or code has expired' })
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to verify email' })
   }
 })
 
-// login
+// // login
 router.post("/login", (req, res, next) => {
     // console.log('Login request body:', req.body)
     passport.authenticate("local", (err, user, info) => {

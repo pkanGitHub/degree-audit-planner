@@ -9,7 +9,7 @@ const session = require("express-session");
 const cookieParser = require('cookie-parser')
 // const plannerRoute = require('./routes/planner')
 const authRoute = require('./routes/auth')
-const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'User2']
+const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds']
 const models = {}
 modelNames.forEach(modelName => {
   const Model = require(`./Models/${modelName}`)
@@ -53,11 +53,11 @@ app.use((req, res, next) => {
 });
 app.use(passport.initialize());
 app.use(passport.session({
+  // login sessions last 1 hour?
   sessionID: 'session',
   maxAge: 3600  
 }));
 
-// login sessions last 1 hour
 require('./passport-config')(passport);
 app.use('/', authRoute);
 
@@ -75,7 +75,8 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     });
      // Start the cron job
      // Schedule a task to run everyday every 3 mins for now
-     let task = cron.schedule('*/3 * * * *', async () => {
+    //  let task = cron.schedule('*/3 * * * *', async () => {
+     let task = cron.schedule('*/5 * * * *', async () => {
       console.log('Cron job scheduled. Running now...');
       await removeEmail();
     })
@@ -87,26 +88,26 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 });
 
 
-app.post("/api/user/save", (req, res) => {
-    models['User2'].findOneAndUpdate(
-        { _id: req.body.id },
-        { 
-            courses: req.body.courses,
-            major: req.body.major,
-            minor: req.body.minor,
-            certificates: req.body.cert,
-            generalEducationComplete: req.body.genEd
-        }
-    )
-    .then(user => res.status(200).json({
-        message: "User data updated",
-        data: user
-    }))
-    .catch(err => res.status(500).json({
-        message: "Could not update user data",
-        error: err
-    }))
-})
+// app.post("/api/user/save", (req, res) => {
+//     models['User2'].findOneAndUpdate(
+//         { _id: req.body.id },
+//         { 
+//             courses: req.body.courses,
+//             major: req.body.major,
+//             minor: req.body.minor,
+//             certificates: req.body.cert,
+//             generalEducationComplete: req.body.genEd
+//         }
+//     )
+//     .then(user => res.status(200).json({
+//         message: "User data updated",
+//         data: user
+//     }))
+//     .catch(err => res.status(500).json({
+//         message: "Could not update user data",
+//         error: err
+//     }))
+// })
 
 app.post("/api/user/load", (req, res) => {
     models['User2'].findOne(

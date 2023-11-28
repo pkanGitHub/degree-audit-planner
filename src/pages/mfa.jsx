@@ -5,23 +5,21 @@ import axios from 'axios'
 
 const MFA = () => {
     const [verificationCode, setVerificationCode] = useState('')
-    const [verificationRequestInProgress, setVerificationRequestInProgress] = useState(false)
 
     const handleVerification = async () => {
         try {
-            setVerificationRequestInProgress(true);
             const response = await axios.post('http://localhost:4001/verify-email', { verificationCode })
+    
             if (response.data.success) {
-                console.log(response.data.message)
-                // window.location.href = '/audit'
+                console.log('Email verification successful!')
+                window.location.href = '/audit'
+
             } else {
-                console.log(response.data.message || 'Invalid verification code. Please try again.')
+                console.log('Invalid verification code or code has expired. Please try again.')
             }
         } catch (error) {
             console.error(error)
             console.log('Failed to verify email. Please try again.')
-        } finally {
-            setVerificationRequestInProgress(false);
         }
     }
 
@@ -34,9 +32,7 @@ const MFA = () => {
                     <div id="formContent">
                         <label htmlFor="code">Enter Code</label>
                         <input type="text" name="code" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-                        <button onClick={handleVerification} disabled={verificationRequestInProgress}>
-                            {verificationRequestInProgress ? 'Verifying...' : 'Verify Email'}
-                        </button>
+                        <button onClick={handleVerification}>Verify Email</button>
                     </div>
                     <br/>
                 </form>
