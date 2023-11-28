@@ -177,5 +177,12 @@ header {
   }
   
   .bodyText{
+    position: relative;
+    left: 10%;
     padding: 20px;
+    right: 10%;
+  }
+
+  .welcomeBody{
+    word-wrap: break-word;
   }

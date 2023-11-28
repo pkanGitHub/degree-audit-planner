@@ -122,6 +122,15 @@ const Home = () => {
 
             <div className="bodyText">
                 <h1 id="welcomeTitle">Welcome!</h1>
+                <div id="hyperlinksTable">
+
+                </div>
+                <p id="welcomeBody">
+                A degree audit is a report reflecting a student’s academic progress toward the completion of a program of study (degree, minor, certificate, etc.). 
+                The degree audit matches students’ Mizzou and transfer coursework to a program of study’s completion requirements.
+                myDegreePlanner is the tool students and advisors use to create degree audits.
+                A degree audit is not a substitute for working with an academic advisor.
+                </p>
                 <h1 id="startingTitle">Getting Started</h1>
             </div>
 
