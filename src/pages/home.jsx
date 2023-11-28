@@ -126,10 +126,9 @@ const Home = () => {
 
                 </div>
                 <p id="welcomeBody">
-                A degree audit is a report reflecting a student’s academic progress toward the completion of a program of study (degree, minor, certificate, etc.). 
-                The degree audit matches students’ Mizzou and transfer coursework to a program of study’s completion requirements.
-                myDegreePlanner is the tool students and advisors use to create degree audits.
-                A degree audit is not a substitute for working with an academic advisor.
+                Our degree planner is a tool for Mizzou Engineering students to review their academic progress toward the completion of their program of study (degree, minor, certificate, etc.) 
+                so that students are able to create degree audits. This tool matches students’ Mizzou and transfer coursework to a program of study’s completion requirements.
+                Any degree audits created by this planner is not a substitute for working with an academic advisor.
                 </p>
                 <h1 id="startingTitle">Getting Started</h1>
             </div>
