@@ -10,12 +10,20 @@ import ResetPassword from './pages/resetPassword';
 import MFA from './pages/mfa';
 
 import './styles/App.css';
+import { useEffect } from 'react';
+import { getCerts, getCourseList, getMajors, getMinors } from './lib/data';
 
 
 // to run app, type: npm run start
 // if this is first time, have to download dependencies so run npm install
 
 function App() {
+    useEffect(() => {
+        getMajors();
+        getMinors();
+        getCourseList();
+        getCerts();
+    })
   return (
     <>
     <NavBar/>

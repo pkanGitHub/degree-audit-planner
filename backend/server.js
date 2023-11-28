@@ -80,50 +80,12 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
       await removeEmail();
     })
     task.start()
+    console.log(models['Major']);
      
 })
 .catch((error) => {
     console.log(error);
 });
-
-
-app.post("/api/user/save", (req, res) => {
-    models['User2'].findOneAndUpdate(
-        { _id: req.body.id },
-        { 
-            courses: req.body.courses,
-            major: req.body.major,
-            minor: req.body.minor,
-            certificates: req.body.cert,
-            generalEducationComplete: req.body.genEd
-        }
-    )
-    .then(user => res.status(200).json({
-        message: "User data updated",
-        data: user
-    }))
-    .catch(err => res.status(500).json({
-        message: "Could not update user data",
-        error: err
-    }))
-})
-
-app.post("/api/user/load", (req, res) => {
-    models['User2'].findOne(
-        { _id: req.body.id }
-    )
-    .then(user => res.status(200).json({
-        message: "User data fetched",
-        courses: user.courses,
-        major: user.major,
-        minor: user.minor,
-        certificate: user.certificate
-    }))
-    .catch(err => res.status(500).json({
-        message: "Could not fetch user data",
-        error: err
-    }))
-})
 
 // Get from all schemes
 
@@ -215,6 +177,18 @@ app.get("/api/courses", (req, res) => {
     res.status(500).json({ error: "Failed to retrieve courses" });
   });
 });
+
+app.get('/api/courses/:page', (req,res) => {
+    retrieveCourseData(req.params.page).then((courses) => {
+        res.status(200).json({
+          message: `Course List page: ${req.params.page}`,
+          courses: courses
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve courses" });
+      });
+})
 
 app.get("/api/genEds", (req, res) => {
   retrieveGenEds().then((genEds) => {
@@ -390,6 +364,20 @@ app.post('/addGenEds', (req, res) => {
   });
 })
 
+//------ Fetch Years ------//
+app.get("/api/years", (req, res) => {
+    models['Major'].distinct("year")
+    .then(years => {
+        res.status(200).json({
+            message: "Years",
+            years: years
+        })
+    })
+    .catch(error => {
+        res.status(500).json({ error: "Failed to retrieve year list" });
+    })
+})
+
 //Retrieve data functions
 async function retrieveCertificateData(year) {
   try {
@@ -419,14 +407,16 @@ async function retrieveMinorData(year) {
   }
 }
 
-async function retrieveCourseData() {
-  try {
-    const courses = await models['Course'].find({}); 
-    return courses;
-  } catch (error) {
-    throw error;
+async function retrieveCourseData(page) {
+    try {
+      const limit = 60;
+      const skip = (page - 1) * limit;
+      const courses = await models['Courses'].find().skip(skip).limit(limit);
+      return courses;
+    } catch (error) {
+      throw error;
+    }
   }
-}
 
 async function retrieveGenEds() {
   try {

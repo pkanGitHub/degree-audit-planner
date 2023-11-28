@@ -1,14 +1,25 @@
+import { API } from 'aws-amplify';
 const url = process.env.REACT_APP_API_ROUTE || "http://localhost:4001/api/";
 var Majors;
 var Minors;
 var Certificates;
 var Courses;
 var GenEds;
+var Years;
 
 export async function getMajors(pull) {
     if (pull || Majors === undefined) {
-        return Majors = await fetchGet('majors')
-        .then(majors => planFormat(majors))
+        // const years = await getYears();
+        const years = await fetchGet('years');
+        if (!years) return;
+        console.log(years);
+        const programs = [];
+        for (var year of years) {
+            const program = await fetchGet('majors', year)
+            programs.push({year: year, programs: program})
+        }
+        Majors = planFormat(programs);
+        return Majors;
     }
     console.log(Majors);
     return Majors;
@@ -75,10 +86,17 @@ export function getProgramsBySearch(name_segment, year, category=undefined) {
     return program;
 }
 
-
+var runningCoursePull = false
 export async function getCourseList(pull) {
-    if (pull || Courses === undefined) {
-        return Courses =  await fetchGet('courses');
+    if ((pull || Courses === undefined) && !runningCoursePull) {
+        runningCoursePull = true;
+        var courses = [];
+
+        for (let i = 1; i < 6; i++) {
+            const page =  await fetchGet('courses', i);
+            courses = courses.concat(page);
+        }
+        Courses = courses;
     }
     return Courses;
 }
@@ -109,17 +127,40 @@ export async function getGenEds(pull) {
     return GenEds;
 }
 
-async function fetchGet(type) {
-    return await fetch(url + type) 
-    .then(response => response.json())
+export async function getYears(pull) {
+    if (pull || Years === undefined) {
+        return Years = await fetchGet('years')
+    }
+    return Years;
+}
+
+// async function fetchGet(type, year) {
+//     return await fetch(url + type + (year ? `/${year}` : "")) 
+//     .then(response => response.json())
+//     .then(reponse => {console.log(reponse); return reponse})
+//     .then(data => data[type])
+//     .then(data => {console.log(data); return data})
+//     .catch(error => {
+//         console.error(`Error fetching ${type}${year ? ` for ${year}`: ""} data: ${error}`);
+//     });
+// }
+
+export async function fetchGet(type, year) {
+    return await API.get('DatabaseAPI', "/api/" + type + (year ? `/${year}` : ""))
+    .then(reponse => {console.log(reponse); return reponse})
     .then(data => data[type])
+    .then(data => {console.log(data); return data})
     .catch(error => {
-        console.error(`Error fetching ${type} data: ${error}`);
+        console.error(`Error fetching ${type}${year ? ` for ${year}`: ""} data: ${error}`);
     });
+
 }
 
 
 function planFormat(plan) {
+    if (!plan) return [];
+    console.log("Plan format")
+    console.log(plan);
     return plan
     .reduce((obj, item) => {
         obj[item.year] = item.programs;

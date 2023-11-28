@@ -29,11 +29,12 @@
         },
         "GeneralAPI": {
           "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
-          "s3Key": "amplify-builds/GeneralAPI-41706b45734755675568-build.zip"
+          "s3Key": "amplify-builds/GeneralAPI-57472f672b4879424b4d-build.zip"
         }
       },
       "api": {
-        "DatabaseAPI": {}
+        "DatabaseAPI": {},
+        "apiConnect": {}
       }
     }
   }

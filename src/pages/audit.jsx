@@ -52,15 +52,15 @@ const Audit = () => {
     const [genEds, setGenEds] = useState([])
 
     useEffect(() => {
-        getMajors(true).then(val => setMajors(val));
+        getMajors().then(val => setMajors(val));
 
-        getCourseList(true).then(val => setCourses(val))
+        getCourseList().then(val => setCourses(val))
         // .then(() => User.read('655f96b827fb470cd02a3e1b'))
         // .then(() => setUserCourses([...User.getCourses()]));
 
-        getMinors(true).then(val => setMinors(val));
-        getCerts(true).then(val => setCertificates(val));
-        getGenEds(true).then(val => setGenEds(val));
+        getMinors().then(val => setMinors(val));
+        getCerts().then(val => setCertificates(val));
+        getGenEds().then(val => setGenEds(val));
     }, []);
 
 

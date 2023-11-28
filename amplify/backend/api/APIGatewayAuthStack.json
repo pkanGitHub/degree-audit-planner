@@ -11,10 +11,10 @@
     "env": {
       "Type": "String"
     },
-    "apiConnect": {
+    "DatabaseAPI": {
       "Type": "String"
     },
-    "DatabaseAPI": {
+    "apiConnect": {
       "Type": "String"
     }
   },

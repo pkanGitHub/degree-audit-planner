@@ -6,8 +6,8 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-
-
+const connection = require('./db')
+const mongoose = require('mongoose')
 
 const express = require('express')
 const bodyParser = require('body-parser')
@@ -18,234 +18,224 @@ const app = express()
 app.use(bodyParser.json())
 app.use(awsServerlessExpressMiddleware.eventContext())
 
-const mongoose = require('mongoose')
 
-const models = {
-    Certificate: mongoose.Schema({
-        title: { type: String, required: true },
-        url: String,
-        courses: {
-            label: String,
-            list: { type: [{ id: String, or: { type: [ String ], default: undefined }}], default: undefined },
-            info: { type: [{ index: Number, comment: String }], default: undefined }
-        },
-        credits: { type: [{
-            area: { type: String, required: true },
-            hours: { type: Number, required: true }
-        }], default: undefined }
-    }),
-
-    Course: mongoose.Schema({
-        courseID: { type: String, required: true, unique: true },
-        name: { type: String, required: true },
-        credit: { type: Number },
-        category: { type: String },
-        prerequisites: { type: String },
-        description: { type: String },
-        available: { type: Boolean }
-    }),
-
-    Courses: mongoose.Schema({
-        area: {type: String, required: true, unique: true},
-        courses: {type: [{
-            courseID: { type: String, required: true },
-            name: { type: String, required: true },
-            credit: String,
-            category: String,
-            prerequisites: String,
-            description: String,
-            available: Boolean,
-            pastTerms: {type: [{type: String}]}
-        }],
-        required: true}
-    }), 
-
-    GenEds: mongoose.Schema({
-        year: Number,
-        requirements: [{
-            label: String,
-            hours: Number,
-            completion: Boolean,
-            info: String,
-            categories: { type: [String], default: undefined },
-                properties: { type: [String], default: undefined },
-            sub: { type: [{
-                label: String,
-                hours: Number,
-                info: String,
-                categories: { type: [String], default: undefined },
-                properties: { type: [String], default: undefined }
-            }], default: undefined }
-        }]
-    }),
-
-    Majors: mongoose.Schema({
-        title: { type: String, required: true, unique: true},
-        courses: { type: [{
-            label: String,
-            list: { type: [{ id: String, or: { type: [String], default: undefined }}], default: undefined },
-            info: { type: [{ index: Number, comment: String }], default: undefined }
-        }], default: undefined },
-        semesters: { type: [{ 
-            label: { type: String, required: true },
-            courses: { type: [ String ], default: undefined }
-        }], default: undefined },
-        credits: { type: [{
-            area: { type: String, required: true },
-            hours: { type: Number, required: true }
-        }], default: undefined },
-        url: String
-    }),
-
-    Minors: mongoose.Schema({
-        title: { type: String, required: true, unique: true },
-        totalCredit: Number,
-        courses: { type: [{
-            label: String,
-            list: { type: [{ id: String, or: [ String ]}], default: undefined },
-            info: { type: [{ index: Number, comment: String }], default: undefined }
-        }], default: undefined },
-        hasPlan: { type: Boolean },
-        url: { type: String }
-    }),
-
-    Users: mongoose.Schema({
-        email: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
-        major: { type: String, required: true },
-        coursePlan: {
-            semester: [{
-                date: { type: Date },
-                courses: [{
-                    inProgress: { type: Boolean, default: false },
-                    completed: { type: Boolean, required: true },
-                    completion_date: { type: Date }
-                }]
-            }]
-        },
-        generalEducationCompleted: { type: Boolean, required: true, default: false },
-        programRequirements: [{
-            description: String,
-            completed: { type: Boolean, default: false },
-            courses: [String],
-            creditHours: Number
-        }]
-    })
-}
+const Certificate = () => mongoose.model('Certificate', require('./Models/certificate'));
+const Courses = () => mongoose.model('Courses', require('./Models/courses'));
+const GenEds = () => mongoose.model('GenEds', require('./Models/geneds'));
+const Major = () => mongoose.model('Major', require('./Models/major'));
+const Minor = () => mongoose.model('Minor', require('./Models/minor'));
+const User = () => mongoose.model('User', require('./Models/user'));
 
 // Enable CORS for all methods
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "*")
-  next()
+app.use(async (req, res, next)=>{
+    res.setHeader("Access-Control-Allow-Origin","*");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept"
+    );
+    res.setHeader("Access-Control-Allow-Methods",
+      "GET, POST"
+    );
+    try {
+        await connection;
+    }       
+    catch (error) {
+        res.status(500).json({ error: error });
+    }
+    
+    next();
+  });
+
+
+//------ Fetch Certificates ------//
+app.get("/api/certificates", (req, res) => {
+    Certificate().find()
+    .then((certificates) => {
+        res.status(200).json({
+            message: "Certificate List",
+            certificates: certificates
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Certificates" });
+      });;
 });
 
-/**********************
- * Example get method *
- **********************/
-
-app.get('/api', function(req, res) {
-  // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
+app.get("/api/certificates/:year", (req, res) => {
+  retrieveCertificateData(req.params.year).then((certificates) => {
+    res.status(200).json({
+      message: `Certificate List page: ${req.params.year}`,
+      certificates: certificates
+    });
+  })
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Certificates" });
+  });
 });
 
-// app.get('/api/*', function(req, res) {
-//   // Add your code here
-//   res.json({success: 'get call succeed!', url: req.url});
-// });
 
-// app.get("/api/courses", (req, res) => {
-//   var retrieved = "false";
-//   try {
-//     retrieveCoursesData().then((courses) => {
-//       // res.status(200).json({
-//       //   message: "Course List",
-//       //   courses: courses
-//       // });
-//       retrieved = "true";
-//     })
-//   }
-//   catch {
+//------ Fetch Majors ------//
+app.get("/api/majors", async (req, res) => {
+    await Promise.all(
+        await Major().distinct('year')
+        .then(years => years
+            .map(year => Major()
+            .findOne({year: year})
+            .then(major => major)))
+    )
+    .then(majors => {
+        res.status(200).json({
+            message: "Major List",
+            majors: majors
+        });
+    })
 
-//   }
+});
 
-//   // .catch((error) => {
-//   //   res.status(500).json({ error: "Failed to retrieve courses" });
-//   // });
-//   res.status(200).json({
-//     message: "Course List",
-//     // courses: courses
-//     retrieved: retrieved
-//   });
-// });
+app.get("/api/majors/:year", (req, res) => {
+  retrieveMajorData(req.params.year).then((majors) => {
+    res.status(200).json({
+      message: `Major List page: ${req.params.year}`,
+      majors: majors
+    });
+  })
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Majors" });
+  });
+});
 
-async function retrieveCoursesData() {
+//------ Fetch Minors ------//
+app.get("/api/minors", (req, res) => {
+    Minor().find()
+    .then((minors) => {
+        res.status(200).json({
+            message: "Minor List",
+            minors: minors
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Minors" });
+      });;
+});
+
+app.get("/api/minors/:year", (req, res) => {
+  retrieveMinorData(req.params.year).then((minors) => {
+    res.status(200).json({
+      message: `Minor List page: ${req.params.year}`,
+      minors: minors
+    });
+  })
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Minors" });
+  });
+});
+
+
+//------ Fetch Courses ------//
+app.get("/api/courses", (req, res) => {
+  retrieveCourseData().then((courses) => {
+    res.status(200).json({
+      message: "Course List",
+      courses: courses
+    });
+  })
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve courses" });
+  });
+});
+
+app.get('/api/courses/:page', (req,res) => {
+    retrieveCourseData(req.params.page).then((courses) => {
+        res.status(200).json({
+          message: `Course List page: ${req.params.page}`,
+          courses: courses
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve courses" });
+      });
+})
+
+
+//------ Fetch General Education Requirements ------//
+app.get("/api/genEds", (req, res) => {
+  retrieveGenEds().then((genEds) => {
+    res.status(200).json({
+      message: "Gen Eds",
+      genEds: genEds
+    });
+  })
+  .catch((error) => {
+    res.status(500).json({ error: "Failed to retrieve Gen Eds" });
+  });
+});
+
+
+//------ Fetch Years ------//
+app.get("/api/years", (req, res) => {
+    Major().distinct("year")
+    .then(years => {
+        res.status(200).json({
+            message: "Years",
+            years: years
+        })
+    })
+    .catch(error => {
+        res.status(500).json({ error: "Failed to retrieve year list" });
+    })
+})
+
+//Retrieve data functions
+async function retrieveCertificateData(year) {
   try {
-    const courses = await models.Courses.find({}); 
+    const certificates = await Certificate().findOne({ year: year }); 
+    return certificates.programs;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveMajorData(year) {
+    console.log(year);
+  try {
+    const majors = await Major().findOne({ year: year });
+    return majors.programs;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveMinorData(year) {
+  try {
+    const minors = await Minor().findOne({ year: year }); 
+    return minors.programs;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function retrieveCourseData(page) {
+  try {
+    const limit = 40;
+    const skip = (page - 1) * limit;
+    const courses = await Courses().find().skip(skip).limit(limit);
     return courses;
   } catch (error) {
     throw error;
   }
 }
 
-/****************************
-* Example post method *
-****************************/
+async function retrieveGenEds() {
+  try {
+    const genEds = await GenEds().find({}); 
+    return genEds;
+  } catch (error) {
+    throw error;
+  }
+}
+//-------------------------------------------------------------
 
-app.post('/api', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
-});
 
-app.post('/api/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
-});
-
-/****************************
-* Example put method *
-****************************/
-
-app.put('/api', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
-});
-
-app.put('/api/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
-});
-
-/****************************
-* Example delete method *
-****************************/
-
-app.delete('/api', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
-});
-
-app.delete('/api/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
-});
-
-app.listen(3000, function() {
-    console.log("App started")
-});
-
-// mongoose.connect("mongodb+srv://root:gmQ3kZT9aKJBQF7W@mernapp.9jdlshy.mongodb.net/?retryWrites=true&w=majority")
-// .then(()=>{
-//     app.listen(3000, function() {
-//       console.log("App started")
-//     });
-// })
-// .catch((error) => {
-//     console.log(error)
-//     app.listen(3000, function() {
-//       console.log("App started")
-//     });
-// })
 
 // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from

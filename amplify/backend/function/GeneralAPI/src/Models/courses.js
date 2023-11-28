@@ -1,18 +1,15 @@
 const mongoose = require('mongoose')
 
-const courseListSchema = mongoose.Schema({
+module.exports = mongoose.Schema({
     area: {type: String, required: true, unique: true},
     courses: {type: [{
         courseID: { type: String, required: true },
         name: { type: String, required: true },
         credit: String,
-        category: String,
+        categories: [ String ],
         prerequisites: String,
         description: String,
-        available: Boolean,
-        pastTerms: {type: [{type: String}]}
-    }],
-    required: true}
-})
-
-module.exports = mongoose.model('Courses', courseListSchema)
+        pastTerms: [ String ],
+        available: Boolean
+    }], required: true}
+});

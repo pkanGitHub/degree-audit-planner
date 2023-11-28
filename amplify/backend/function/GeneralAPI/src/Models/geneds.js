@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const genedSchema = mongoose.Schema({
+module.exports = mongoose.Schema({
     year: Number,
     requirements: [{
         label: String,
@@ -18,5 +18,3 @@ const genedSchema = mongoose.Schema({
         }], default: undefined }
     }]
 });
-
-module.exports = mongoose.model('GenEds', genedSchema)
