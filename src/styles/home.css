@@ -175,4 +175,11 @@ header {
   .uploadTranscriptHere {
     padding-bottom: 900px; 
   }
-  
+
+.bodyText {
+    padding: 20px;
+    margin: 0 10%; /* Use margin instead of fixed positions */
+    max-width: 80%; /* Set a maximum width to prevent excessive stretching */
+    margin-left: auto;
+    margin-right: auto;
+}

@@ -4,11 +4,15 @@ import RequiredChoice from "./requiredChoice";
 import "../styles/audit.css"
 import { userRequirments } from "./catalog";
 
+import { addCourse, concatCourses } from "../lib/user";
 const AddCourses = ({courses, orCourses}) => {
+    // console.log(courses);
+
+    // concatCourses([...courses, ...orCourses]);
 
     const totalCourses = []
-    {courses.map((course) => totalCourses.push(course))}
-    {orCourses.map((course)=> totalCourses.push(course))}
+    courses.map((course) => totalCourses.push(course))
+    orCourses.map((course)=> totalCourses.push(course))
     let sortedTotalCourses = totalCourses.sort(function (a, b) {
         if (a.classId < b.classId) {
           return -1;
@@ -53,7 +57,7 @@ const AddCourses = ({courses, orCourses}) => {
 
     const handleAddCourse = () => {
         const courseInfo = course
-        {totalCourses.filter((course) => course.classId.match(courseInfo)).map((selectedCourse)=> 
+        totalCourses.filter((course) => course.classId.match(courseInfo)).map((selectedCourse)=> 
             setUserCourses([...userCourses, selectedCourse
             ]))}
             handleUserInput(course.courseId , course.creditHours);
@@ -125,7 +129,7 @@ const AddCourses = ({courses, orCourses}) => {
                 <select id='chooseNumber' name='course' onChange={handleChangeCourse}>
                     <option value=""></option>
                     {sortedTotalCourses.map((key) => (
-                    <option value={key.classId}>{key.classId}</option>))}
+                    <option key={key.classId} value={key.classId}>{key.classId}</option>))}
                 </select>
             </label>
 
@@ -133,6 +137,6 @@ const AddCourses = ({courses, orCourses}) => {
             
         </div>
     )
-}
+
 
 export default AddCourses;

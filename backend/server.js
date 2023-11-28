@@ -6,14 +6,17 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const mongoose = require('mongoose')
 const session = require("express-session");
+const cookieParser = require('cookie-parser')
 // const plannerRoute = require('./routes/planner')
 const authRoute = require('./routes/auth')
-const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'Major2']
+const modelNames = ['Course', 'Major', 'Minor', 'Certificate', 'Courses', 'GenEds', 'User2']
 const models = {}
 modelNames.forEach(modelName => {
   const Model = require(`./Models/${modelName}`)
   models[modelName] = Model
 })
+const cron = require('node-cron')
+const removeEmail = require('./cron/removeUnverifiedEmailFromDatabase')
 
 /**
  * Set up CORS
@@ -29,14 +32,14 @@ app.use((req, res, next)=>{
   );
   next();
 });
-
+app.use(cookieParser());
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     // save if nothing is changed
     resave: false,
     // save empty value in the session if there is no value
-    saveUninitialized: false,
+    saveUninitialized: true,
   })
 );
 
@@ -49,7 +52,12 @@ app.use((req, res, next) => {
     next();
 });
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session({
+  sessionID: 'session',
+  maxAge: 3600  
+}));
+
+// login sessions last 1 hour
 require('./passport-config')(passport);
 app.use('/', authRoute);
 
@@ -65,15 +73,72 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     app.listen(process.env.BACKEND_PORT, () => {
         console.log('Mongo connection successful on port', process.env.BACKEND_PORT);
     });
+     // Start the cron job
+     // Schedule a task to run everyday every 3 mins for now
+     let task = cron.schedule('*/3 * * * *', async () => {
+      console.log('Cron job scheduled. Running now...');
+      await removeEmail();
+    })
+    task.start()
+     
 })
 .catch((error) => {
     console.log(error);
 });
 
+
+app.post("/api/user/save", (req, res) => {
+    models['User2'].findOneAndUpdate(
+        { _id: req.body.id },
+        { 
+            courses: req.body.courses,
+            major: req.body.major,
+            minor: req.body.minor,
+            certificates: req.body.cert,
+            generalEducationComplete: req.body.genEd
+        }
+    )
+    .then(user => res.status(200).json({
+        message: "User data updated",
+        data: user
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not update user data",
+        error: err
+    }))
+})
+
+app.post("/api/user/load", (req, res) => {
+    models['User2'].findOne(
+        { _id: req.body.id }
+    )
+    .then(user => res.status(200).json({
+        message: "User data fetched",
+        courses: user.courses,
+        major: user.major,
+        minor: user.minor,
+        certificate: user.certificate
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not fetch user data",
+        error: err
+    }))
+})
+
 // Get from all schemes
 
 app.get("/api/certificates", (req, res) => {
-    res.redirect('/api/certificates/2023-24')
+    // res.redirect('/api/certificates/2023-24')
+    models['Certificate'].find()
+    .then((certificates) => {
+        res.status(200).json({
+            message: "Certificate List",
+            certificates: certificates
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Certificates" });
+      });;
 });
 
 app.get("/api/certificates/:year", (req, res) => {
@@ -89,7 +154,17 @@ app.get("/api/certificates/:year", (req, res) => {
 });
 
 app.get("/api/majors", (req, res) => {
-    res.redirect('/api/majors/2023-24')
+    // res.redirect('/api/majors/2023-24')
+    models['Major'].find()
+    .then((majors) => {
+        res.status(200).json({
+            message: "Major List",
+            majors: majors
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Majors" });
+      });;
 });
 
 app.get("/api/majors/:year", (req, res) => {
@@ -105,7 +180,16 @@ app.get("/api/majors/:year", (req, res) => {
 });
 
 app.get("/api/minors", (req, res) => {
-    res.redirect('/api/minors/2023-24')
+    models['Minor'].find()
+    .then((minors) => {
+        res.status(200).json({
+            message: "Minor List",
+            minors: minors
+          });
+    })
+    .catch((error) => {
+        res.status(500).json({ error: "Failed to retrieve Minors" });
+      });;
 });
 
 app.get("/api/minors/:year", (req, res) => {
@@ -244,79 +328,6 @@ app.post("/addMajor/:year", (req, res) => {
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: err
-      });
-    });
-  })
-
-  app.post("/addMajor2/:year", (req, res) => {
-
-    // models['Major2'].updateOne({
-    //     year: req.params.year,
-    //     "programs.title": req.body.title
-    // },{
-    //     $set: { "programs.$": { 
-    //         title: req.body.title ,
-    //         years: req.body.years,
-    //         url: req.body.url
-    //     }}
-    // },{
-    //     upsert: true
-    // })
-
-    // models['Major2'].updateOne(
-    //     {
-    //         year: req.params.year,
-    //         "programs.title": req.body.title
-    //     },
-    //     {
-    //         $setOnInsert: {
-    //             programs: []
-    //         },
-    //         $set: {
-    //             "programs.$[elem].title": req.body.title,
-    //             "programs.$[elem].years": req.body.years,
-    //             "programs.$[elem].url": req.body.url
-    //         }
-    //     },
-    //     {
-    //         upsert: true,
-    //         arrayFilters: [
-    //             {"elem.title": req.body.title}
-    //         ]
-    //     }
-    // )
-
-    models['Major2'].updateOne({
-        year: req.params.year
-        },{
-        $addToSet: { programs: { title: req.body.title }}
-        },{
-        upsert: true
-    })
-    .then(() => models['Major2'].updateOne({
-        year: req.params.year,
-        programs: {
-            $elemMatch: {
-                title: req.body.title
-            }
-        }}, {
-        $set: {
-            "programs.$.requirements": req.body.requirements,
-            "programs.$.years": req.body.years,
-            "programs.$.url": req.body.url
-        }}, {
-        upsert: true      
-    }))
-    .then(result => {
-      res.status(201).json({
-        message: "Major created!",
-        result: result
-      });
-    })
-    .catch(err => {
-        console.log(err);
       res.status(500).json({
         error: err
       });

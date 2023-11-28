@@ -1,12 +1,14 @@
 #contents
 {
-    background-color: white;
     padding: 20px;
-    box-shadow: 5px 10px 8px #c3c3c3;
-    width: 80%;
+    background-color: rgb(255, 255, 255);
+    padding: 20px;
+    width: 90%;
     align-items: center;
     margin: auto;
+    border: 1px solid black;
 }
+
 #orClasses{
     display: flex;
 }
@@ -35,8 +37,23 @@
 
 #addedSectionEnroll label{
     font-weight: bold;
+    display: flex;
+    padding:  0 2%;
 }
 
+#addedSectionEnroll select {
+    padding: 5px;
+    border-radius: 5px;
+    flex-grow: 1;
+}
+
+#addedSectionEnroll label:first-child, #addedSectionEnroll label:nth-child(2) {
+    width: 25%;
+}
+
+#addedSectionEnroll label:nth-child(3) {
+    width: 50%;
+}
 
 button{
     border: none;
@@ -84,22 +101,59 @@ button{
     background-color: white;
     display: inline-block;
     padding: 5px;
+    vertical-align: top;
 
 }
 
+.preReqTD{
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
+}
 
 .courseTable {
     border: 1px solid gray;
     border-collapse: collapse;
     padding: 10px;
-    max-height: min-content;
+    width: 300px;
+    max-width: 300px;
 }
 .courseTable th, td
 {
     padding: 5px;
     background-color: rgb(230, 230, 230);
     overflow-y: scroll;
+    height: 30px;
+}
+
+.tablePrereq{
     max-width: 200px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    height: fit-content;
+
+}
+
+.prereqButton{
+    background-color: transparent;
+    border: 1px solid black;
+    padding: none;
+    font-weight: normal;
+    padding: 3px;
+    width: fit-content;
+    height: fit-content;
+    vertical-align:top;
+    margin: auto;
+}
+.prereqButton:hover{
+    background-color: lightgray;
+}
+
+.expandPrereq{
+    max-width: 200px;
+    height: fit-content;
+    padding-right: 2px;
 }
 
 .courseTable td{
@@ -113,6 +167,11 @@ button{
     border: none;
     background-color: transparent;
     font-weight: normal;
+    padding: 5px;
+}
+
+#removeButton:hover{
+    background-color: lightgray;
 }
 
 #removeItem {
@@ -219,6 +278,15 @@ hr{
     text-align: center;
 }
 
+#checkboxDiv input[type=checkbox]{
+    border: 1px solid gray;
+    display: inline-block;
+}
+
+#checkboxlabel{
+    display: inline-block;
+}
+
 /* for drop down menu selection */
 
 .accordion{
@@ -246,7 +314,7 @@ hr{
     font-weight: 600;
 }
 
-input[type="checkbox"]{
+.accordion input[type="checkbox"]{
     display: none;
 }
 
@@ -279,6 +347,9 @@ input[type="checkbox"]{
     padding: 20px;
     border: 1px solid black;
     border-radius: 25px;
+    background-color: white;
+    width: 50%;
+    margin: auto;
 }
 #confirmButtonsDiv{
     display: flex;

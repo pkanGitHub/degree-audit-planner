@@ -38,7 +38,7 @@ const SignUp = () => {
             
             if (response.status === 201) {
                 console.log('User sign up successfully');
-                window.location.href = '/login'
+                // window.location.href = '/mfa'
             } else {
                 const data = await response.json();
                 console.error(data.message);
@@ -59,11 +59,11 @@ const SignUp = () => {
                         </label>
                         <br/>
                         <label>Password
-                            <input type="text" name="password" placeholder="Enter password here..." value={formData.password} onChange={handleChange}/>
+                            <input type="password" name="password" placeholder="Enter password here..." value={formData.password} onChange={handleChange}/>
                         </label>
                         <br/>
                         <label>Enter Password Again
-                            <input type="text" name="confirmPassword"placeholder="Enter password again..." value={formData.confirmPassword} onChange={handleChange}/>
+                            <input type="password" name="confirmPassword"placeholder="Enter password again..." value={formData.confirmPassword} onChange={handleChange}/>
                         </label>
                         <br/>
                         <div id="checkboxDiv">
@@ -73,6 +73,7 @@ const SignUp = () => {
                                 <input type="checkbox" name="terms" value={isChecked} onChange={handleCheckbox}/>
                                 I accept the <TermsCondition/>
                             </label>
+                            <br/>
                         </div>
                         
                     </div>
