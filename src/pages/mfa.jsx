@@ -5,21 +5,23 @@ import axios from 'axios'
 
 const MFA = () => {
     const [verificationCode, setVerificationCode] = useState('')
+    const [errorMsg, setErrorMsg] = useState('')
+    const handleVerification = async (e) => {
+        e.preventDefault()
 
-    const handleVerification = async () => {
         try {
             const response = await axios.post('http://localhost:4001/verify-email', { verificationCode })
-    
+            console.log(response);
             if (response.data.success) {
                 console.log('Email verification successful!')
-                window.location.href = '/audit'
+                window.location.href = '/login'
 
             } else {
-                console.log('Invalid verification code or code has expired. Please try again.')
+                setErrorMsg('Invalid verification code. Please try again.')
             }
         } catch (error) {
             console.error(error)
-            console.log('Failed to verify email. Please try again.')
+            setErrorMsg('Failed to verify email. Please try again.')
         }
     }
 
@@ -33,6 +35,7 @@ const MFA = () => {
                         <label htmlFor="code">Enter Code</label>
                         <input type="text" name="code" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
                         <button onClick={handleVerification}>Verify Email</button>
+                        {errorMsg && <p className="error-message">{errorMsg}</p>}
                     </div>
                     <br/>
                 </form>
