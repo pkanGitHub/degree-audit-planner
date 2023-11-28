@@ -178,7 +178,7 @@ const NavBar = () => {
                       </label>
 
                       <br/>
-                    <button className="editButton" type="submit">Forgot Password</button>
+                    <button className="editButton" type="submit">Reset Password</button>
 
                   </form>
                 </div>
