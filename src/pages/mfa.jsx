@@ -34,7 +34,7 @@ const MFA = () => {
                     <div id="formContent">
                         <label htmlFor="code">Enter Code</label>
                         <input type="text" name="code" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-                        <button onClick={handleVerification} disabled={verificationRequestInProgress}>
+                        <button className="submitButton" id="mfabutton" onClick={handleVerification} disabled={verificationRequestInProgress}>
                             {verificationRequestInProgress ? 'Verifying...' : 'Verify Email'}
                         </button>
                     </div>

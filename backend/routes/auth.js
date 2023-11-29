@@ -128,4 +128,70 @@ router.post("/login", (req, res, next) => {
     })(req, res, next)
   })
 
+
+  // check email
+router.post("/email", async(req, res) => {
+  const email = req.body
+  try {
+    // check if user already exists
+    const existUser = await User.findOne({ email })
+    if (!existUser) {
+      return res.status(400).json({ msg: 'User does not exist' })
+    }
+    // // Generate a verification code
+    // const verificationCode = Math.floor(100000 + Math.random() * 900000)
+    // // Store the verification code in the session
+    // req.session.verificationCode = verificationCode
+    // console.log(`what should be stored: ${req.session.verificationCode}`)
+    // req.session.save()
+
+    // // console.log('Before sending verification code email')
+    // const emailResult = await sendVerificationCode(email, verificationCode)
+    // console.log(emailResult)
+
+    res.status(201).json({ msg: 'Check your email for verification code.' })
+      
+  } catch (error) {
+      console.error(error)
+      return res.status(500).json({ error: 'Email has failed.' })
+  }
+})
+
+// testing stuff
+
+// router.post('/verify-user', async(req, res) => {
+//   const userInputCode = req.body.verificationCode
+//   console.log(`user inputted: ${userInputCode}`)
+
+//   // Retrieve the stored verification code from session
+//   console.log("Verfication code listed below")
+//   const storedVerificationCode = req.session.verificationCode
+//   console.log(storedVerificationCode)
+//   if (userInputCode === storedVerificationCode) {
+//     // Email verification
+//     try {
+//       const user = await User.findOneAndUpdate(
+//         { email: req.body },
+//         { $set: { userVerify: true } },
+//         { new: true }
+//       )
+//       if (user) {
+//         // remove verification code from session
+//         delete req.session.verificationCode
+//         return res.status(200).json({ msg: 'Email successfully verified' })
+//       } else {
+//         // Handle error and inform the user
+//         return res.status(404).json({ error: 'User not found' })
+//       }
+//     } catch (error) {
+//       // Handle database update error
+//       console.error(error)
+//       return res.status(500).json({ error: 'Internal Server Error' })
+//     }
+//   } else {
+//     // Handle error and inform the user
+//     return res.status(400).json({ error: 'Incorrect verification code' })
+//   }
+// })
+
 module.exports = router

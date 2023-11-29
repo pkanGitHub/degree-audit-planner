@@ -10,6 +10,14 @@ const ClassInfo = ({key, className, classTitle, classDescript, creditHours, preR
     if (!preReq){
         preReq = "None"
     }
+
+    let notice = "";
+    
+
+    if(!lastOffered){
+        lastOffered = "N/A"
+        notice = "Note: This course has no information on when it was last offered. This could be because it has not been offered in years, or records have not been updated about this course. Please contact your advisor about this course if you need to take this course."
+    }
     
     return(
         <Popup contentStyle={{overflowX: "scroll", overflowY: 'scroll', height: "40%", width: "40%", margin: 'auto', padding: "10px"}} trigger=
@@ -23,6 +31,7 @@ const ClassInfo = ({key, className, classTitle, classDescript, creditHours, preR
                     <p><b>Credit hours:</b> {creditHours}</p>
                     <p><b>Prerequisites:</b> {preReq}</p>
                     <p><b>Last offered:</b> {lastOffered}</p>
+                    <p id='notice'>{notice}</p>
                 </div>
         
                 
