@@ -75,7 +75,6 @@ const SignUp = () => {
                             </label>
                             <br/>
                         </div>
-                        
                     </div>
                     <button className="submitButton">Register</button>
 

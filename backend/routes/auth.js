@@ -4,6 +4,8 @@ const router = express.Router()
 const bcrypt = require('bcrypt')
 const User = require('../Models/user')
 const { sendVerificationCode } = require('../nodemailer-config')
+const { codeExpirationTime } = require('../cron/cron-config')
+
 
 async function retrieveUserData() {
   try {
@@ -40,14 +42,13 @@ router.post('/signup', async (req, res) => {
     if (existUser) {
       return res.status(400).json({ msg: 'User already exists' })
     }
-    // Generate a verification code
-    const verificationCode = Math.floor(100000 + Math.random() * 900000)
-    // Set the expiration time for the verification code for 3 mins
-    const expirationTime = new Date(Date.now() + 3 * 60 * 1000);
 
-    req.session.save()
     const salt = await bcrypt.genSalt(10)
     const hashedPassword = await bcrypt.hash(password, salt)
+    // Generate a verification code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000)
+    // Set the expiration time in cron-config
+    const expirationTime = codeExpirationTime()
     const newUser = new User({ email, password: hashedPassword, verificationCode, verificationCodeExpires: expirationTime })
     await newUser.save()
 
@@ -71,13 +72,11 @@ router.post('/verify-email', async(req, res) => {
     }
     // Check if the verification code matches and not expired
     if (user.verificationCodeExpires && user.verificationCodeExpires > new Date()) {
-      // Update the status of email as verified
       user.emailVerified = true
       await user.save()
-
       res.status(200).json({ success: true, msg: 'Email verification successful' })
     } else {
-      res.status(400).json({ success: false, msg: 'Invalid verification code or code has expired' })
+      res.status(400).json({ success: false, error: 'invalid_code' })
     }
   } catch (error) {
     console.error(error)

@@ -11,13 +11,18 @@ const MFA = () => {
 
         try {
             const response = await axios.post('http://localhost:4001/verify-email', { verificationCode })
-            console.log(response);
+            console.log('Server Response:', response);
             if (response.data.success) {
                 console.log('Email verification successful!')
                 window.location.href = '/login'
 
             } else {
-                setErrorMsg('Invalid verification code. Please try again.')
+                if (response.data.error === 'invalid_code') {
+                    setErrorMsg('Invalid verification code. Please try again.');
+                } else {
+                    // Display a generic error message for other errors
+                    setErrorMsg('Failed to verify email. Please try again.');
+                }
             }
         } catch (error) {
             console.error(error)
@@ -30,12 +35,12 @@ const MFA = () => {
             <div id="formDesign" className="mfa">
                 <h1>2-Step Verification</h1>
                 <h2>Please confirm this is you. We sent a verification code to your email.</h2>
+                {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
                 <form>
                     <div id="formContent">
                         <label htmlFor="code">Enter Code</label>
                         <input type="text" name="code" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
                         <button onClick={handleVerification}>Verify Email</button>
-                        {errorMsg && <p className="error-message">{errorMsg}</p>}
                     </div>
                     <br/>
                 </form>
