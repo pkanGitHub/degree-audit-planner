@@ -52,6 +52,7 @@ const Audit = () => {
     const [genEds, setGenEds] = useState([])
 
     useEffect(() => {
+        const controller = new AbortController();
         getMajors().then(val => setMajors(val));
 
         getCourseList().then(val => setCourses(val))
@@ -61,6 +62,8 @@ const Audit = () => {
         getMinors().then(val => setMinors(val));
         getCerts().then(val => setCertificates(val));
         getGenEds().then(val => setGenEds(val));
+
+        return () => controller.abort();
     }, []);
 
 

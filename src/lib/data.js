@@ -1,5 +1,4 @@
 import { API } from 'aws-amplify';
-const url = process.env.REACT_APP_API_ROUTE || "http://localhost:4001/api/";
 var Majors;
 var Minors;
 var Certificates;
@@ -12,7 +11,6 @@ export async function getMajors(pull) {
         // const years = await getYears();
         const years = await fetchGet('years');
         if (!years) return;
-        console.log(years);
         const programs = [];
         for (var year of years) {
             const program = await fetchGet('majors', year)
@@ -21,7 +19,6 @@ export async function getMajors(pull) {
         Majors = planFormat(programs);
         return Majors;
     }
-    console.log(Majors);
     return Majors;
 }
 
@@ -109,13 +106,9 @@ export function getCourseById(id) {
 
     if (!Courses) return;
 
-    // console.log(Courses.filter(doc => doc.area?.match(regex) != null)[0].courses)
-
     const course = Courses
     .filter(doc => doc.area?.match(regex) != null)[0]?.courses
     .filter(course => course.courseID === id)[0];
-
-    // console.log(course);
 
     return course;
 }
@@ -147,9 +140,7 @@ export async function getYears(pull) {
 
 export async function fetchGet(type, year) {
     return await API.get('DatabaseAPI', "/api/" + type + (year ? `/${year}` : ""))
-    .then(reponse => {console.log(reponse); return reponse})
     .then(data => data[type])
-    .then(data => {console.log(data); return data})
     .catch(error => {
         console.error(`Error fetching ${type}${year ? ` for ${year}`: ""} data: ${error}`);
     });
@@ -159,8 +150,6 @@ export async function fetchGet(type, year) {
 
 function planFormat(plan) {
     if (!plan) return [];
-    console.log("Plan format")
-    console.log(plan);
     return plan
     .reduce((obj, item) => {
         obj[item.year] = item.programs;

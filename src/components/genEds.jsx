@@ -6,6 +6,8 @@ import ClassInfo from "./classInfoPopup";
 
 const GenEdsModel = ({genEds, coursesList}) => {
 
+    if (!genEds || !coursesList) return;
+
     return(
         
         genEds.map((genEd) => 

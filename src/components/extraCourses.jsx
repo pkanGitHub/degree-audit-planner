@@ -5,14 +5,17 @@ import ClassInfo from "./classInfoPopup";
 const ExtraCourses = ({coursesList}) => {
     // gets list of course areas, used in mass select
 
-    let courseAreas = coursesList.map((section) => <option key={section?.area}>{section?.area}</option>)
     const [section, setSection] = useState([])
     const handleSectionChange = (e) => {
         setSection(e.target.value)
     }
 
+    const [userCourses, setUserCourses] = useState([])
+    const [course, setCourse] = useState('');
+
+    if (!coursesList) return;
     let allCourseList = []
-    {coursesList.filter(area => area.area === section).map(selectedArea => selectedArea.courses.map(course => allCourseList.push(course)))}
+    coursesList.filter(area => area.area === section).map(selectedArea => selectedArea.courses.map(course => allCourseList.push(course)))
     
     let sortedTotalCourses = allCourseList.sort(function (a, b) {
         if (a.courseID < b.courseID) {
@@ -25,8 +28,7 @@ const ExtraCourses = ({coursesList}) => {
       })
 
 
-    const [userCourses, setUserCourses] = useState([])
-    const [course, setCourse] = useState('');
+
 
     const handleChangeCourse=(e)=>{
         setCourse(e.target.value)
@@ -35,9 +37,9 @@ const ExtraCourses = ({coursesList}) => {
 
     const handleAddCourse = () => {
         const courseInfo = course
-        {sortedTotalCourses.filter((course) => course.courseID.match(courseInfo)).map((selectedCourse)=> 
+        sortedTotalCourses.filter((course) => course.courseID.match(courseInfo)).map((selectedCourse)=> 
             setUserCourses([...userCourses, selectedCourse
-            ]))}
+            ]))
         
 
     }
@@ -58,7 +60,7 @@ const ExtraCourses = ({coursesList}) => {
                 Select Section:&nbsp;&nbsp;
                 <select name='section' onChange={handleSectionChange}>
                     <option value="default"></option>
-                    { courseAreas }
+                    { coursesList.map((section) => <option key={section?.area}>{section?.area}</option>) }
                 </select>
             </label>
 

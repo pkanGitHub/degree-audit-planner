@@ -8,6 +8,7 @@ import tutorialCard from "../tutorial.jpg"
 import React, { useState, useEffect } from 'react';
 import { API } from 'aws-amplify';
 import { fetchGet,getCerts,getCourseList,getMajors } from '../lib/data';
+import { Link } from 'react-router-dom';
 
 
 //const Home = () => {
@@ -19,9 +20,9 @@ const Home = () => {
                     <h2 id="mizEngineering">College of Engineering</h2>
                     <h2 id="degreePlanner">MIZZOU'S DEGREE PLANNER</h2>
                 </header>
-                <a className="getstarted" href='/audit'>
+                <Link className="getstarted" to='/audit'>
                 <button class="getStart">GET STARTED TODAY</button>
-                </a>
+                </Link>
             </div>
 
             <div className="bodyText">

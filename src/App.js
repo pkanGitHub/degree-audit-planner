@@ -18,12 +18,6 @@ import { getCerts, getCourseList, getMajors, getMinors } from './lib/data';
 // if this is first time, have to download dependencies so run npm install
 
 function App() {
-    useEffect(() => {
-        getMajors();
-        getMinors();
-        getCourseList();
-        getCerts();
-    })
   return (
     <>
     <NavBar/>

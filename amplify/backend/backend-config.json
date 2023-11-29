@@ -13,54 +13,10 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "API Gateway"
-    },
-    "apiConnect": {
-      "dependsOn": [
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "DatabaseAPI"
-        }
-      ],
-      "providerPlugin": "awscloudformation",
-      "service": "API Gateway"
     }
   },
-  "auth": {
-    "degreeauditplanner": {
-      "dependsOn": [],
-      "frontendAuthConfig": {
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyCharacters": [],
-          "passwordPolicyMinLength": 8
-        },
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "socialProviders": [],
-        "usernameAttributes": [],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      },
-      "providerPlugin": "awscloudformation",
-      "service": "Cognito",
-      "serviceType": "managed"
-    }
-  },
+  "auth": {},
   "function": {
-    "DatabaseAPI": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "GeneralAPI": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -75,22 +31,6 @@
     }
   },
   "parameters": {
-    "AMPLIFY_function_DatabaseAPI_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DatabaseAPI"
-        }
-      ]
-    },
-    "AMPLIFY_function_DatabaseAPI_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "DatabaseAPI"
-        }
-      ]
-    },
     "AMPLIFY_function_GeneralAPI_deploymentBucketName": {
       "usedBy": [
         {

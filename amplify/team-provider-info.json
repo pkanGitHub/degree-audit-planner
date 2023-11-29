@@ -19,22 +19,14 @@
           "type": "manual"
         }
       },
-      "auth": {
-        "degreeauditplanner": {}
-      },
       "function": {
-        "DatabaseAPI": {
-          "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
-          "s3Key": "amplify-builds/DatabaseAPI-7037484a39594c4c7477-build.zip"
-        },
         "GeneralAPI": {
           "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
           "s3Key": "amplify-builds/GeneralAPI-57472f672b4879424b4d-build.zip"
         }
       },
       "api": {
-        "DatabaseAPI": {},
-        "apiConnect": {}
+        "DatabaseAPI": {}
       }
     }
   }
