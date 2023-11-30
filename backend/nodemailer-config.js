@@ -23,7 +23,6 @@ const transporter = nodemailer.createTransport({
        
         const info = await transporter.sendMail(mailOptions)
         console.log('Email sent: ' + info.response)
-        // res.status(200).json({ msg: 'Email sent successfully' })
         return 'Email sent successfully';
     } catch (error) {
         console.error(error);

@@ -38,7 +38,7 @@ const SignUp = () => {
             
             if (response.status === 201) {
                 console.log('User sign up successfully');
-                // window.location.href = '/mfa'
+                window.location.href = '/mfa'
             } else {
                 const data = await response.json();
                 console.error(data.message);
@@ -75,7 +75,6 @@ const SignUp = () => {
                             </label>
                             <br/>
                         </div>
-                        
                     </div>
                     <button className="submitButton">Register</button>
 
