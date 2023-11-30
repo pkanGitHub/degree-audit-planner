@@ -183,3 +183,36 @@ header {
     margin-left: auto;
     margin-right: auto;
 }
+
+ul {
+    list-style-type: none
+}
+
+#sidebarNav {
+    background-color: #fbd986;
+    padding-left: 0px;
+    border: 1px solid #DCA00F;
+    align-items: center;
+    width: 350px;
+}
+
+#sidebarNav ul {
+    padding: 0;
+    margin: 0;
+    align-items: center;
+}
+
+
+.flex-container{
+    display: flex;
+    justify-content: space-between; /* or other value as needed */
+    align-items: center; /* or other value as needed */
+}
+
+#hyperlinksTable{
+    margin-right: 30px; /* Add margin as needed */
+}
+
+.menu-item-1, .menu-item-2 {
+    
+}

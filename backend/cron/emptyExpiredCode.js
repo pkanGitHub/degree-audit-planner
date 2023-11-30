@@ -1,12 +1,11 @@
 const User = require('../Models/user')
 const cron = require('node-cron')
-const { timeToRemoveExpiredCodes } = require('./cron-config')
-const { min, timeAgo, cronTime } = timeToRemoveExpiredCodes()
+const { currentTime, timeToRemoveExpiredCodes } = require('./cron-config')
+const { min, time, cronTime } = timeToRemoveExpiredCodes()
 
 const removeExpiredCodes = async() => {
     try {
-        const currentTime = new Date();
-        console.log(`Timestamp ${min} minutes ago:`, timeAgo)
+        console.log(`Timestamp every ${min} minutes:`, time)
         // update user's verification code field to empty string when code expires.
         await User.updateMany(
             { verificationCodeExpires: { $lt: currentTime} },
