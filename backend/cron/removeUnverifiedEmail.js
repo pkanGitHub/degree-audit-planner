@@ -1,11 +1,11 @@
 const User = require('../Models/user')
 const cron = require('node-cron')
 const { timeToRemoveUnverifiedUser} = require('./cron-config')
-const { min, timeAgo, cronTime } = timeToRemoveUnverifiedUser()
+const { min, time, cronTime } = timeToRemoveUnverifiedUser()
 
 const removeEmail = async() => {
     try {
-        console.log(`Timestamp ${min} minutes ago:`, timeAgo)
+        console.log(`Timestamp at minutes ${min}:`, time)
         // Find and remove unverified users
         const result = await User.deleteMany({
             emailVerified: false,
