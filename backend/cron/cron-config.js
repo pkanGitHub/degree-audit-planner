@@ -25,7 +25,7 @@ const timeToRemoveUnverifiedUser = () => {
 
 //set time here to run cron to remove expired code
 const timeToRemoveExpiredCodes = () => {
-    // At minute 30
+    // Every 30 mins
     const min = 30
     const timeAgo = cronSchedule(min)
     const cronTime = `*/${min} * * * *`
