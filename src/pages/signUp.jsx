@@ -28,6 +28,15 @@ const SignUp = () => {
             alert("Passwords do not match.");
             return
         }
+        else if(!formData.email){
+            setError("You must enter an email.")
+        }
+        else if(!formData.password){
+            setError("You must enter a password.")
+        }
+        else if(!formData.confirmPassword){
+            setError("You must re-enter your password.")
+        }
         else if(isChecked === false){
             setError("You must agree to the terms and conditions.")
             return
@@ -52,6 +61,7 @@ const SignUp = () => {
         <div className="formSection">
             <div id="formDesign">
                 <h1>Create Your Account</h1>
+                <p id='errorMessage'>{ error }</p>
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
                         <label>Email
@@ -67,7 +77,7 @@ const SignUp = () => {
                         </label>
                         <br/>
                         <div id="checkboxDiv">
-                            <p id='errorMessage'>{ error }</p>
+                            
                             
                             <label for="terms" id="checkboxlabel">
                                 <input type="checkbox" name="terms" value={isChecked} onChange={handleCheckbox}/>
