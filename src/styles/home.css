@@ -192,12 +192,15 @@ ul {
     background-color: #fbd986;
     padding-left: 0px;
     border: 1px solid #DCA00F;
+    align-items: center;
     width: 350px;
 }
 
 #sidebarNav ul {
     padding: 0;
     margin: 0;
+    align-items: center;
+    justify-content: space-between;
 }
 
 
