@@ -122,10 +122,40 @@ const Home = () => {
 
             <div className="bodyText">
                 <h1 id="welcomeTitle">Welcome!</h1>
+                    <div className="flex-container">
                     <div id="hyperlinksTable">
-
+                    <nav id="sidebarNav">
+                        <ul id="menu-item-1">
+                        <h3>Degree Programs and Catalogues</h3>
+                            <ul id="miz-sub-nav">
+                                <li id="sub-nav-menu-item-1">
+                                    <a href="https://catalog.missouri.edu/">Catalogs</a>
+                                </li>
+                                <li id="sub-nav-menu-item-2">
+                                    <a href="https://catalog.missouri.edu/archives/">Archived Catalogs</a>
+                                </li>
+                                <li id="sub-nav-menu-item-3">
+                                    <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
+                                </li>
+                            </ul>
+                        </ul>
+                        <ul id="menu-item-2">
+                        <h3>Degree Audits</h3>
+                            <ul id="miz-sub-nav">
+                                <li id="sub-nav-menu-item-1">
+                                    <a href="https://catalog.missouri.edu/">Catalogs</a>
+                                </li>
+                                <li id="sub-nav-menu-item-2">
+                                    <a href="https://catalog.missouri.edu/archives/">Archived Catalogs</a>
+                                </li>
+                                <li id="sub-nav-menu-item-3">
+                                    <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
+                                </li>
+                            </ul>
+                        </ul>
+                    </nav>
                     </div>
-                    <p id="welcomeBody">
+                    <p id="paragraphs">
                     Our degree planner is a tool for students at Mizzou within the College of Engineering to review their academic progress toward the completion of their program of study (degree, minor, certificate, etc.) so that students are able to create degree audits.
                     <br />
                     <br></br>
@@ -134,7 +164,14 @@ const Home = () => {
                     <br></br>
                     Any degree audits created by this planner is not a substitute for working with an academic advisor.
                     </p>
+                    </div>
                 <h1 id="startingTitle">Getting Started</h1>
+                    <p id="paragraphs">
+                    If you have never used the Mizzou Degree Planner before and need to create your first audit, we have two ways to start.
+                    <br />
+                    <br></br>
+                    You can create your first degree planner by (1) uploading your degree audit so that our tool can auto-populate your credits and progress OR (2) manually choose your classes and credits based on your major(s) and/or minor(s).
+                    </p>
 
             </div>
 

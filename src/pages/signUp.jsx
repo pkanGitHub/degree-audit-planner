@@ -2,8 +2,11 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import TermsCondition from "../components/termsConditions";
 import "../styles/formStyle.css"
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 const SignUp = () => {
+    const [visible, setVisible] = useState(false);
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -59,11 +62,33 @@ const SignUp = () => {
                         </label>
                         <br/>
                         <label>Password
-                            <input type="password" name="password" placeholder="Enter password here..." value={formData.password} onChange={handleChange}/>
+                        <div className="password-input">
+                              <input
+                                type={visible ? "text" : "password"}
+                                name="password"
+                                placeholder="Enter password here..."
+                                value={formData.password}
+                                onChange={handleChange}
+                              />
+                              <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                                {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                              </div>
+                            </div>
                         </label>
                         <br/>
                         <label>Enter Password Again
-                            <input type="password" name="confirmPassword"placeholder="Enter password again..." value={formData.confirmPassword} onChange={handleChange}/>
+                        <div className="password-input">
+                              <input
+                                type={visible ? "text" : "password"}
+                                name="confirmPassword"
+                                placeholder="Enter password again..."
+                                value={formData.password}
+                                onChange={handleChange}
+                              />
+                              <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                                {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                              </div>
+                            </div>
                         </label>
                         <br/>
                         <div id="checkboxDiv">
