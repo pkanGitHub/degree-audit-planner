@@ -125,34 +125,26 @@ const Home = () => {
                     <div className="flex-container">
                     <div id="hyperlinksTable">
                     <nav id="sidebarNav">
-                        <ul id="menu-item-1">
-                        <h3>Degree Programs and Catalogues</h3>
-                            <ul id="miz-sub-nav">
-                                <li id="sub-nav-menu-item-1">
+                        <h3 id="degreeProgramTitle">Degree Programs and Catalogues</h3>
+                                <li id="sub-nav-menu-item">
                                     <a href="https://catalog.missouri.edu/">Catalogs</a>
                                 </li>
-                                <li id="sub-nav-menu-item-2">
+                                <li id="sub-nav-menu-item">
                                     <a href="https://catalog.missouri.edu/archives/">Archived Catalogs</a>
                                 </li>
-                                <li id="sub-nav-menu-item-3">
+                                <li id="sub-nav-menu-item">
                                     <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
                                 </li>
-                            </ul>
-                        </ul>
-                        <ul id="menu-item-2">
-                        <h3>Degree Audits</h3>
-                            <ul id="miz-sub-nav">
-                                <li id="sub-nav-menu-item-1">
+                        <h3 id="degreeAuditTitle">Degree Audits</h3>
+                                <li id="sub-nav-menu-item">
                                     <a href="https://catalog.missouri.edu/">Catalogs</a>
                                 </li>
-                                <li id="sub-nav-menu-item-2">
+                                <li id="sub-nav-menu-item">
                                     <a href="https://catalog.missouri.edu/archives/">Archived Catalogs</a>
                                 </li>
-                                <li id="sub-nav-menu-item-3">
+                                <li id="sub-nav-menu-item">
                                     <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
                                 </li>
-                            </ul>
-                        </ul>
                     </nav>
                     </div>
                     <p id="paragraphs">

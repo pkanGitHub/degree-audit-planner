@@ -48,7 +48,7 @@
     background-color: white;
     color: black;
     border-radius: 5px;
-    margin: 50px; /* Add margin to create space between the two divs */
+    margin: 50px;
     width: 325px;
     height: 550px;
     border: 2px solid #D7D7D7;
@@ -57,8 +57,8 @@
 }
 
 .transcript1 img, .transcript2 img {
-    width: 100%; /* Set the image width to 100% of the div width */
-    height: auto; /* Maintain aspect ratio */
+    width: 100%;
+    height: auto;
 }
 
 .cardText {
@@ -178,8 +178,8 @@ header {
 
 .bodyText {
     padding: 20px;
-    margin: 0 10%; /* Use margin instead of fixed positions */
-    max-width: 80%; /* Set a maximum width to prevent excessive stretching */
+    margin: 0 10%;
+    max-width: 80%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -190,29 +190,74 @@ ul {
 
 #sidebarNav {
     background-color: #fbd986;
-    padding-left: 0px;
+    padding-left: 0;
     border: 1px solid #DCA00F;
     align-items: center;
-    width: 350px;
+    width: 380px;
 }
 
-#sidebarNav ul {
-    padding: 0;
+#sidebarNav li {
     margin: 0;
     align-items: center;
+    list-style-type: none;
 }
 
 
 .flex-container{
     display: flex;
-    justify-content: space-between; /* or other value as needed */
-    align-items: center; /* or other value as needed */
+    justify-content: space-between;
+    align-items: center;
 }
 
 #hyperlinksTable{
-    margin-right: 30px; /* Add margin as needed */
+    margin-right: 30px;
 }
 
-.menu-item-1, .menu-item-2 {
-    
+#sidebarNav {
+    background-color: #fbd986;
+    padding-left: 0;
+    border: 1.5px solid #DCA00F;
+    align-items: center;
+    width: 370px;
+}
+
+#sidebarNav ul {
+    padding: 15px;
+    margin: 0;
+    align-items: center;
+}
+
+#sidebarNav li {
+    margin: 0;
+    list-style-type: none;
+}
+
+#sidebarNav h3 {
+    padding-left: 20px;
+    font-size: 14px;
+}
+
+#sidebarNav a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px 10px 10px 40px;
+    display: block;
+}
+
+#sidebarNav li:hover {
+    background-color: #F1B82D;
+}
+
+#degreeAuditTitle {
+    background-color: #F1B82D;
+    display: block;
+    padding: 10px;
+    margin: 0px;
+}
+
+#degreeProgramTitle {
+    padding: 10px; /* Adjust this value as needed */
+    margin: 0px; /* Remove default margin */
 }
