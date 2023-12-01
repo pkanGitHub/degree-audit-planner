@@ -8,46 +8,46 @@ const ForgotPassword = () => {
     // grabs today's date and then sets the date to tomorrow, used for cookie expiry
     var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
-    const [formData, setFormData] = useState("")
+    const [formData, setFormData] = useState({ email: '' })
     const [errorMsg, setErrorMsg] = useState(null)
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(!formData)
+        if(!formData.email)
         {
             setErrorMsg("You must enter an email.")
+            return
         }
-        else{
-            window.location.href = '/passwordMFA'
-        }
+        
     
-        // try {
-        //     const response = await fetch('http://localhost:4001/email', {
-        //       method: 'POST',
-        //       headers: {
-        //         'Content-Type': 'application/json',
-        //       },
-        //       body: JSON.stringify(formData),
-        //     })
+        try {
+            const response = await fetch('http://localhost:4001/email', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(formData),
+            })
         
-        //     const data = await response.json()
+            const data = await response.json()
         
-        //     if (response.ok) {
-        //         console.log('Email exists')
-        //         cookies.set("forgotpass", formData, {expires: tomorrow}) // takes data and adds it to cookie
-        //         // Redirect
-        //         window.location.href = '/passwordMFA'
-        //     } else {
-        //         // show error message on browser or console...
-        //         setErrorMsg(data.message)
-        //         console.log('Login failed on the frontend:', data.message)
-        //     }
-        //   } catch (error) {
-        //     console.error('Error during login on the frontend:', error)
-        // }
+            if (response.ok) {
+                console.log('Email exists')
+                cookies.set("forgotpass", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
+                // Redirect
+                window.location.href = '/passwordMFA'
+            } else {
+                // show error message on browser or console...
+                setErrorMsg(data.msg)
+                console.log('Login failed on the frontend:', data.msg)
+            }
+          } catch (error) {
+            console.error('Error during login on the frontend:', error)
+        }
     }
 
     const handleChange = (e) => {
-        setFormData(e.target.value)
+        const { name, value } = e.target
+        setFormData({ ...formData, [name]: value })
         setErrorMsg(null)
       }
     return (
@@ -63,7 +63,7 @@ const ForgotPassword = () => {
                     <h2>Enter the email address associated with your account.</h2>
                     <p id="errorMessage">{errorMsg}</p>
                     
-                    <input type="text" placeholder="Enter email address here..." value={formData} onChange={handleChange}/>
+                    <input type="text" placeholder="Enter email address here..." name="email" value={formData.email} onChange={handleChange}/>
                     <br/>
                     {/* this does not exactly make sense, will need to figure out how to route these */}
                     <button type="submit" id="forgotNextButton">Next</button>

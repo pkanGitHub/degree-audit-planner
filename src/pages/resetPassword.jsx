@@ -19,19 +19,38 @@ const ResetPassword = () => {
 
     const [error, setError] = useState("")
 
-    const [data, setData] = useState({email: testAuth, password: "", passwordAgain: ""})
 
-    const handleSubmit = (e) => {
+    const [data, setData] = useState({email: testAuth.email, password: "", passwordAgain: ""})
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
         if(!data.password || !data.passwordAgain)
         {
             setError("You must enter a password in both fields.")
+            return
         }
         else if (data.password !== data.passwordAgain) {
             setError("Passwords do not match.");
+            return
         }
-        else{
-            window.location.href = '/login'
+
+        try {
+            const response = await axios.post('http://localhost:4001/resetpassword',  data )
+            console.log('Server Response:', response);
+            if (response.data.success) {
+                console.log('Password change successful!')
+                cookies.remove("forgotpass")
+                alert("You have successfully changed your password!")
+                window.location.href = '/login'
+
+            } else {
+               
+                setError('Failed to update password. Please try again.');
+               
+            }
+        } catch (error) {
+            console.error(error)
+            setError('Failed to update password. Please try again.')
         }
     }
 
@@ -46,7 +65,7 @@ const ResetPassword = () => {
 
                 <h1>Reset Password</h1>
 
-                <p>For user: {testAuth}</p>
+                <p>For User: {testAuth.email}</p>
                 <p id="errorMessage">{error}</p>
                 <form onSubmit={handleSubmit}>
                     

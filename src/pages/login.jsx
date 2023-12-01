@@ -55,11 +55,11 @@ const Login = () => {
 
     return (
         <div className="formSection">
-            {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
   
             <p></p>
             <div id="formDesign">
                 <h1>Login</h1>
+                <p id='errorMessage'>{errorMsg}</p>
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
                         <label>Email</label>          

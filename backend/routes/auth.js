@@ -63,6 +63,34 @@ router.post('/signup', async (req, res) => {
   }
 })
 
+// reset password
+router.post("/resetpassword", async(req, res) => {
+  const { email, passwordAgain } = req.body 
+
+  try{
+    // check if user already exists
+    const existUser = await User.findOne({ email })
+    if (!existUser) {
+      return res.status(400).json({ msg: 'User does not exist' })
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(passwordAgain, salt)
+    // Generate a verification code
+  
+    existUser.password = hashedPassword
+    await existUser.save()
+    res.status(200).json({ success: true, msg: 'Password Successfully changed' })
+
+
+  }catch (error) {
+    console.error(error)
+    res.status(500).json({ success: false, msg: 'Failed to update password.' })
+  }
+
+
+}); 
+
 router.post('/verify-email', async(req, res) => {
   const { verificationCode } = req.body
   try {
@@ -110,9 +138,9 @@ router.post("/login", (req, res, next) => {
 })
 
 
-  // check email
+// check email
 router.post("/email", async(req, res) => {
-  const email = req.body
+  const { email } = req.body
   try {
     // check if user already exists
     const existUser = await User.findOne({ email })
@@ -137,42 +165,5 @@ router.post("/email", async(req, res) => {
       return res.status(500).json({ error: 'Email has failed.' })
   }
 })
-
-// testing stuff
-
-// router.post('/verify-user', async(req, res) => {
-//   const userInputCode = req.body.verificationCode
-//   console.log(`user inputted: ${userInputCode}`)
-
-//   // Retrieve the stored verification code from session
-//   console.log("Verfication code listed below")
-//   const storedVerificationCode = req.session.verificationCode
-//   console.log(storedVerificationCode)
-//   if (userInputCode === storedVerificationCode) {
-//     // Email verification
-//     try {
-//       const user = await User.findOneAndUpdate(
-//         { email: req.body },
-//         { $set: { userVerify: true } },
-//         { new: true }
-//       )
-//       if (user) {
-//         // remove verification code from session
-//         delete req.session.verificationCode
-//         return res.status(200).json({ msg: 'Email successfully verified' })
-//       } else {
-//         // Handle error and inform the user
-//         return res.status(404).json({ error: 'User not found' })
-//       }
-//     } catch (error) {
-//       // Handle database update error
-//       console.error(error)
-//       return res.status(500).json({ error: 'Internal Server Error' })
-//     }
-//   } else {
-//     // Handle error and inform the user
-//     return res.status(400).json({ error: 'Incorrect verification code' })
-//   }
-// })
 
 module.exports = router
