@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import "../styles/formStyle.css";
 import Cookies from 'universal-cookie';
 import CookiePopup from '../components/cookiepopup';
+import { API } from 'aws-amplify';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' })
@@ -9,30 +10,18 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
     
-        try {
-            const response = await fetch('http://localhost:4001/login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formData),
-            })
-        
-            const data = await response.json()
-        
-            if (response.ok) {
-                console.log('Login successful on the frontend')
-                cookies.set("user", {email: formData.email, password: formData.password}, {expires: tomorrow}) // takes data and adds it to cookie
-                // Redirect
-                window.location.href = '/audit'
-            } else {
-                // show error message on browser or console...
-                setErrorMsg(data.message)
-                console.log('Login failed on the frontend:', data.message)
-            }
-          } catch (error) {
-            console.error('Error during login on the frontend:', error)
-        }
+
+        API.post('DatabaseAPI', "/auth/login", { body: formData })
+        .then(response => {
+            console.log('Login successful on the frontend')
+            cookies.set("user", {id: response.id}, {expires: tomorrow}) // takes data and adds it to cookie
+            // Redirect
+            window.location.href = '/audit'
+        })
+        .catch(error => {
+            setErrorMsg(error.response.data.message)
+            console.log('Login failed on the frontend:', error.response.data.message)
+        })
     }
     
       const handleChange = (e) => {

@@ -2,14 +2,16 @@ const express = require('express')
 const passport = require('passport')
 const router = express.Router()
 const bcrypt = require('bcrypt')
-const User = require('../Models/user')
+const mongoose = require('mongoose')
 const { sendVerificationCode } = require('../nodemailer-config')
 const { codeExpirationTime } = require('../cron/cron-config')
+
+const User = () => mongoose.model('User', require('./Models/user'));
 
 
 async function retrieveUserData() {
   try {
-    const users = await User.find({}) 
+    const users = await User().find({}) 
     return users
   } catch (error) {
     throw error
@@ -38,7 +40,7 @@ router.post('/signup', async (req, res) => {
 
   try {
     // check if user already exists
-    const existUser = await User.findOne({ email })
+    const existUser = await User().findOne({ email })
     if (existUser) {
       return res.status(400).json({ msg: 'User already exists' })
     }
@@ -49,7 +51,7 @@ router.post('/signup', async (req, res) => {
     const verificationCode = Math.floor(100000 + Math.random() * 900000)
     // Set the expiration time in cron-config
     const expirationTime = codeExpirationTime()
-    const newUser = new User({ email, password: hashedPassword, verificationCode, verificationCodeExpires: expirationTime })
+    const newUser = new User()({ email, password: hashedPassword, verificationCode, verificationCodeExpires: expirationTime })
     await newUser.save()
 
       // console.log('Before sending verification code email')
@@ -67,7 +69,7 @@ router.post('/signup', async (req, res) => {
 router.post('/verify-email', async(req, res) => {
   const { verificationCode } = req.body
   try {
-    const user = await User.findOne({ verificationCode })
+    const user = await User().findOne({ verificationCode })
     if (!user) {
       return res.status(404).json({ error: 'User not found or invalid verification code' })
     }
@@ -113,7 +115,7 @@ router.post("/login", (req, res, next) => {
   })
 
 router.post("/api/user/save", (req, res) => {
-    User.findOneAndUpdate(
+    User().findOneAndUpdate(
         { _id: req.body.id },
         { 
             courses: req.body.courses,
@@ -134,7 +136,7 @@ router.post("/api/user/save", (req, res) => {
 })
 
 router.post("/api/user/load", (req, res) => {
-    User.findOne(
+    User().findOne(
         { _id: req.body.id }
     )
     .then(user => res.status(200).json({

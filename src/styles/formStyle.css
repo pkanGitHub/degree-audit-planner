@@ -43,7 +43,7 @@
     width: 100%;
     padding: 10px;
     border-radius: 10px;
-    border: 1px solid lightgray;
+    border: 2px solid lightgray;
     box-sizing: border-box;
     font-weight: normal;
 }
@@ -126,4 +126,35 @@
 }
 #errorMessage{
     color: red;
+    font-weight: bold;
+}
+
+#mfaButtons{
+    display: flex;
+    margin: auto;
+    justify-content: space-between;
+}
+
+#mfaSubmit{
+    background-color: #69901D;
+    color: white;
+}
+#mfaSubmit:hover{
+    background-color: #527115;
+}
+#mfaBack{
+    border: 1px solid black;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+}
+#mfaBack:hover{
+    background-color: rgb(224, 224, 224);
 }

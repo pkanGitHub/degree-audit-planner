@@ -6,25 +6,23 @@ or in the "license" file accompanying this file. This file is distributed on an 
 See the License for the specific language governing permissions and limitations under the License.
 */
 
-const connection = require('./db')
-const mongoose = require('mongoose')
+const connection = require('./db');
+const mongoose = require('mongoose');
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
+const express = require('express');
+const bodyParser = require('body-parser');
+const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
 
 // declare a new express app
-const app = express()
-app.use(bodyParser.json())
-app.use(awsServerlessExpressMiddleware.eventContext())
-
+const app = express();
+app.use(bodyParser.json());
+app.use(awsServerlessExpressMiddleware.eventContext());
 
 const Certificate = () => mongoose.model('Certificate', require('./Models/certificate'));
 const Courses = () => mongoose.model('Courses', require('./Models/courses'));
 const GenEds = () => mongoose.model('GenEds', require('./Models/geneds'));
 const Major = () => mongoose.model('Major', require('./Models/major'));
 const Minor = () => mongoose.model('Minor', require('./Models/minor'));
-const User = () => mongoose.model('User', require('./Models/user'));
 
 // Enable CORS for all methods
 app.use(async (req, res, next)=>{

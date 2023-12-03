@@ -13,5 +13,7 @@ module.exports = mongoose.Schema({
         credits: String
     }],
     generalEducationCompleted: { type: Boolean, default: false },
-    emailVerified: { type: Boolean, default: false } // Add this field for email verification
+    emailVerified: { type: Boolean, default: false }, // Add this field for email verification
+    verificationCode: { type: String },
+    verificationCodeExpires: { type: Date }
 });

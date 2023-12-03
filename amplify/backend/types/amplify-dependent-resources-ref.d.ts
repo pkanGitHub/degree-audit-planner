@@ -7,6 +7,13 @@ export type AmplifyDependentResourcesAttributes = {
     }
   },
   "function": {
+    "Authentication": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "GeneralAPI": {
       "Arn": "string",
       "LambdaExecutionRole": "string",

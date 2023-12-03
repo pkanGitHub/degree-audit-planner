@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import TermsCondition from "../components/termsConditions";
+import { API } from 'aws-amplify';
 import "../styles/formStyle.css"
 
 const SignUp = () => {
@@ -33,19 +34,15 @@ const SignUp = () => {
             return
         }
 
-        try {
-            const response = await axios.post('http://localhost:4001/signup', formData)
-            
-            if (response.status === 201) {
-                console.log('User sign up successfully');
-                // window.location.href = '/mfa'
-            } else {
-                const data = await response.json();
-                console.error(data.message);
-            }
-        } catch (error) {
-            console.error('Error during sign up: ', error)
-        }
+        API.post('DatabaseAPI', "/auth/signup", { body: formData })
+        .then(response => {
+            console.log(`response: ${response}`);
+            console.log('User sign up successfully');
+            window.location.href = '/mfa'
+        })
+        .catch(error => {
+            console.error(error.response.data.message);
+        })
     }
 
     return (
@@ -75,7 +72,6 @@ const SignUp = () => {
                             </label>
                             <br/>
                         </div>
-                        
                     </div>
                     <button className="submitButton">Register</button>
 

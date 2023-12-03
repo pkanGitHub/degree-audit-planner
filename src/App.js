@@ -8,6 +8,7 @@ import Tutorial from "./pages/tutorial"
 import NavBar from "./components/navbar"
 import ResetPassword from './pages/resetPassword';
 import MFA from './pages/mfa';
+import PasswordMFA from './pages/passwordMFA';
 
 import './styles/App.css';
 import { useEffect } from 'react';
@@ -30,6 +31,7 @@ function App() {
       <Route path="tutorial" element={<Tutorial />}/>
       <Route path="resetpassword" element={<ResetPassword />}/>
       <Route path="mfa" element={<MFA/>}/>
+      <Route path="passwordMFA" element={<PasswordMFA/>}/>
     </Routes>
     </>
   );

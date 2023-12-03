@@ -5,14 +5,15 @@ import manualCard from "../manual.jpg"
 import tutorialCard from "../tutorial.jpg"
 
 //---------------------------------------------------------
-import React, { useState, useEffect } from 'react';
-import { API } from 'aws-amplify';
-import { fetchGet,getCerts,getCourseList,getMajors } from '../lib/data';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { API } from 'aws-amplify';
 
 
-//const Home = () => {
 const Home = () => {
+    useEffect(() => {
+        API.get('DatabaseAPI', "/auth/users").then(x => console.log(x))
+    })
     return (
         <div>
             <div className="intro">
@@ -27,7 +28,20 @@ const Home = () => {
 
             <div className="bodyText">
                 <h1 id="welcomeTitle">Welcome!</h1>
+                    <div id="hyperlinksTable">
+
+                    </div>
+                    <p id="welcomeBody">
+                    Our degree planner is a tool for students at Mizzou within the College of Engineering to review their academic progress toward the completion of their program of study (degree, minor, certificate, etc.) so that students are able to create degree audits.
+                    <br />
+                    <br></br>
+                    This tool matches students’ Mizzou and transfer coursework to a program of study’s completion requirements.
+                    <br />
+                    <br></br>
+                    Any degree audits created by this planner is not a substitute for working with an academic advisor.
+                    </p>
                 <h1 id="startingTitle">Getting Started</h1>
+
             </div>
 
             {/* might need to use columns if possible */}

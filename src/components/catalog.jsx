@@ -5,7 +5,7 @@ import "../styles/audit.css"
 import AddCourses from "./addCourses";
 
 
-const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
+const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
     const [isOrOpen, setIsOrOpen] = useState(false)
     const toggleOrCourses = () => {
         setIsOrOpen(!isOrOpen)
@@ -16,7 +16,7 @@ const CatalogItems = ({type, category, coursesList, removeCatalog}) => {
             // this first if basically says take the first filtered option. did this because would grab names that match but have extra. for example, minor in social justice would also return minor in social justice for educators
             <div key={selectedOption?._id}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <h2>{selectedOption?.title}</h2>
+                    <h2>{selectedOption?.title} {year}</h2>
                     <button className="programDelete" onClick={removeCatalog}>Delete</button>
                 </div>
                 

@@ -101,21 +101,59 @@ button{
     background-color: white;
     display: inline-block;
     padding: 5px;
+    vertical-align: top;
 
+}
+
+.preReqTD{
+    width: 200px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .courseTable {
     border: 1px solid gray;
     border-collapse: collapse;
     padding: 10px;
-    max-height: min-content;
+    width: 300px;
+    max-width: 300px;
 }
 .courseTable th, td
 {
     padding: 5px;
     background-color: rgb(230, 230, 230);
     overflow-y: scroll;
+    height: 30px;
+}
+
+.tablePrereq{
     max-width: 200px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    height: fit-content;
+
+}
+
+.prereqButton{
+    background-color: transparent;
+    border: 1px solid black;
+    padding: none;
+    font-weight: normal;
+    padding: 3px;
+    width: fit-content;
+    height: fit-content;
+    vertical-align:top;
+    margin: auto;
+}
+.prereqButton:hover{
+    background-color: lightgray;
+}
+
+.expandPrereq{
+    max-width: 200px;
+    height: fit-content;
+    padding-right: 2px;
 }
 
 .courseTable td{
@@ -129,10 +167,19 @@ button{
     border: none;
     background-color: transparent;
     font-weight: normal;
+    padding: 5px;
+}
+
+#removeButton:hover{
+    background-color: lightgray;
 }
 
 #removeItem {
     text-align: right;
+}
+
+#notice{
+    font-style: italic;
 }
 
 body{

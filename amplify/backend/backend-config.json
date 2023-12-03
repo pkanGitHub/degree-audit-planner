@@ -9,6 +9,14 @@
           ],
           "category": "function",
           "resourceName": "GeneralAPI"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "Authentication"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -17,6 +25,11 @@
   },
   "auth": {},
   "function": {
+    "Authentication": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "GeneralAPI": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -31,6 +44,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_Authentication_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Authentication"
+        }
+      ]
+    },
+    "AMPLIFY_function_Authentication_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "Authentication"
+        }
+      ]
+    },
     "AMPLIFY_function_GeneralAPI_deploymentBucketName": {
       "usedBy": [
         {
