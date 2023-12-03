@@ -117,6 +117,12 @@ function CourseCell({course, update}) {
             </td>
         </>
     )
+    else return (
+        <>
+            <td></td>
+            <td></td>
+        </>
+    )
 }
 
 function calcStatus(semester) {

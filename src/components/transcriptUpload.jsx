@@ -78,7 +78,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                                 })
                                 .reduce((([total, year, prevSem, semCnt], semester) => { 
                                     
-                                    if (semester[0][0] === 2 ^ semester[0][0] <= prevSem && prevSem !== 2) {
+                                    if (semester[0][0] === 2 ^ (semester[0][0] <= prevSem && prevSem !== 2)) {
                                         year++;
                                         semCnt = 0;
                                     }
@@ -91,7 +91,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                                         return course;
                                     }));          
                                     return [total, year, semester[0][0], ++semCnt]; 
-                                }), [[], -1, 3, 0])
+                                }), [[], 0, 3, 0])
                                 [0])
             // closeModal(null);
         })

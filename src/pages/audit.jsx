@@ -205,7 +205,13 @@ const Audit = () => {
     return (
         <div id="fullpage">
             <div id="header">
-                <TranscriptUpload setCatalog={setUserCatalog} setCourses={(courses) => {User.setCourses(courses);setUserCourses([...User.getCourses()]);}} hasData={userCourses.length > 0}/>
+                <TranscriptUpload 
+                    setCatalog={setUserCatalog} 
+                    setCourses={(courses) => {
+                        User.setCourses(courses);
+                        setUserCourses([...User.getCourses()]);
+                    }} 
+                    hasData={userCourses.length > 0}/>
                 <br/>
                 <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
