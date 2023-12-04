@@ -82,7 +82,7 @@ const Home = () => {
                     <img src={autoCard}></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Upload Transcript</h3>
-                            <p>Download your unofficial transcript from MyZou and upload it here for easy use!</p>
+                            <p id = "cardParagraph">Download your unofficial transcript from MyZou and upload it here for easy use!</p>
                             <a class="uploadTranscriptHere" href="/audit">
                                 <button class="auto">Upload your transcript here</button>
                             </a>
@@ -91,8 +91,8 @@ const Home = () => {
                 <div className="transcript2">
                     <img src={manualCard}></img>
                     <div className="cardText">
-                        <h3 className="miniTutTitles">Do it yourself</h3>
-                            <p>Use this feature when you do not have your unofficial transcript on hand.</p>
+                        <h3 className="miniTutTitles">Do It Yourself</h3>
+                            <p id = "cardParagraph">Use this feature when you do not have your unofficial transcript on hand.</p>
                             <a class="uploadTranscriptHere" href="/audit">
                                 <button class="tutorialCardButton">Set up your audit planner here</button>
                             </a>
@@ -102,7 +102,7 @@ const Home = () => {
                     <img src={tutorialCard}></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Still Confused?</h3>
-                            <p>Still not sure on how to start? Do not fear - we have several tutorials to get you started!</p>
+                            <p id = "cardParagraph">Still not sure on how to start? Do not fear - we have several tutorials to get you started!</p>
                             <a class="uploadTranscriptHere" href="/tutorial">
                                 <button class="manual">Take me to the tutorial</button>
                             </a>

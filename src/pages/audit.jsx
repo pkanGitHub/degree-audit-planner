@@ -245,7 +245,6 @@ const Audit = () => {
                     }} 
                     hasData={userCourses.length > 0}/>
                 <br/>
-                <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
             <div id='contents'>
             
@@ -335,7 +334,6 @@ const Audit = () => {
 
 
                     <div id='optionButtons'>
-                        {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
                         <button id='saveButton' onClick={saveData}>Save</button>
                         <button id='exportButton' onClick={exportData}>Export</button>
                         <button id='deleteButton' onClick={deleteAlert}>Delete</button>
