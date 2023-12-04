@@ -17,60 +17,60 @@ export const SemesterPlan = memo(({data, courses, user}) => {
 
     if (years.length > 0 && change) return (
         <div id="planner">
-            <h2 id='userPlanner'>{user}</h2>
-                {years?.map((year, index) => {
-                    const rows = year?.semesters.reduce((max, semester) => max > semester.length ? max : semester.length, 0)
+            <h2 id='userPlanner'>Degree Plan</h2>
+            {years?.map((year, index) => {
+                const rows = year?.semesters.reduce((max, semester) => max > semester.length ? max : semester.length, 0)
 
-                    return (
-                        <table key={index} id={"Year" + (index + 1)} className="planTable">
-                            <thead>
-                                <tr>
-                                    <th colSpan={year.semesters.length * 2} className='tableHeading'>Year {index + 1}</th>
-                                </tr>
-                                <tr>
-                                    {
-                                        year.semesters.map((semester, index) => 
-                                            <td colSpan={2} className="semesterHeading">Semester {index + 1}</td>
-                                        )
-                                    }
-                                </tr>
-                                <tr className="courseTableInfo tableDataHeading">
-
-                                    {
-                                        year.semesters.map(() => 
-                                            <>
-                                                <td>Course name</td>
-                                                <td>Credit hours</td>
-                                            </>
-                                        )
-                                    }
-                                </tr>
-                            </thead> 
-                            <tbody>
-                                {[...Array(rows).keys()].map(r => {
-
-                                    return (
-                                        <tr className="courseTableInfo" key={r}>
-                                            { year.semesters.map(semester => 
-                                                <CourseCell course={semester[r]} update={update} />
-                                            )}
-                                        </tr>
+                return (
+                    <table key={index} id={"Year" + (index + 1)} className="planTable">
+                        <thead>
+                            <tr>
+                                <th colSpan={year.semesters.length * 2} className='tableHeading'>Year {index + 1}</th>
+                            </tr>
+                            <tr>
+                                {
+                                    year.semesters.map((semester, index) => 
+                                        <td colSpan={2} className="semesterHeading">Semester {index + 1}</td>
                                     )
-                                }, year)}
-                            </tbody>
-                            <tfoot>
-                                <tr className='tableSummary'>
-                                    { year.semesters.map((semester, index) => 
-                                    <>
-                                        <td><b>Status:</b> <SetStatus semester={semester} update={update} /></td>
-                                        <td><b>Total Credit Hours: </b>{ calcCredits(semester) }</td>
-                                    </>
-                                    )}
-                                </tr>
-                            </tfoot>
-                        </table>
-                    )
-                })}
+                                }
+                            </tr>
+                            <tr className="courseTableInfo tableDataHeading">
+
+                                {
+                                    year.semesters.map(() => 
+                                        <>
+                                            <td>Course name</td>
+                                            <td>Credit hours</td>
+                                        </>
+                                    )
+                                }
+                            </tr>
+                        </thead> 
+                        <tbody>
+                            {[...Array(rows).keys()].map(r => {
+
+                                return (
+                                    <tr className="courseTableInfo" key={r}>
+                                        { year.semesters.map(semester => 
+                                            <CourseCell course={semester[r]} update={update} />
+                                        )}
+                                    </tr>
+                                )
+                            }, year)}
+                        </tbody>
+                        <tfoot>
+                            <tr className='tableSummary'>
+                                { year.semesters.map((semester, index) => 
+                                <>
+                                    <td><b>Status:</b> <SetStatus semester={semester} update={update} /></td>
+                                    <td><b>Total Credit Hours: </b>{ calcCredits(semester) }</td>
+                                </>
+                                )}
+                            </tr>
+                        </tfoot>
+                    </table>
+                )
+            })}
         </div>
     );
 
