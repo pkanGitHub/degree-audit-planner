@@ -5,7 +5,6 @@
 
 .intro
 {
-    background-color: white;
     background-image: url('../lafferre.jpg');
     background-size: 100% auto;
     background-repeat: no-repeat; /* Prevent image from repeating */
@@ -106,10 +105,6 @@ header {
     color: white;
 }
 
-.tlink {
-    text-decoration: none;
-} 
-
 .tutBut {
     display: flex;
     width: 235px;
@@ -128,11 +123,6 @@ header {
 
 .tutBut:hover {
     background-color: #F7D88D;
-}
-
-.tutorialButton {
-    display: flex;
-    justify-content: center;
 }
 
 .auto, .manual, .tutorialCardButton {
@@ -170,10 +160,6 @@ header {
   
   .auto:hover:before, .manual:hover:before, .tutorialCardButton:hover:before {
     top: 0;
-  }
-
-  .uploadTranscriptHere {
-    padding-bottom: 900px; 
   }
 
 .bodyText {
@@ -218,7 +204,7 @@ ul {
     padding-left: 0;
     border: 1.25px solid #DCA00F;
     align-items: center;
-    width: 370px;
+    width: 380px;
 }
 
 #sidebarNav ul {
@@ -249,15 +235,63 @@ ul {
     background-color: #F1B82D;
 }
 
-#degreeAuditTitle {
+#degreeProgramTitle {
     background-color: #F1B82D;
     display: block;
+    margin: 0px;
     padding: 10px;
+    padding-left: 5px;
     margin: 0px;
 }
 
-#degreeProgramTitle {
-    padding: 10px;
+#startingTitle {
+    font-size: 50px;
+}
+
+#bodyTitle {
+    font-size: 50px;
+    margin-top: 0;
+}
+
+#welcomeTitle {
+    font-size: 30px;
+    margin-top: 0;
+}
+
+#moreParagraphs, #evenMoreParagraphs {
+    line-height: 1.5;
+}
+
+#degreeAuditTitle {
     padding-left: 20px;
-    margin: 0px;
+}
+
+p a {
+    color: black;
+}
+
+p a:hover {
+    text-decoration: none;
+}
+
+footer {
+    background-color: black;
+}
+
+#uniTitle {
+    font-size: 30px;
+    color: white;
+    font-family: 'Kameron', serif;
+    text-decoration: none;
+}
+
+#mizLogoTag {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+#mizzouLogo {
+    width: 60px;
+    height: 60px;
 }
