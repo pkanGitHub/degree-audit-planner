@@ -8,8 +8,7 @@ const bodyParser = require('body-parser')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
 
-// const { sendVerificationCode } = require('../nodemailer-config')
-// const { codeExpirationTime } = require('../cron/cron-config')
+const { sendVerificationCode } = require('../nodemailer-config')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 
 // declare a new express app
@@ -90,9 +89,6 @@ app.get("/auth/users", (req, res) => {
 
 // create user
 app.post('/auth/signup', async (req, res) => {
-
-    // res.json({success: 'signup call succeed!', url: req.url, body: req.body})
-
   const {email, password} = req.body
   
   if (!email || !password) {
@@ -114,8 +110,6 @@ app.post('/auth/signup', async (req, res) => {
     const verificationCode = Math.floor(100000 + Math.random() * 900000)
     // Set the expiration time in cron-config
     const expirationTime = codeExpirationTime()
-    // const newUser = new User()({ email, password: hashedPassword, verificationCode, verificationCodeExpires: expirationTime })
-    // await newUser.save()
 
     await User().create({ 
         email: email, 
@@ -124,15 +118,10 @@ app.post('/auth/signup', async (req, res) => {
         verificationCodeExpires: expirationTime 
     })
 
-    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.' })
-
-      // console.log('Before sending verification code email')
-    //   const emailResult = await sendVerificationCode(email, verificationCode)
-    //   console.log(emailResult)
+    const emailResult = await sendVerificationCode(email, verificationCode)
     
-      
+    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.' })
   } catch (error) {
-    console.error(error)
     return res.status(500).json({ error: 'Sign up failed' })
   }
 })
@@ -153,7 +142,6 @@ app.post('/auth/verify-email', async(req, res) => {
       res.status(400).json({ success: false, error: 'invalid_code' })
     }
   } catch (error) {
-    console.error(error)
     res.status(500).json({ error: 'Failed to verify email' })
   }
 })
@@ -162,30 +150,45 @@ app.post('/auth/verify-email', async(req, res) => {
 app.post("/auth/login", (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) {
-      console.error('Error during authentication:', err)
       return res.status(500).json({ message: 'Internal server error' })
     }
 
       if (!user) {
         // Authentication failed
-        console.log('Incorrect email or password on the server')
         return res.status(401).json({ message: 'Incorrect email or password' })
       }
   
       // Authentication succeeded
       req.logIn(user, (err) => {
         if (err) {
-          console.error('Error during login:', err)
           return res.status(500).json({ message: 'Internal server error' })
         }
-  
-        console.log('Authentication successful on the server')
+
         return res.status(200).json({ message: 'Authentication successful', id: user._id  })
       })
     })(req, res, next)
   })
 
-app.post("/auth/user/save", (req, res) => {
+app.post("/api/user/load", (req, res) => {
+    User().findOne(
+        { _id: req.body.id }
+    )
+    .then(user => res.status(200).json({
+        message: "User data fetched",
+        courses: user.courses,
+        major: user.major,
+        minor: user.minor,
+        certificate: user.certificate,
+        id: user._id,
+        email: user.email
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not fetch user data",
+        error: err
+    }))
+})
+
+app.post("/api/user/save", (req, res) => {
     User().findOneAndUpdate(
         { _id: req.body.id },
         { 
@@ -197,8 +200,7 @@ app.post("/auth/user/save", (req, res) => {
         }
     )
     .then(user => res.status(200).json({
-        message: "User data updated",
-        data: user
+        message: "User data updated"
     }))
     .catch(err => res.status(500).json({
         message: "Could not update user data",
@@ -206,25 +208,7 @@ app.post("/auth/user/save", (req, res) => {
     }))
 })
 
-app.post("/auth/user/load", (req, res) => {
-    User().findOne(
-        { _id: req.body.id }
-    )
-    .then(user => res.status(200).json({
-        message: "User data fetched",
-        courses: user.courses,
-        major: user.major,
-        minor: user.minor,
-        certificate: user.certificate
-    }))
-    .catch(err => res.status(500).json({
-        message: "Could not fetch user data",
-        error: err
-    }))
-})
-
 app.listen(3000, function() {
-    console.log("App started")
 });
 
 

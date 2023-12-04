@@ -5,7 +5,6 @@
 
 .intro
 {
-    background-color: white;
     background-image: url('../lafferre.jpg');
     background-size: 100% auto;
     background-repeat: no-repeat; /* Prevent image from repeating */
@@ -42,23 +41,23 @@
     justify-content: center;
 }
 
-.transcript1, .transcript2 {
+.transcript1, .transcript2, .transcript3 {
     display: inline-block;
     padding-bottom: 20px;
     background-color: white;
     color: black;
-    border-radius: 5px;
-    margin: 50px; /* Add margin to create space between the two divs */
+    border-radius: 1px;
+    margin: 50px;
     width: 325px;
-    height: 550px;
-    border: 2px solid #D7D7D7;
+    height: 460px;
+    border: 2px solid #F0F0F0;
     font-size: 17px;
     justify-content: center;
 }
 
-.transcript1 img, .transcript2 img {
-    width: 100%; /* Set the image width to 100% of the div width */
-    height: auto; /* Maintain aspect ratio */
+.transcript1 img, .transcript2 img, .transcript3 img {
+    width: 100%;
+    height: auto;
 }
 
 .cardText {
@@ -106,10 +105,6 @@ header {
     color: white;
 }
 
-.tlink {
-    text-decoration: none;
-} 
-
 .tutBut {
     display: flex;
     width: 235px;
@@ -120,7 +115,7 @@ header {
     gap: 10px;
     flex-shrink: 0;
     border-radius: 1px;
-    border-bottom: 3px solid #000;
+    border-bottom: 2px solid #000;
     color: white;
     font-weight: bold;
     background: #F1B82D;
@@ -130,17 +125,12 @@ header {
     background-color: #F7D88D;
 }
 
-.tutorialButton {
-    display: flex;
-    justify-content: center;
-}
-
 .auto, .manual, .tutorialCardButton {
     position: relative;
     padding: 5px 5px;
     font-size: 15px;
     color: black;
-    border-bottom: 3px solid #F1B82D;
+    border-bottom: 2px solid #F1B82D;
     border-radius: 1px;
     outline: 0;
     overflow:hidden;
@@ -172,14 +162,140 @@ header {
     top: 0;
   }
 
-  .uploadTranscriptHere {
-    padding-bottom: 900px; 
-  }
-
 .bodyText {
     padding: 20px;
-    margin: 0 10%; /* Use margin instead of fixed positions */
-    max-width: 80%; /* Set a maximum width to prevent excessive stretching */
+    margin: 0 10%;
+    max-width: 80%;
     margin-left: auto;
     margin-right: auto;
+}
+
+ul {
+    list-style-type: none
+}
+
+#sidebarNav {
+    background-color: #fbd986;
+    padding-left: 0;
+    border: 1px solid #DCA00F;
+    align-items: center;
+    width: 380px;
+}
+
+#sidebarNav li {
+    margin: 0;
+    align-items: center;
+    list-style-type: none;
+}
+
+
+.flex-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#hyperlinksTable{
+    margin-right: 30px;
+}
+
+#sidebarNav {
+    background-color: #fbd986;
+    padding-left: 0;
+    border: 1.25px solid #DCA00F;
+    align-items: center;
+    width: 380px;
+}
+
+#sidebarNav ul {
+    padding: 15px;
+    margin: 0;
+    align-items: center;
+}
+
+#sidebarNav li {
+    margin: 0;
+    list-style-type: none;
+}
+
+#sidebarNav h3 {
+    font-size: 15px;
+}
+
+#sidebarNav a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 8px 10px 10px 40px;
+    display: block;
+}
+
+#sidebarNav li:hover {
+    background-color: #F1B82D;
+}
+
+#degreeProgramTitle {
+    background-color: #F1B82D;
+    display: block;
+    margin: 0px;
+    padding: 10px;
+    padding-left: 5px;
+    margin: 0px;
+}
+
+#startingTitle {
+    font-size: 50px;
+}
+
+#bodyTitle {
+    font-size: 50px;
+    margin-top: 0;
+}
+
+#welcomeTitle {
+    font-size: 30px;
+    margin-top: 0;
+}
+
+#moreParagraphs, #evenMoreParagraphs {
+    line-height: 1.5;
+}
+
+#degreeAuditTitle {
+    padding-left: 20px;
+}
+
+p a {
+    color: black;
+}
+
+p a:hover {
+    text-decoration: none;
+}
+
+footer {
+    background-color: black;
+}
+
+#uniTitle {
+    font-size: 30px;
+    color: white;
+    font-family: 'Kameron', serif;
+    text-decoration: none;
+}
+
+#mizLogoTag {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+
+#mizzouLogo {
+    width: 60px;
+    height: 60px;
+}
+
+#cardParagraph {
+    padding-bottom: 30px;
 }

@@ -39,16 +39,16 @@ export async function getCerts(pull) {
     return Certificates;
 }
 
-export function getProgramByExactName(name) {
-    if (!name) return;
+export function getProgramByExactName(name, year) {
+    if (!name || !year) return;
 
-    const major = Majors.filter(major => major.title === name)[0];
+    const major = Majors[year].filter(major => major.title === name)[0];
     if (major) return major;
 
-    const minor = Minors.filter(minor => minor.title === name)[0];
+    const minor = Minors[year].filter(minor => minor.title === name)[0];
     if (minor) return minor;
 
-    const cert = Certificates.filter(cert => cert.title === name)[0];
+    const cert = Certificates[year].filter(cert => cert.title === name)[0];
     if (cert) return cert;
 
     return null;
@@ -56,6 +56,7 @@ export function getProgramByExactName(name) {
 
 export function getProgramsBySearch(name_segment, year, category=undefined) {
 
+    console.log(year);
     if (category === undefined) {
         var programs = [];
         programs = programs.concat(getProgramsBySearch(name_segment, year, "major"))

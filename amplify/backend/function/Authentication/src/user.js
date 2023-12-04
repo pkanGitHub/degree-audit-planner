@@ -3,9 +3,9 @@ const mongoose = require('mongoose')
 module.exports = mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    major: [String],
-    minor: [String],
-    certificate: [String],
+    major: [{title: String, year: String}],
+    minor: [{title: String, year: String}],
+    certificate: [{title: String, year: String}],
     courses: [{
         id: String,
         plan: [Number],
