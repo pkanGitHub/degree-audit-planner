@@ -1,8 +1,3 @@
-#cookieImage{
-    width: 100%;
-    height: 100%;
-}
-
 #cookieInfo{
     padding: 15px;
     display: inline-block;
@@ -13,8 +8,8 @@
 
 #cookieTitle{
     font-size: xx-large;
-    color: #1C5E90;
 }
+
 #cookieData{
     font-size: large;
 }
