@@ -6,12 +6,7 @@ import tutorialCard from "../tutorial.jpg"
 import mizzouLogo from "../MU-StackedMU-4C.png";
 import { RightOutlined } from "@ant-design/icons";
 import React from 'react';
-import { Link } from 'react-router-dom'; 
-
-//---------------------------------------------------------
-import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { API } from 'aws-amplify';
 
 
 const Home = () => {

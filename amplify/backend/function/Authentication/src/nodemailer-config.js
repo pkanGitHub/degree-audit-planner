@@ -1,4 +1,3 @@
-require('dotenv').config()
 const nodemailer = require('nodemailer');
 const aws = require("@aws-sdk/client-ses");
 
@@ -7,8 +6,8 @@ const transporter = nodemailer.createTransport({
       ses: new aws.SES({
         region: 'us-east-1',
         credentials: {
-            accessKeyId: 'AKIA5327EGHZ4TVWMFG2',
-            secretAccessKey: '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',
+            accessKeyId: process.env.ACCESS_KEY,
+            secretAccessKey: process.env.SECRET_ACCESS_KEY,
         }
       }),
       aws

@@ -7,8 +7,9 @@ const session = require("express-session");
 const bodyParser = require('body-parser')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
-
-const { sendVerificationCode } = require('../nodemailer-config')
+// const aws = require("@aws-sdk/client-ses");
+// const nodemailer = require('nodemailer');
+const { sendVerificationCode } = require('nodemailer-config')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 
 // declare a new express app
@@ -118,9 +119,9 @@ app.post('/auth/signup', async (req, res) => {
         verificationCodeExpires: expirationTime 
     })
 
-    const emailResult = await sendVerificationCode(email, verificationCode)
+    const emailResult = await sendVerificationCode(email, verificationCode);
     
-    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.' })
+    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.', result: emailResult })
   } catch (error) {
     return res.status(500).json({ error: 'Sign up failed' })
   }
@@ -169,7 +170,7 @@ app.post("/auth/login", (req, res, next) => {
     })(req, res, next)
   })
 
-app.post("/api/user/load", (req, res) => {
+app.post("/auth/user/load", (req, res) => {
     User().findOne(
         { _id: req.body.id }
     )
@@ -188,7 +189,7 @@ app.post("/api/user/load", (req, res) => {
     }))
 })
 
-app.post("/api/user/save", (req, res) => {
+app.post("/auth/user/save", (req, res) => {
     User().findOneAndUpdate(
         { _id: req.body.id },
         { 

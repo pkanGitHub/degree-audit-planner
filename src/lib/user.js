@@ -131,7 +131,7 @@ export function save(id) {
 }
 
 export async function read(id) {
-    return await API.post('DatabaseAPI', "/auth/user/save", {
+    return await API.post('DatabaseAPI', "/auth/user/load", {
         body:{ id: id }
     }) 
     .then(response => {
