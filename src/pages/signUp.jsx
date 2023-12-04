@@ -3,6 +3,7 @@ import axios from 'axios'
 import TermsCondition from "../components/termsConditions";
 import "../styles/formStyle.css"
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import Cookies from 'universal-cookie';
 
 const SignUp = () => {
     const [visible, setVisible] = useState(false);
@@ -24,6 +25,9 @@ const SignUp = () => {
     }
 
     const [error, setError] = useState("")
+
+    const cookies = new Cookies(null);
+    if (cookies.get("user")?.id) window.location.href = '/audit';
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -92,7 +96,7 @@ const SignUp = () => {
                                 type={visible ? "text" : "password"}
                                 name="confirmPassword"
                                 placeholder="Enter password again..."
-                                value={formData.password}
+                                value={formData.confirmPassword}
                                 onChange={handleChange}
                               />
                               <div className="eye-icon" onClick={() => setVisible(!visible)}>

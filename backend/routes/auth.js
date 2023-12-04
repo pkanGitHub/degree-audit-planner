@@ -102,7 +102,7 @@ router.post('/verify-email', async(req, res) => {
     if (user.verificationCodeExpires && user.verificationCodeExpires > new Date()) {
       user.emailVerified = true
       await user.save()
-      res.status(200).json({ success: true, msg: 'Email verification successful' })
+      res.status(200).json({ success: true, msg: 'Email verification successful', id: user._id })
     } else {
       res.status(400).json({ success: false, error: 'invalid_code' })
     }
@@ -132,7 +132,7 @@ router.post("/login", (req, res, next) => {
       }
 
       console.log('Authentication successful on the server')
-      return res.status(200).json({ message: 'Authentication successful' })
+      return res.status(200).json({ message: 'Authentication successful', id: user._id })
     })
   })(req, res, next)
 })
@@ -147,16 +147,16 @@ router.post("/email", async(req, res) => {
     if (!existUser) {
       return res.status(400).json({ msg: 'User does not exist' })
     }
-    // // Generate a verification code
-    // const verificationCode = Math.floor(100000 + Math.random() * 900000)
-    // // Store the verification code in the session
-    // req.session.verificationCode = verificationCode
-    // console.log(`what should be stored: ${req.session.verificationCode}`)
-    // req.session.save()
+    // Generate a verification code
+    const verificationCode = Math.floor(100000 + Math.random() * 900000)
+    // Store the verification code in the session
+    req.session.verificationCode = verificationCode
+    console.log(`what should be stored: ${req.session.verificationCode}`)
+    req.session.save()
 
-    // // console.log('Before sending verification code email')
-    // const emailResult = await sendVerificationCode(email, verificationCode)
-    // console.log(emailResult)
+    // console.log('Before sending verification code email')
+    const emailResult = await sendVerificationCode(email, verificationCode)
+    console.log(emailResult)
 
     res.status(201).json({ msg: 'Check your email for verification code.' })
       
@@ -164,6 +164,45 @@ router.post("/email", async(req, res) => {
       console.error(error)
       return res.status(500).json({ error: 'Email has failed.' })
   }
+})
+
+router.post("/api/user/load", (req, res) => {
+    User.findOne(
+        { _id: req.body.id }
+    )
+    .then(user => res.status(200).json({
+        message: "User data fetched",
+        courses: user.courses,
+        major: user.major,
+        minor: user.minor,
+        certificate: user.certificate,
+        id: user._id,
+        email: user.email
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not fetch user data",
+        error: err
+    }))
+})
+
+router.post("/api/user/save", (req, res) => {
+    User.findOneAndUpdate(
+        { _id: req.body.id },
+        { 
+            courses: req.body.courses,
+            major: req.body.major,
+            minor: req.body.minor,
+            certificates: req.body.cert,
+            generalEducationComplete: req.body.genEd
+        }
+    )
+    .then(user => res.status(200).json({
+        message: "User data updated"
+    }))
+    .catch(err => res.status(500).json({
+        message: "Could not update user data",
+        error: err
+    }))
 })
 
 module.exports = router

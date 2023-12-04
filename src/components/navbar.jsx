@@ -56,7 +56,7 @@ const NavBar = () => {
     try{
       testAuth = cookies.get("user")
       // checks if has cookie, if does, does not render login and sign up, else does render login and sign up
-      if(testAuth !== undefined){
+      if(testAuth?.id){
         setShowLogin(false)
       }
       else{
@@ -66,7 +66,7 @@ const NavBar = () => {
     }catch(err){
       console.log(err)
     }
-  }, [showLogin])
+  }, [])
 
   
 
