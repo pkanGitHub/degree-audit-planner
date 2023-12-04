@@ -7,8 +7,6 @@ import "../styles/transcriptUpload.css"
 import { getProgramsBySearch } from "../lib/data";
 import TermsCondition from "./termsConditions";
 import { confirmAlert } from "react-confirm-alert";
-// https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 
-// https://spacejelly.dev/posts/uploading-files-in-react-from-a-form-with-drag-and-drop/
 
 export default function TranscriptUpload({setCatalog, setCourses, hasData}) {    
 
@@ -22,7 +20,6 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
     const [overwrite, setOverwrite] = useState(false);
 
     // === Variables from React Dropzone === //
-    // const onDrop = 
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone(
         { onDrop: 
@@ -34,10 +31,6 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         }
     );
 
-    const consentCheck = e => {
-        setConsent(e.target.checked);
-    }
-
     const readFile = e => {
         if (uploadedFile === null) {
             setError("Please upload a file.")
@@ -45,8 +38,10 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         };
         GetInfo(uploadedFile).then(data => {
             console.log(data);
-            addPrograms(data.Programs);
-            setCourses(Object.entries(data.CourseWork)
+            addPrograms(data.Programs, data.FileType);
+            console.log(data.Courses);
+            setCourses(data.Courses);
+            /*setCourses(Object.entries(data.CourseWork)
                                 .map(term => {
                                         const formatted = term[0].split("_");
                                         formatted[0] = (() => {
@@ -92,21 +87,22 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                                     }));          
                                     return [total, year, semester[0][0], ++semCnt]; 
                                 }), [[], 0, 3, 0])
-                                [0])
-            // closeModal(null);
+                                [0])*/
         })
         .catch(error => {
             console.error(error);
             setError("Please upload accepted file.");
         });;
-        // .then(data => props.set("Major", data.Major.split("-")[0]));
     }
 
-    const addPrograms = programs => {
+    const addPrograms = (programs, fileType) => {
         const list = programs.map(program => {
-            var [name, type] = program.title.split("-");
-            const search = getProgramsBySearch(name, program.year, undefined);
-            return {original: program.title, year: program.year, results: search}
+                var [name, type] = program.title.split("-");
+                console.log(program);
+                console.log(name.replace(/\s+/g, ' '));
+                const search = getProgramsBySearch(name.replace(/\s+/g, ' '), program.year, undefined);
+                console.log(search);
+                return {original: program.title, year: program.year, results: search}
         })
 
         setPrograms(list);
@@ -133,7 +129,6 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
     const closeModal = e => {
         if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close" && e.target.id != "no") return;
         setHidden(true);
-        setConsent(false);
         setFile(null);
         setPreview(null);
         setError(null);
@@ -172,11 +167,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                         </>
                     }
                 </div>
-                <a href="/tutorial#uploading">What can I upload?</a>
-                <div id="consent">
-                    <input type="checkbox" name="consentCheck" onChange={consentCheck}/>
-                    <p>I consent to the collection and processing of essential information and understand it will be handled confidentially, used solely for the intended purpose.</p>
-                </div>
+                <a href="/tutorial#uploading" style={{width: "100%", display: "block"}}>What can I upload?</a>
                 <button type="button" disabled={!userConsents} onClick={readFile}>Upload</button>
                 { error ? <p className="error">{ error }</p> : <p>&nbsp;</p> }
                 

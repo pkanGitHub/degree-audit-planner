@@ -1,7 +1,6 @@
 import "../styles/semesterPlan.css";
-import { getCourseById, getProgramsBySearch } from "../lib/data";
+import { getProgramsBySearch } from "../lib/data";
 import { Course, STATUS } from "../lib/course";
-import { getCourses } from "../lib/user";
 import { useState, memo } from "react";
 import Popup from "reactjs-popup";
 
@@ -11,7 +10,6 @@ export const SemesterPlan = memo(({data, courses, user}) => {
 
     var years = [];
     addFromUser(years, courses);
-    // addProgramPlans(years, data);
     years = DeleteDuplicates(years);
 
     if (JSON.stringify(years[years.length -1 ]?.semesters) === "[[],[]]") years.pop();
@@ -30,7 +28,6 @@ export const SemesterPlan = memo(({data, courses, user}) => {
                                     <th colSpan={year.semesters.length * 2} className='tableHeading'>Year {index + 1}</th>
                                 </tr>
                                 <tr>
-
                                     {
                                         year.semesters.map((semester, index) => 
                                             <td colSpan={2} className="semesterHeading">Semester {index + 1}</td>

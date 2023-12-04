@@ -5,13 +5,14 @@ import GenEdsModel from "../components/genEds";
 import ExtraCourses from "../components/extraCourses";
 import TransferCourse from "../components/transferCourses";
 import SemesterPlan from "../components/semesterplan";
-import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
+import { getCerts, getCourseList, getGenEds, getMajors, getMinors, getTest } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
 import * as User from "../lib/user";
 import { exportData } from "../lib/filehandling";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Cookies from "universal-cookie";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Audit = () => {
     const [selectType, setType] = useState("");
@@ -61,7 +62,20 @@ const Audit = () => {
         getMinors(true).then(val => setMinors(val));
         getCerts(true).then(val => setCertificates(val));
         getGenEds(true).then(val => setGenEds(val));
+
+        // getTest();
     }, []);
+
+    // const result = useQuery({
+    //     queryKey: ['repoData'],
+    //     queryFn: () => fetch("http://localhost:4001/api/majors").then(majors => majors.json())
+    //   })
+
+    // if (result.isFetching) console.log("loading...") 
+    // else console.log(result.data);
+    // console.log(majorsTest);
+    // console.log(fetchingMajors);
+    // if (error) console.log(error);
 
 
     // this is the user catalog section. this is a list of the type and category that the user has chosen. this is used to loop through database data

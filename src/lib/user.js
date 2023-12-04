@@ -9,6 +9,10 @@ const majors = [];
 const certificates = [];
 const minors = [];
 
+export function userMajors() { return majors; }
+export function userMinors() { return minors; }
+export function userCerts() { return certificates; }
+
 
 export function addCourse(course) {
     courses.push(course);
@@ -34,9 +38,9 @@ export function addPlan(name, year, type) {
     console.log(program);
     switch (type.toLowerCase()) {
         case "majors":
-        case "major": majors.push(program.title); break;
-        case "minor": minors.push(program.title); break;
-        case "cert": certificates.push(program.title); break;
+        case "major": majors.push(program[0]); break;
+        case "minor": minors.push(program[0]); break;
+        case "cert": certificates.push(program[0]); break;
         default: return;
     }
 

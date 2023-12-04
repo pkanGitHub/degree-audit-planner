@@ -4,6 +4,25 @@ var Minors;
 var Certificates;
 var Courses;
 var GenEds;
+var Test;
+
+export async function getTest() {
+    if ( Test === undefined) {
+        const storage = JSON.parse(localStorage.getItem("test"));
+        if (storage) {
+
+            return Test = storage;
+        }
+        else {
+            Test = await fetchGet('majors')
+            .then(majors => planFormat(majors));
+
+            localStorage.setItem("test", JSON.stringify(Test));
+            return Test;
+        }
+    }
+    return Test;
+}
 
 export async function getMajors(pull) {
     if (pull || Majors === undefined) {
@@ -31,16 +50,16 @@ export async function getCerts(pull) {
     return Certificates;
 }
 
-export function getProgramByExactName(name) {
-    if (!name) return;
+export function getProgramByExactName(name, year) {
+    if (!name || !year) return;
 
-    const major = Majors.filter(major => major.title === name)[0];
+    const major = Majors[year].filter(major => major.title === name)[0];
     if (major) return major;
 
-    const minor = Minors.filter(minor => minor.title === name)[0];
+    const minor = Minors[year].filter(minor => minor.title === name)[0];
     if (minor) return minor;
 
-    const cert = Certificates.filter(cert => cert.title === name)[0];
+    const cert = Certificates[year].filter(cert => cert.title === name)[0];
     if (cert) return cert;
 
     return null;
