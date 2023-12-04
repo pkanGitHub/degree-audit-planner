@@ -3,6 +3,8 @@ import TermsCondition  from '../components/termsConditions';
 import autoCard from "../auto.jpg"
 import manualCard from "../manual.jpg"
 import tutorialCard from "../tutorial.jpg"
+import { RightOutlined } from "@ant-design/icons";
+
 
 //---------------------------------------------------------
 const Home = () => {
@@ -121,7 +123,6 @@ const Home = () => {
             </div>
 
             <div className="bodyText">
-                <h1 id="welcomeTitle">Welcome!</h1>
                     <div className="flex-container">
                     <div id="hyperlinksTable">
                     <nav id="sidebarNav">
@@ -135,18 +136,19 @@ const Home = () => {
                                 <li id="sub-nav-menu-item">
                                     <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
                                 </li>
-                        <h3 id="degreeAuditTitle">Degree Audits</h3>
+                        <h3 id="degreeAuditTitle"><b>&gt;</b> Degree Audits and More</h3>
                                 <li id="sub-nav-menu-item">
-                                    <a href="https://catalog.missouri.edu/">Catalogs</a>
+                                    <a href="/audit">Degree Planner</a>
                                 </li>
                                 <li id="sub-nav-menu-item">
-                                    <a href="https://catalog.missouri.edu/archives/">Archived Catalogs</a>
+                                    <a href="/tutorial">Video Tutorials</a>
                                 </li>
                                 <li id="sub-nav-menu-item">
-                                    <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
+                                    <a href="https://registrar.missouri.edu/academic-calendar/">Academic Calendar</a>
                                 </li>
                     </nav>
                     </div>
+                    
                     <p id="paragraphs">
                     Our degree planner is a tool for students at Mizzou within the College of Engineering to review their academic progress toward the completion of their program of study (degree, minor, certificate, etc.) so that students are able to create degree audits.
                     <br />

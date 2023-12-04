@@ -233,16 +233,15 @@ ul {
 }
 
 #sidebarNav h3 {
-    padding-left: 20px;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 #sidebarNav a {
     text-decoration: none;
     color: black;
     font-weight: bold;
-    font-size: 14px;
-    padding: 10px 10px 10px 40px;
+    font-size: 15px;
+    padding: 8px 10px 10px 40px;
     display: block;
 }
 
@@ -258,6 +257,7 @@ ul {
 }
 
 #degreeProgramTitle {
-    padding: 10px; /* Adjust this value as needed */
-    margin: 0px; /* Remove default margin */
+    padding: 10px;
+    padding-left: 20px;
+    margin: 0px;
 }
