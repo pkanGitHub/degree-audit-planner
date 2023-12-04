@@ -253,7 +253,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
 
     return (
         <>
-            <button id="transcriptButton" onClick={openModal}>Upload Unoffical Transcript</button>
+            <button id="transcriptButton" onClick={openModal}>UPLOAD UNOFFICIAL TRANSCRIPT</button>
             { hideModal ? null :        
                 <div id="uploadModal" onClick={closeModal}>
                 { !userConsents ? 

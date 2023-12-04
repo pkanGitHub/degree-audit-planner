@@ -41,7 +41,7 @@
     justify-content: center;
 }
 
-.transcript1, .transcript2 {
+.transcript1, .transcript2, .transcript3 {
     display: inline-block;
     padding-bottom: 20px;
     background-color: white;
@@ -49,13 +49,13 @@
     border-radius: 1px;
     margin: 50px;
     width: 325px;
-    height: 550px;
+    height: 460px;
     border: 2px solid #F0F0F0;
     font-size: 17px;
     justify-content: center;
 }
 
-.transcript1 img, .transcript2 img {
+.transcript1 img, .transcript2 img, .transcript3 img {
     width: 100%;
     height: auto;
 }
@@ -115,7 +115,7 @@ header {
     gap: 10px;
     flex-shrink: 0;
     border-radius: 1px;
-    border-bottom: 3px solid #000;
+    border-bottom: 2px solid #000;
     color: white;
     font-weight: bold;
     background: #F1B82D;
@@ -130,7 +130,7 @@ header {
     padding: 5px 5px;
     font-size: 15px;
     color: black;
-    border-bottom: 3px solid #F1B82D;
+    border-bottom: 2px solid #F1B82D;
     border-radius: 1px;
     outline: 0;
     overflow:hidden;
@@ -294,4 +294,8 @@ footer {
 #mizzouLogo {
     width: 60px;
     height: 60px;
+}
+
+#cardParagraph {
+    padding-bottom: 30px;
 }

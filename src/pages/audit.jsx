@@ -207,12 +207,10 @@ const Audit = () => {
             <div id="header">
                 <TranscriptUpload setCatalog={setUserCatalog} setCourses={(courses) => {User.setCourses(courses);setUserCourses([...User.getCourses()]);}} hasData={userCourses.length > 0}/>
                 <br/>
-                <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
             <div id='contents'>
             
                 <div id="audit">
-                    <p>{testAuth.email}{testAuth.password}</p>
 
                     <div id="enrollmentSelection">
                         {/* https://www.youtube.com/watch?v=XtS14dXwvwE */}
@@ -300,9 +298,9 @@ const Audit = () => {
 
                     <div id='optionButtons'>
                         {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
-                        <button id='saveButton' >Save</button>
-                        <button id='exportButton' onClick={exportData}>Export</button>
-                        <button id='deleteButton' onClick={deleteAlert}>Delete</button>
+                        <button id='saveButton'>SAVE</button>
+                        <button id='exportButton' onClick={exportData}>EXPORT</button>
+                        <button id='deleteButton' onClick={deleteAlert}>DELETE</button>
                     </div>
                 </div>
                 <hr/>
