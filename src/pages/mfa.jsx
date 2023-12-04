@@ -2,18 +2,26 @@ import "../styles/formStyle.css"
 
 import React, { useState } from 'react'
 import axios from 'axios'
+import Cookies from 'universal-cookie';
 
 const MFA = () => {
     const [verificationCode, setVerificationCode] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
+
+    const cookies = new Cookies(null);
+    if (cookies.get("user")?.id) window.location.href = '/audit';
+
     const handleVerification = async (e) => {
         e.preventDefault()
+
+        const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
         try {
             const response = await axios.post('http://localhost:4001/verify-email', { verificationCode })
             console.log('Server Response:', response);
             if (response.data.success) {
                 console.log('Email verification successful!')
+                cookies.set("user", {id: response.data.id}, {expires: tomorrow}) // takes data and adds it to cookie
                 window.location.href = '/login'
 
             } else {
