@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 const Home = () => {
     return (
-        <div>
+        <div id='fullpage'>
             <div className="intro">
                 <header>
                     <h2 id="mizEngineering">Office of the University Registrar</h2>
@@ -24,57 +24,57 @@ const Home = () => {
             <div className="bodyText">
                 <h1 id="bodyTitle">Degree Planner</h1>
                     <div className="flex-container">
-                    <div id="hyperlinksTable">
-                    <nav id="sidebarNav">
-                        <h3 id="degreeProgramTitle"><b>&gt;</b> Degree Programs and Catalogues</h3>
-                                <li id="sub-nav-menu-item">
-                                    <a href="https://catalog.missouri.edu/">Catalogs</a>
-                                </li>
-                                <li id="sub-nav-menu-item">
-                                    <a href="https://catalog.missouri.edu/archives/">Archived Catalogs</a>
-                                </li>
-                                <li id="sub-nav-menu-item">
-                                    <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
-                                </li>
-                        <h3 id="degreeAuditTitle">Helpful Links</h3>
-                                <li id="sub-nav-menu-item">
-                                    <a href="/audit">Degree Planner</a>
-                                </li>
-                                <li id="sub-nav-menu-item">
-                                    <a href="/tutorial">Video Tutorials</a>
-                                </li>
-                                <li id="sub-nav-menu-item">
-                                    <a href="https://registrar.missouri.edu/academic-calendar/">Academic Calendar</a>
-                                </li>
-                    </nav>
-                    </div>
+                        <div id="hyperlinksTable">
+                            <nav id="sidebarNav">
+                                <h3 id="degreeProgramTitle"><b>&gt;</b> Degree Programs and Catalogues</h3>
+                                        <li id="sub-nav-menu-item">
+                                            <a href="https://catalog.missouri.edu/">Catalogs</a>
+                                        </li>
+                                        <li id="sub-nav-menu-item">
+                                            <a href="https://catalog.missouri.edu/archives/">Archived Catalogs</a>
+                                        </li>
+                                        <li id="sub-nav-menu-item">
+                                            <a href="https://catalog.missouri.edu/degreesanddegreeprograms/">Degree Programs</a>
+                                        </li>
+                                <h3 id="degreeAuditTitle">Helpful Links</h3>
+                                        <li id="sub-nav-menu-item">
+                                            <a href="/audit">Degree Planner</a>
+                                        </li>
+                                        <li id="sub-nav-menu-item">
+                                            <a href="/tutorial">Video Tutorials</a>
+                                        </li>
+                                        <li id="sub-nav-menu-item">
+                                            <a href="https://registrar.missouri.edu/academic-calendar/">Academic Calendar</a>
+                                        </li>
+                            </nav>
+                        </div>
                     
-                    <div id="moreParagraphs">
-                        <h2 id="welcomeTitle">Welcome to the Mizzou Degree Planner!</h2>
-                        <p id="paragraphs">
-                        Our degree planner is a tool for students attending the University of Missouri to review their academic progress toward the completion of their program of study (degree, minor, certificate, etc.) so that students are able to create degree audits. By doing so, students may better prepare for their academic journey by creating customized degree plans for the entirety of their time at the university.
-                        <br />
-                        <br></br>
-                        This tool matches students’ Mizzou and transfer coursework to a program of study’s completion requirements. The degree planner will also account for any other majors, minors, or certificates the student is working towards and/or have completed.
-                        <br />
-                        <br></br>
-                       <em>Any degree audits created by this planner is <b>not</b> a substitute for working with an academic advisor.</em>
-                        </p>
+                        <div id="moreParagraphs">
+                            <h2 id="welcomeTitle">Welcome to the Mizzou Degree Planner!</h2>
+                            <p id="paragraphs">
+                            Our degree planner is a tool for students attending the University of Missouri to review their academic progress toward the completion of their program of study (degree, minor, certificate, etc.) so that students are able to create degree audits. By doing so, students may better prepare for their academic journey by creating customized degree plans for the entirety of their time at the university.
+                            <br />
+                            <br></br>
+                            This tool matches students’ Mizzou and transfer coursework to a program of study’s completion requirements. The degree planner will also account for any other majors, minors, or certificates the student is working towards and/or have completed.
+                            <br />
+                            <br></br>
+                            <p><b><em>This website is to serve as a tool for students to better understand their degree plan. Any degree audits created by this planner are</em> not <em>a substitute for working with an academic advisor. Please reach out to your advisors for specific information about your degree plan.</em></b></p>
+                            </p>
+                            </div>
+                        </div>
+                        <div id="evenMoreParagraphs">
+                            <h1 id="startingTitle">Getting Started</h1>
+                                <p id="paragraphs">
+                                If you have never used the Mizzou Degree Planner before and need to create your first audit, we have two ways to start.
+                                <br />
+                                <br></br>
+                                You can create your first degree planner by <a href="/audit">(1) uploading your degree audit so that our tool can auto-populate your credits and progress</a> OR <a href="/audit">(2) manually choose your classes and credits based on your major(s) and/or minor(s)</a>. Please keep in mind that <em>your degree information will not be saved for you to revisit upon leaving this website unless you have an account and are logged in</em>.
+                                <br />
+                                <br></br>
+                                When you are ready to create your degree plan you will find the necessary links below to redirect you to where you need to go on our website. If you aren't quite sure on how to start, we have video tutorials that provide a general introduction to this tool.
+                                </p>
                         </div>
                     </div>
-                <div id="evenMoreParagraphs">
-                <h1 id="startingTitle">Getting Started</h1>
-                    <p id="paragraphs">
-                    If you have never used the Mizzou Degree Planner before and need to create your first audit, we have two ways to start.
-                    <br />
-                    <br></br>
-                    You can create your first degree planner by <a href="/audit">(1) uploading your degree audit so that our tool can auto-populate your credits and progress</a> OR <a href="/audit">(2) manually choose your classes and credits based on your major(s) and/or minor(s)</a>. Please keep in mind that <em>your degree information will not be saved for you to revisit upon leaving this website unless you have an account and are logged in</em>.
-                    <br />
-                    <br></br>
-                    When you are ready to create your degree plan you will find the necessary links below to redirect you to where you need to go on our website. If you aren't quite sure on how to start, we have video tutorials that provide a general introduction to this tool. Please keep in mind that <em><b>your degree information will not be saved for you to revisit upon leaving this website unless you have an account and are logged in</b></em>
-                    </p>
-                </div>
-            </div>
 
             {/* might need to use columns if possible */}
             <div className="miniTutorial">
