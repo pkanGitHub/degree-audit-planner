@@ -281,11 +281,12 @@ const Audit = () => {
                                             { options }
                                         </select>
                                     </label>
-                                
+                                    <div id = "test">
+                                        <button id="programButton" onClick={handleUserCategories}>ADD PROGRAM</button>
+                                    </div>
                                 </div>
                             )
                         })}
-                        <button id="programButton" onClick={handleUserCategories}>Add Program</button>
                     </div>
                     <hr/>
 
@@ -306,7 +307,7 @@ const Audit = () => {
                     {/* <MajorTest majors={majors} coursesList={coursesList}/> */}
 
                     <div>
-                        <h2>Elective Courses</h2>
+                        <h2 id = "auditHeaders">Elective Courses</h2>
                         <p>If you have other courses you have taken that are outside of your major or transfer courses, enter them here:</p>
                         <ul className="accordion">
                             <li>
@@ -334,9 +335,11 @@ const Audit = () => {
 
 
                     <div id='optionButtons'>
-                        <button id='saveButton' onClick={saveData}>Save</button>
-                        <button id='exportButton' onClick={exportData}>Export</button>
-                        <button id='deleteButton' onClick={deleteAlert}>Delete</button>
+                        {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
+                        <button id='deleteButton' onClick={deleteAlert}>DELETE</button>
+                        <button id='exportButton' onClick={exportData}>EXPORT</button>
+                        <button id='saveButton'>SAVE</button>
+
                     </div>
                 </div>
                 <hr/>

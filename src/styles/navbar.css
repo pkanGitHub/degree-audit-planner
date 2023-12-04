@@ -9,12 +9,6 @@
     align-items: center; /* Center items vertically */
   }
 
-#userprofile {
-  width: 30px;
-  display: flex;
-  align-items: center;
-}
-
 #mizLogo {
     width: 40px;
     height: 40px;
@@ -32,16 +26,17 @@
     align-items: center; /* Center items vertically */
 }
 
-#pfpButton {
-    background: white;
-}
-
 .navbarlink {
     color: #F1B82D;
     text-align: center;
     text-decoration: none;
     padding: 15px;
     font-size: 17px;
+}
+
+.navbarlink:visited {
+    color: #F1B82D; /* Set the color for visited links */
+    text-decoration: none; /* Remove the underline for visited links */
 }
 
 #universityTitle {
@@ -53,20 +48,12 @@
     font-family: 'Kameron', serif;
 }
 
-#pfpButton {
-    background: transparent;
-}
-
 .navbarlink:hover:not(.active) {
     background-color: #3E321A;
 }
 
 #universityTitle:hover:not(.active) {
     color: #F1B82D;
-}
-
-.navbarlink.active {
-    background-color: #04AA6D;
 }
 
 .editButton {
@@ -82,19 +69,6 @@
 .popup {
     text-align: center;
     padding-top: 50px;
-  }
-  
-  /* Add this style to center the form content */
-  #profileDesign {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-#userPFP {
-    width: 200px;
-    height: auto;
   }
 
   .password-input {

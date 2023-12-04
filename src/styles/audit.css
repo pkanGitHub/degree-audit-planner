@@ -1,6 +1,12 @@
+#auditHeaders {
+    border-left: 13px solid #F1B82D;
+    padding: 8px;
+    margin: 0;
+}
+
 #contents
 {
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     background-color: rgb(255, 255, 255);
     width: 90%;
     align-items: center;
@@ -30,7 +36,10 @@
 
 #addedSectionEnroll{
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: auto;
 }
 
 #addedSectionEnroll label{
@@ -41,8 +50,8 @@
 
 #addedSectionEnroll select {
     padding: 5px;
-    border-radius: 3px;
     flex-grow: 1;
+    height: 30px;
 }
 
 #addedSectionEnroll label:first-child, #addedSectionEnroll label:nth-child(2) {
@@ -62,43 +71,48 @@ button{
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 1px;
     font-weight: bold;
     align-items: center;
 }
 
 #transcriptButton {
-    border-radius: 1px;
-    background-color: black;
-    color: white;
-    border-bottom: 2px solid #F1B82D;
+    background-color: #F1B82D;
+    color: black;
+    margin: 30px;
+    border-bottom: 2px solid black;
 }
 
 #transcriptButton:hover{
-    background-color: #444444;
+    background-color: #F7D88D;
 }
 
-#programButton{
-    background-color: #F1B82D;
-}
-#programButton:hover{
+#programButton {
     background-color: #ffdb7f;
+    color: black;
+    border: 2px solid #F1B82D;
+    padding: 10px;
+    display: flex;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    min-width: 150px; /* Set your desired minimum width */
+}
+
+#programButton:hover{
+    background-color: #FFF3D6;
 }
 
 #addCourseButton {
-    
-    background-color: #F1B82D;
+    background-color: #ffdb7f;
     color: black;
-
+    border: 1.5px solid #F1B82D;
 }
 
 #addCourseButton:hover{
-    background-color: #ffdb7f;
+    background-color: #FFF3D6;
 }
 
 #requiredCourse, #choiceCourse
 {
-    background-color: white;
     display: inline-block;
     padding: 5px;
     vertical-align: top;
@@ -112,7 +126,7 @@ button{
 }
 
 .courseTable {
-    border: 1px solid gray;
+    border: 1px solid #F1B82D;
     border-collapse: collapse;
     padding: 10px;
     width: 300px;
@@ -121,7 +135,7 @@ button{
 .courseTable th, td
 {
     padding: 5px;
-    background-color: rgb(230, 230, 230);
+    background-color: #FFF3D6;
     overflow-y: scroll;
     height: 30px;
 }
@@ -187,6 +201,7 @@ body{
 }
 
 hr{
+    margin: 15px;
     color: rgb(231, 231, 231);
 }
 
@@ -205,36 +220,36 @@ hr{
 }
 
 #exportButton{
-    background-color: black;
-    border-bottom: 2px solid #F1B82D;
-    color: white;
+    background-color: #ffdb7f;
+    border: 2px solid #F1B82D;
+    color: black;
     width: 15%;
 }
 
 #exportButton:hover{
-    background-color: #444444;
+    background-color: #FFF3D6;
 }
 
 #saveButton{
-    background-color: black;
-    border-bottom: 2px solid #F1B82D;
-    color: white;
+    background-color: #ffdb7f;
+    border: 2px solid #F1B82D;
+    color: black;
     width: 15%;
 }
 
 #saveButton:hover{
-    background-color: #444444;
+    background-color: #FFF3D6;
 }
 
 #deleteButton{
-    background-color: black;
-    border-bottom: 2px solid #F1B82D;
-    color: white;
+    background-color: #ffdb7f;
+    border: 2px solid #F1B82D;
+    color: black;
     width: 15%;
 }
 
 #deleteButton:hover{
-    background-color: #444444;
+    background-color: #FFF3D6;
 }
 
 #twoSemesterPlan, #threeSemesterPlan, .planTable{
@@ -344,6 +359,7 @@ hr{
 
 #transferCourseInput label, input[type="text"]{
     font-weight: normal;
+    
 }
 
 #errorMessage{
