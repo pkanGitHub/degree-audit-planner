@@ -239,8 +239,8 @@ function AuditPlan(data, resolve, reject) {
             inPrograms = false;
         }
         else if (inPrograms) {
-            const [title, year] = line.split("-");
-            userData.Programs.push({title: title, year: year});
+            const [title, year1, year2] = line.split("-");
+            userData.Programs.push({title: title, year: (year1 + "-" + year2).trim()});
         }
         else if (line.match(/Year \d/)) {
             year++;

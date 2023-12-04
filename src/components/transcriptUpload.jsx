@@ -38,7 +38,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         };
         GetInfo(uploadedFile).then(data => {
             console.log(data);
-            addPrograms(data.Programs, data.FileType);
+            addPrograms(data.Programs);
             console.log(data.Courses);
             setCourses(data.Courses);
             /*setCourses(Object.entries(data.CourseWork)
@@ -95,12 +95,10 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         });;
     }
 
-    const addPrograms = (programs, fileType) => {
+    const addPrograms = programs => {
         const list = programs.map(program => {
                 var [name, type] = program.title.split("-");
-                console.log(program);
-                console.log(name.replace(/\s+/g, ' '));
-                const search = getProgramsBySearch(name.replace(/\s+/g, ' '), program.year, undefined);
+                const search = getProgramsBySearch(name.replace(/\s+/g, ' ').trim(), program.year, undefined);
                 console.log(search);
                 return {original: program.title, year: program.year, results: search}
         })
@@ -127,7 +125,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
     }
 
     const closeModal = e => {
-        if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close" && e.target.id != "no") return;
+        if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close" && e.target.id !== "no") return;
         setHidden(true);
         setFile(null);
         setPreview(null);
@@ -185,8 +183,8 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                 { programs.map(program => (
                     <>
                         <p>{ program.original } | { program.year }</p>
-                        { program.results.length > 1 ?
-                            <select>
+                        { program.results.length > 0 ?
+                            <select style={program.results.length === 1 ? {display: "none"} : {}}>
                                 { program.results?.map(result => (
                                     <option>{result.title}</option>
                                 ))}

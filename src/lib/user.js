@@ -38,9 +38,9 @@ export function addPlan(name, year, type) {
     console.log(program);
     switch (type.toLowerCase()) {
         case "majors":
-        case "major": majors.push(program[0]); break;
-        case "minor": minors.push(program[0]); break;
-        case "cert": certificates.push(program[0]); break;
+        case "major": majors.push({ title: program[0].title, year: year }); break;
+        case "minor": minors.push({ title: program[0].title, year: year }); break;
+        case "cert": certificates.push({ title: program[0].title, year: year }); break;
         default: return;
     }
 
@@ -59,8 +59,8 @@ export function getCourses() {
     return courses;
 }
 
-export function addMajor(major) {
-    majors.push(major);
+export function addMajor(major, year) {
+    majors.push({ title: major, year: year });
 }
 
 export function addPrograms(programs) {

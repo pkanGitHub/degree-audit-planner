@@ -67,6 +67,7 @@ export function getProgramByExactName(name, year) {
 
 export function getProgramsBySearch(name_segment, year, category=undefined) {
 
+    console.log(year);
     if (category === undefined) {
         var programs = [];
         programs = programs.concat(getProgramsBySearch(name_segment, year, "major"))
