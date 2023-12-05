@@ -1,18 +1,17 @@
 import React, {useState} from 'react';
 import "../styles/formStyle.css";
-import Cookies from 'universal-cookie';
+// import Cookies from 'universal-cookie';
 import CookiePopup from '../components/cookiepopup';
 import { API } from 'aws-amplify';
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [visible, setVisible] = useState(false);
     const [formData, setFormData] = useState({ email: '', password: '' })
     const [errorMsg, setErrorMsg] = useState(null)
 
-
-    const cookies = new Cookies(null);
-    if (cookies.get("user")?.id) window.location.href = '/audit';
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -20,11 +19,9 @@ const Login = () => {
 
         API.post('DatabaseAPI', "/auth/login", { body: formData })
         .then(response => {
-            // grabs today's date and then sets the date to tomorrow, used for cookie expiry
-            var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-            cookies.set("user", {email: formData.email, id: response.id}, {expires: tomorrow}) // takes data and adds it to cookie
-            // Redirect
-            window.location.href = '/audit'
+            console.log('Login successful on the frontend')
+            console.log(response)
+            navigate('/loginMFA');
         })
         .catch(error => {
             setErrorMsg(error.response.data.message)

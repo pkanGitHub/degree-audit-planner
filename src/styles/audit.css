@@ -21,11 +21,13 @@
 }
 
 .programDelete{
-    background-color: #F1B82D;
+    background-color: #ffdb7f;
+    border: 2px solid #F1B82D;
+    color: black;
 
 }
 .programDelete:hover{
-    background-color: #ffdb7f;
+    background-color: #FFF3D6;
 }
 
 #enrollmentSelection {

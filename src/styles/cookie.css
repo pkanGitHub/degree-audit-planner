@@ -1,5 +1,5 @@
 #cookieInfo{
-    padding: 15px;
+    padding: 20px;
     display: inline-block;
     display: flex;
     margin-left: auto;
@@ -26,12 +26,7 @@
     display: flex;
     justify-content: space-between;
 }
-#cookie{
-    display: inline-block;
-    flex: 0.75;
-}
 #cookieAbout{
     display: inline-block;
-    flex: 1.25;
     text-align: left;
 }

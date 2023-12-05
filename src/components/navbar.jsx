@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Popup from 'reactjs-popup';
 import '../styles/navbar.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import mizzouLogo from "../MU-StackedMU-4C.png";
 import { EyeInvisibleOutlined, EyeOutlined, CloseOutlined } from "@ant-design/icons";
 
@@ -22,7 +22,7 @@ const NavBar = () => {
   const cookies = new Cookies(null);
   const user = cookies.get("user")
   const loggedIn = Boolean(user?.id);
-
+  const navigate = useNavigate();
 
 //   let testAuth = "";
 //     try{
@@ -40,7 +40,7 @@ const NavBar = () => {
     })
   
     const handleSignOut = () => {
-        window.location.href = '/'
+        navigate('/');
         cookies.remove("user")
     }
 
@@ -76,7 +76,7 @@ const NavBar = () => {
 
       if (response.status === 201) {
         console.log('User sign up successfully');
-        window.location.href = '/login';
+        navigate('/login');
       } else {
         const data = await response.json();
         console.error(data.message);

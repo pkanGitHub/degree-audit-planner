@@ -22,7 +22,7 @@ const User = () => mongoose.model('User', require('./user'));
 const timeZone = 'America/Chicago'
 const codeExpirationTime = () => {
     const min = 5
-    const codeExpires = new Date(Date.now() + min * 60 * 1000).toLocaleString('en-US', { timeZone })
+    const codeExpires = new Date(Date.now() + (min * 60 * 1000)).toLocaleString('en-US', { timeZone })
     return codeExpires
 }
 
@@ -112,20 +112,16 @@ app.post('/auth/signup', async (req, res) => {
     // Set the expiration time in cron-config
     const expirationTime = codeExpirationTime()
 
-    const user = await User().create({ 
+    await User().create({ 
         email: email, 
         password: hashedPassword, 
         verificationCode: verificationCode, 
-        verificationCodeExpires: expirationTime,
-        // TEMP ************************************************************!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        emailVerified: true
+        verificationCodeExpires: expirationTime
     })
 
-    // const emailResult = await sendVerificationCode(email, verificationCode);
-    const emailResult = "email not set up";
+    const emailResult = await sendVerificationCode(email, verificationCode);
     
-    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.', result: emailResult, id: user._id })
-    // return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.', result: emailResult })
+    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.', result: emailResult })
   } catch (error) {
     return res.status(500).json({ error: 'Sign up failed' })
   }
@@ -139,12 +135,14 @@ app.post('/auth/verify-email', async(req, res) => {
       return res.status(404).json({ error: 'User not found or invalid verification code' })
     }
     // Check if the verification code matches and not expired
-    if (user.verificationCodeExpires && user.verificationCodeExpires > new Date()) {
+
+
+    if (user.verificationCodeExpires && new Date(user.verificationCodeExpires).getTime() > new Date().getTime()) {
       user.emailVerified = true
       await user.save()
-      res.status(200).json({ success: true, msg: 'Email verification successful' })
+      res.status(200).json({ success: true, msg: 'Email verification successful', ev:  user.verificationCodeExpires })
     } else {
-      res.status(400).json({ success: false, error: 'invalid_code' })
+      res.status(400).json({ success: false, error: 'invalid_code', ev:  user.verificationCodeExpires})
     }
   } catch (error) {
     res.status(500).json({ error: 'Failed to verify email' })
@@ -153,25 +151,53 @@ app.post('/auth/verify-email', async(req, res) => {
 
 // login
 app.post("/auth/login", (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    if (err) {
-      return res.status(500).json({ message: 'Internal server error' })
-    }
-
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error('Error during authentication:', err)
+        return res.status(500).json({ message: 'Internal server error' })
+      }
+  
       if (!user) {
-        // Authentication failed
+        console.log('Incorrect email or password on the server')
         return res.status(401).json({ message: 'Incorrect email or password' })
       }
   
-      // Authentication succeeded
-      req.logIn(user, (err) => {
+      req.logIn(user, async(err) => {
         if (err) {
+          console.error('Error during login:', err)
           return res.status(500).json({ message: 'Internal server error' })
         }
-
-        return res.status(200).json({ message: 'Authentication successful', id: user._id  })
+        const loginVerificationCode = Math.floor(100000 + Math.random() * 900000)
+        user.loginVerificationCode = loginVerificationCode
+        await user.save()
+        const emailResult = await sendVerificationCode(user.email, loginVerificationCode)
+        console.log(emailResult)
+  
+        console.log('Authentication successful on the server')
+        return res.status(200).json({ message: 'Authentication successful', id: user._id })
       })
     })(req, res, next)
+  })
+  
+  app.post('/auth/verify-login', async(req, res) => {
+    const { loginVerificationCode } = req.body
+    try {
+      const user = await User().findOne({ loginVerificationCode })
+      if (!user) {
+        return res.status(404).json({ error: 'User not found or invalid verification code' })
+      }
+      // if code match, change code to null upon submit
+      if (user.loginVerificationCode) {
+        user.loginVerificationCode = null
+        await user.save()
+        res.status(200).json({ success: true, msg: 'User verification successful', id: user._id })
+      } else {
+        res.status(400).json({ success: false, error: 'invalid_code' })
+      }
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: 'Failed to verify user' })
+    }
   })
 
 app.post("/auth/user/load", (req, res) => {

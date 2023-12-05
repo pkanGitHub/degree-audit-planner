@@ -1,13 +1,12 @@
 import "../styles/formStyle.css"
 
 import React, { useState } from 'react'
-import axios from 'axios'
 import { API } from 'aws-amplify';
 import Cookies from 'universal-cookie';
 import { useNavigate } from "react-router-dom";
 
-const MFA = () => {
-    const [verificationCode, setVerificationCode] = useState('')
+const LoginMFA = () => {
+    const [loginVerificationCode, setLoginVerificationCode] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
 
     const navigate = useNavigate();
@@ -20,25 +19,19 @@ const MFA = () => {
         const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
         try {
-            const response = await API.post('DatabaseAPI', "/auth/verify-email", { body: { verificationCode: verificationCode }})
-            console.log('Server Response:', response);
-            if (response.data.success) {
-                console.log('Email verification successful!')
+            API.post('DatabaseAPI', "/auth/verify-login", { body: {loginVerificationCode: loginVerificationCode} })
+            .then(response => {
+                console.log('Login verification successful!')
                 cookies.set("user", {id: response.data.id}, {expires: tomorrow}) // takes data and adds it to cookie
-                navigate('/login');
-
-            } else {
-                console.log(response);
-                if (response.data.error === 'invalid_code') {
-                    setErrorMsg('Invalid verification code. Please try again.');
-                } else {
-                    // Display a generic error message for other errors
-                    setErrorMsg('Failed to verify email. Please try again.');
-                }
-            }
+                navigate('/audit');
+            })
+            .catch(error => {
+                console.log(error);
+                setErrorMsg('Invalid verification code. Please try again.');
+            })
         } catch (error) {
             console.error(error)
-            setErrorMsg('Failed to verify email. Please try again.')
+            setErrorMsg('Failed to verify user. Please try again.')
         }
     }
 
@@ -51,8 +44,8 @@ const MFA = () => {
                 <form>
                     <div id="formContent">
                         <label htmlFor="code">Enter Code</label>
-                        <input type="text" name="code" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-                        <button onClick={handleVerification}>Verify Email</button>
+                        <input type="text" name="code" value={loginVerificationCode} onChange={(e) => setLoginVerificationCode(e.target.value)} />
+                        <button onClick={handleVerification}>Verify Login</button>
                     </div>
                     <br/>
                 </form>
@@ -64,4 +57,4 @@ const MFA = () => {
                     <br/>
                     <a href="/forgotpassword">Cancel</a> */
 
-export default MFA;
+export default LoginMFA;

@@ -4,24 +4,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { read } from '../lib/user';
 import { API } from 'aws-amplify';
+import { useNavigate } from "react-router-dom";
 
 const ResetPassword = () => {
+    const navigate = useNavigate();
     const cookies = new Cookies(null);
     const user = cookies.get("user");
     const loggedIn = Boolean(user?.id);
 
-    if (!loggedIn) window.location.href = '/';
-
-    // let testAuth = null;
-    // try{
-    //     testAuth = cookies.get("forgotpass")
-    //     if(testAuth === undefined){
-    //         testAuth = "";
-    //     }
-    // }
-    // catch(err){
-    //     console.log(err)
-    // }
+    if (!loggedIn) navigate('/');
 
     useEffect(() => {
         if (!user?.email) read(user.id);
@@ -44,18 +35,17 @@ const ResetPassword = () => {
             return
         }
 
-        try {
-            API.post('DatabaseAPI', "/auth/resetpassword", { body: data })
-            .then(response => {
-                console.log('Server Response:', response);
-                console.log('Password change successful!')
-                alert("You have successfully changed your password!")
-                window.location.href = '/'
-            })
-        } catch (error) {
+        API.post('DatabaseAPI', "/auth/resetpassword", { body: data })
+        .then(response => {
+            console.log('Server Response:', response);
+            console.log('Password change successful!')
+            alert("You have successfully changed your password!")
+            navigate('/login');
+        })
+        .catch(error => {
             console.error(error)
             setError('Failed to update password. Please try again.')
-        }
+        })
     }
 
     const handleChange = (e) => {
@@ -66,13 +56,11 @@ const ResetPassword = () => {
     return (
         <div className="formSection">
             <div id="formDesign">
-
                 <h1>Reset Password</h1>
 
                 <p>For User: {user.email}</p>
                 <p id="errorMessage">{error}</p>
                 <form onSubmit={handleSubmit}>
-                    
                     <div id="formContent">
                         <label>New Password
                             <input type="password" name="password" value={data.password} onChange={handleChange}/>
@@ -82,15 +70,12 @@ const ResetPassword = () => {
                             <input type="password" name="passwordAgain" value={data.passwordAgain} onChange={handleChange}/>
                         </label>
                     </div>
-                    
                     <br/>
                     <div id="buttons">
                         <a href="/login" id="backButton">Back</a>
                         {/* will want this to have a pop up that says "password has been successfully changed*/}
                         <button type="submit" id="confirm">Confirm Changes</button>
                     </div>
-                    
-
                 </form>
             </div>
         </div>

@@ -222,19 +222,19 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         
         return (
             <div className='confirmButton'>
-            <h1>Upload Notice</h1>
-            <p>By clicking Yes, you are agreeing to the <TermsCondition/>. If you do not agree, hit no and return to the audit page.</p>
-                    
-            <div id="confirmButtonsDiv">
-                <button id="no" onClick={closeModal}>No</button>
-                <button id="yes"
-                onClick={() => {
-                    setConsent(true);
-                }}
-                >
-                Yes
-                </button>
-            </div>
+                <h1>Upload Notice</h1>
+                <p>By clicking Yes, you are agreeing to the <TermsCondition/>. If you do not agree, hit no and return to the audit page.</p>
+                        
+                <div id="confirmButtonsDiv">
+                    <button id="no" onClick={closeModal}>No</button>
+                    <button id="yes"
+                    onClick={() => {
+                        setConsent(true);
+                    }}
+                    >
+                    Yes
+                    </button>
+                </div>
             
             </div>
         );

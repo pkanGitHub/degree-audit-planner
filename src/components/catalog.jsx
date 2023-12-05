@@ -19,7 +19,7 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
             // this first if basically says take the first filtered option. did this because would grab names that match but have extra. for example, minor in social justice would also return minor in social justice for educators
             <div key={selectedOption?._id}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
-                    <h2>{selectedOption?.title} {year}</h2>
+                    <h2 id="auditHeaders">{selectedOption?.title} {year}</h2>
                     <button className="programDelete" onClick={removeCatalog}>Delete</button>
                 </div>
                 
@@ -201,7 +201,7 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                     
                 }})}
 
-                <h4><em>Categories denoted with a * means that there was not enough information for our database to produce a result. For a more accurate understanding of what classes are needed for these programs/sections, please visit the program site at: <a href={selectedOption?.url}>{selectedOption?.title}.</a></em></h4>
+                <h4><em>Categories denoted with a * means that there was not enough information for our database to produce a result. For a more accurate understanding of what classes are needed for these programs/sections, please visit the program site at: <a  target="_blank"  href={selectedOption?.url}>{selectedOption?.title}.</a></em></h4>
                
             </div>
 

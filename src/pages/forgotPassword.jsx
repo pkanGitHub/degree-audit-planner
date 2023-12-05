@@ -2,9 +2,11 @@ import "../styles/password.css"
 import image from "../password.png"
 import Cookies from "universal-cookie";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
     const cookies = new Cookies(null);
+    const navigate = useNavigate();
     // grabs today's date and then sets the date to tomorrow, used for cookie expiry
     var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
 
@@ -34,7 +36,7 @@ const ForgotPassword = () => {
                 console.log('Email exists')
                 cookies.set("forgotpass", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
                 // Redirect
-                window.location.href = '/passwordMFA'
+                navigate('/passwordMFA');
             } else {
                 // show error message on browser or console...
                 setErrorMsg(data.msg)

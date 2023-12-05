@@ -5,6 +5,7 @@ import { API } from 'aws-amplify';
 import "../styles/formStyle.css"
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Cookies from 'universal-cookie';
+import { redirect, useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const [visible, setVisible] = useState(false);
@@ -27,8 +28,10 @@ const SignUp = () => {
 
     const [error, setError] = useState("")
 
+    const navigate = useNavigate();
     const cookies = new Cookies(null);
-    if (cookies.get("user")?.id) window.location.href = '/audit';
+    if (cookies.get("user")?.id) navigate('/audit');
+
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -54,15 +57,10 @@ const SignUp = () => {
         .then(response => {
             console.log(`response: ${response}`);
             console.log('User sign up successfully');
-            // window.location.href = '/mfa'
-            
-            // Temp till email is set up
-            const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-            cookies.set("user", {id: response.id}, {expires: tomorrow}) // takes data and adds it to cookie
-            window.location.href = '/audit'
+            navigate('/mfa');
         })
         .catch(error => {
-            console.error(error.response.data.message);
+            console.error(error);
         })
     }
 

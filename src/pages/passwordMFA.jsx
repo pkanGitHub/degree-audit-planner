@@ -1,9 +1,11 @@
 import { useState } from "react"
 import Cookies from "universal-cookie";
-import axios from "axios";
+import { API } from 'aws-amplify';
+import { useNavigate } from "react-router-dom";
 
 const PasswordMFA = () => {
     const cookies = new Cookies(null);
+    const navigate = useNavigate();
 
     let testAuth = null;
     try{
@@ -16,67 +18,42 @@ const PasswordMFA = () => {
         console.log(err)
     }
 
-    const [error, setError] = useState("")
-    const [verificationCode, setVerificationCode] = useState('')
-    const [verificationRequestInProgress, setVerificationRequestInProgress] = useState(false)
-
-    const handleSubmit = async (e) => {
+    const [errorMsg, setErrorMsg] = useState("")
+    const [resetPwdVerificationCode, setResetPwdVerificationCode] = useState('')
+  
+    const handleVerification = async (e) => {
         e.preventDefault()
-        if(!verificationCode)
-        {
-            setError("You must enter a code.")
-        }
-        else{
-            window.location.href = '/resetpassword'
-        }
-    
-        
-    }
-
-    const handleChange = (e) => {
-        setVerificationCode(e.target.value)
-        setError("")
-      }
-
-    // this was just me testing out stuff
-    const handleVerification = async () => {
         try {
-            setVerificationRequestInProgress(true);
-            const response = await axios.post('http://localhost:4001/verify-user', { verificationCode })
-            if (response.data.success) {
-                console.log(response.data.message)
-                // window.location.href = '/audit'
-            } else {
-                setError(response.data.message)
-                console.log(response.data.message || 'Invalid verification code. Please try again.')
-            }
+            API.post('DatabaseAPI', "/auth/verify-user", { body: {resetPwdVerificationCode: resetPwdVerificationCode} })
+            .then(response => {
+                console.log(response)
+                navigate('/resetpassword');
+            })
+            .catch(error => {
+                setErrorMsg(error)
+                console.log(error.message || 'Invalid verification code. Please try again.')
+            })
         } catch (error) {
             console.error(error)
-            console.log('Failed to verify email. Please try again.')
-        } finally {
-            setVerificationRequestInProgress(false);
+            setErrorMsg('Failed to verify user. Please try again.')
         }
     }
 
     return(
         <div className="formSection">
             <div id="formDesign" className="mfa">
-                <form onSubmit={handleSubmit}>
                     <h1>2-Step Verification</h1>
                     <h2>User: {testAuth.email}</h2>
                     <h2>Please confirm this is you. We sent a verification code to your email.</h2>
-                    <p id="errorMessage">{error}</p>
+                    {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
+                <form>
                     <div id="formContent">
                         <label htmlFor="code">Enter Code</label>
-                        <input type="text" name="code" value={verificationCode} onChange={handleChange} />
+                        <input type="text" name="code" value={resetPwdVerificationCode} onChange={(e) => setResetPwdVerificationCode(e.target.value)} />
                         <div id="mfaButtons">
                             <a href="/forgotpassword" id="mfaBack">Cancel</a>
-                            <button type="submit" id="mfaSubmit">Reset Password</button>
+                            <button type="submit" id="mfaSubmit" onClick={handleVerification}>Verify Reset Code</button>
                         </div>
-                        
-                        {/* <button className="submitButton" id="mfabutton" onClick={handleVerification} disabled={verificationRequestInProgress}>
-                            {verificationRequestInProgress ? 'Verifying...' : 'Verify Email'}
-                        </button> */}
                     </div>
                     <br/>
                 </form>

@@ -13,9 +13,11 @@ const userSchema = mongoose.Schema({
         credits: String
     }],
     generalEducationCompleted: { type: Boolean, default: false },
-    emailVerified: { type: Boolean, default: false }, // Add this field for email verification
+    emailVerified: { type: Boolean, default: false },
     verificationCode: { type: String },
-    verificationCodeExpires: { type: Date }
+    verificationCodeExpires: { type: Date },
+    loginVerificationCode: { type: String },
+    resetPwdVerificationCode: { type: String }
 })
 
 module.exports = mongoose.model('User', userSchema)
