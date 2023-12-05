@@ -18,8 +18,6 @@ const ResetPassword = () => {
     }
 
     const [error, setError] = useState("")
-
-
     const [data, setData] = useState({email: testAuth.email, password: "", passwordAgain: ""})
 
     const handleSubmit = async (e) => {
@@ -42,11 +40,8 @@ const ResetPassword = () => {
                 cookies.remove("forgotpass")
                 alert("You have successfully changed your password!")
                 window.location.href = '/login'
-
             } else {
-               
                 setError('Failed to update password. Please try again.');
-               
             }
         } catch (error) {
             console.error(error)
@@ -62,13 +57,10 @@ const ResetPassword = () => {
     return (
         <div className="formSection">
             <div id="formDesign">
-
                 <h1>Reset Password</h1>
-
                 <p>For User: {testAuth.email}</p>
                 <p id="errorMessage">{error}</p>
                 <form onSubmit={handleSubmit}>
-                    
                     <div id="formContent">
                         <label>New Password
                             <input type="password" name="password" value={data.password} onChange={handleChange}/>
@@ -78,15 +70,12 @@ const ResetPassword = () => {
                             <input type="password" name="passwordAgain" value={data.passwordAgain} onChange={handleChange}/>
                         </label>
                     </div>
-                    
                     <br/>
                     <div id="buttons">
                         <a href="/forgotpassword" id="backButton">Back</a>
                         {/* will want this to have a pop up that says "password has been successfully changed*/}
                         <button type="submit" id="confirm">Confirm Changes</button>
                     </div>
-                    
-
                 </form>
             </div>
         </div>

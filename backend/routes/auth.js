@@ -175,12 +175,9 @@ router.post("/email", async(req, res) => {
     }
     // Generate a verification code
     const verificationCode = Math.floor(100000 + Math.random() * 900000)
-    // Store the verification code in the session
-    req.session.verificationCode = verificationCode
-    console.log(`what should be stored: ${req.session.verificationCode}`)
-    req.session.save()
+    existUser.resetPwdVerificationCode = verificationCode
+    existUser.save()
 
-    // console.log('Before sending verification code email')
     const emailResult = await sendVerificationCode(email, verificationCode)
     console.log(emailResult)
 
@@ -189,6 +186,27 @@ router.post("/email", async(req, res) => {
   } catch (error) {
       console.error(error)
       return res.status(500).json({ error: 'Email has failed.' })
+  }
+})
+
+router.post('/verify-user', async(req, res) => {
+  const { resetPwdVerificationCode } = req.body
+  try {
+    const user = await User.findOne({ resetPwdVerificationCode })
+    if (!user) {
+      return res.status(404).json({ error: 'User not found or invalid verification code' })
+    }
+    // if code match, change code to null upon submit
+    if (user.resetPwdVerificationCode) {
+      user.resetPwdVerificationCode = null
+      await user.save()
+      res.status(200).json({ success: true, msg: 'User verification successful', id: user._id })
+    } else {
+      res.status(400).json({ success: false, error: 'invalid_code' })
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to verify user' })
   }
 })
 

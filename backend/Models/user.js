@@ -17,6 +17,7 @@ const userSchema = mongoose.Schema({
     verificationCode: { type: String },
     verificationCodeExpires: { type: Date },
     loginVerificationCode: { type: String },
+    resetPwdVerificationCode: { type: String }
 })
 
 module.exports = mongoose.model('User', userSchema)
