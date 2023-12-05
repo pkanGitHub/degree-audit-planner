@@ -66,7 +66,7 @@ router.post('/signup', async (req, res) => {
 
 // reset password
 router.post("/resetpassword", async(req, res) => {
-  const { email, passwordAgain } = req.body 
+  const { email, password } = req.body 
 
   try{
     // check if user already exists
@@ -76,7 +76,7 @@ router.post("/resetpassword", async(req, res) => {
     }
 
     const salt = await bcrypt.genSalt(10)
-    const hashedPassword = await bcrypt.hash(passwordAgain, salt)
+    const hashedPassword = await bcrypt.hash(password, salt)
     // Generate a verification code
   
     existUser.password = hashedPassword

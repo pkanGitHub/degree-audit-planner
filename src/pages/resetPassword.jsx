@@ -1,26 +1,36 @@
 import "../styles/password.css"
 import Cookies from "universal-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import { read } from '../lib/user';
+import { API } from 'aws-amplify';
 
 const ResetPassword = () => {
     const cookies = new Cookies(null);
+    const user = cookies.get("user");
+    const loggedIn = Boolean(user?.id);
 
-    let testAuth = null;
-    try{
-        testAuth = cookies.get("forgotpass")
-        if(testAuth === undefined){
-            testAuth = "";
-        }
-    }
-    catch(err){
-        console.log(err)
-    }
+    if (!loggedIn) window.location.href = '/';
+
+    // let testAuth = null;
+    // try{
+    //     testAuth = cookies.get("forgotpass")
+    //     if(testAuth === undefined){
+    //         testAuth = "";
+    //     }
+    // }
+    // catch(err){
+    //     console.log(err)
+    // }
+
+    useEffect(() => {
+        if (!user?.email) read(user.id);
+    })
 
     const [error, setError] = useState("")
 
 
-    const [data, setData] = useState({email: testAuth.email, password: "", passwordAgain: ""})
+    const [data, setData] = useState({email: user.email, password: "", passwordAgain: ""})
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -35,19 +45,13 @@ const ResetPassword = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:4001/resetpassword',  data )
-            console.log('Server Response:', response);
-            if (response.data.success) {
+            API.post('DatabaseAPI', "/auth/resetpassword", { body: data })
+            .then(response => {
+                console.log('Server Response:', response);
                 console.log('Password change successful!')
-                cookies.remove("forgotpass")
                 alert("You have successfully changed your password!")
-                window.location.href = '/login'
-
-            } else {
-               
-                setError('Failed to update password. Please try again.');
-               
-            }
+                window.location.href = '/'
+            })
         } catch (error) {
             console.error(error)
             setError('Failed to update password. Please try again.')
@@ -65,7 +69,7 @@ const ResetPassword = () => {
 
                 <h1>Reset Password</h1>
 
-                <p>For User: {testAuth.email}</p>
+                <p>For User: {user.email}</p>
                 <p id="errorMessage">{error}</p>
                 <form onSubmit={handleSubmit}>
                     
@@ -81,7 +85,7 @@ const ResetPassword = () => {
                     
                     <br/>
                     <div id="buttons">
-                        <a href="/forgotpassword" id="backButton">Back</a>
+                        <a href="/login" id="backButton">Back</a>
                         {/* will want this to have a pop up that says "password has been successfully changed*/}
                         <button type="submit" id="confirm">Confirm Changes</button>
                     </div>

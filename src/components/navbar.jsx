@@ -8,64 +8,41 @@ import { EyeInvisibleOutlined, EyeOutlined, CloseOutlined } from "@ant-design/ic
 
 // import can delete later
 import "../styles/audit.css";
-import CatalogItems from "../components/catalog";
-import GenEdsModel from "../components/genEds";
-import ExtraCourses from "../components/extraCourses";
-import TransferCourse from "../components/transferCourses";
-import SemesterPlan from "../components/semesterplan";
-import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
-import TranscriptUpload from "../components/transcriptUpload";
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Cookies from "universal-cookie";
+import { read, userCerts } from "../lib/user"
 
 
 const NavBar = () => {
-  const [showLogin, setShowLogin] = useState(false)
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
 
-  const handleSignOut = () => {
-    window.location.href = '/'
-    cookies.remove("user")
-  }
-
-  
-
-
-  // this is testing for user information, may want to use this to query data, can do this in use effect!
 
 
   const cookies = new Cookies(null);
+  const user = cookies.get("user")
+  const loggedIn = Boolean(user?.id);
 
 
-  let testAuth = null;
-    try{
-        testAuth = cookies.get("user")
-        if(testAuth === undefined){
-            testAuth = ""
-        }
-    }
-    catch(err){
-        console.log(err)
-    }
+//   let testAuth = "";
+//     try{
+//         testAuth = cookies.get("user")
+//         if(testAuth === undefined){
+//             testAuth = ""
+//         }
+//     }
+//     catch(err){
+//         console.log(err)
+//     }
+
+    useEffect(() => {
+        if (loggedIn) read(user?.id);
+    })
   
-
-  useEffect(()=> {
-    try{
-      testAuth = cookies.get("user")
-      // checks if has cookie, if does, does not render login and sign up, else does render login and sign up
-      if(testAuth?.id){
-        setShowLogin(false)
-      }
-      else{
-        setShowLogin(true)
-        testAuth = ""
-      }
-    }catch(err){
-      console.log(err)
+    const handleSignOut = () => {
+        window.location.href = '/'
+        cookies.remove("user")
     }
-  }, [])
 
   
 
@@ -119,13 +96,13 @@ const NavBar = () => {
       <div className='rightItems'>
         <Link to="/" className='navbarlink'>Home</Link>
 
-        {showLogin ? <Link to="/login" className='navbarlink'>Login</Link> : null}
-        {showLogin ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
-        {showLogin ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
+        {!loggedIn ? <Link to="/login" className='navbarlink'>Login</Link> : null}
+        {!loggedIn ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
+        {!loggedIn ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
 
-        {showLogin ? null : <Popup
+        {!loggedIn ? null : <Popup
             contentStyle={{ borderRadius: '0px', width: '40%', height: '50%' }}
-            trigger={<Link to="/" className="navbarlink" onClick={() => handleButtonClick()}>Profile</Link>}
+            trigger={<Link className="navbarlink" onClick={() => handleButtonClick()}>Profile</Link>}
             modal nested
           >
             {(close) => (
@@ -147,15 +124,12 @@ const NavBar = () => {
               >
                 <CloseOutlined />
               </button>
-              
-                  <form onSubmit={handleSubmit}>
-                    
                       <label>Email
                         <div id="formContent">
                           <input className="userInfo"
-                            value={testAuth.email}
+                            value={user.email}
                             type="text"
-                            placeholder={testAuth.email}
+                            placeholder={user.email}
                             readOnly={true}
                           />
                           </div>
@@ -163,10 +137,10 @@ const NavBar = () => {
                       
                       <br/>
 
-                      <label>Password
+                      {/* <label>Password
                         <div className="password-input" id="formContent">
                           <input className="userInfo"
-                            value={testAuth.password}
+                            value={user.password}
                             type={visible ? "text" : "password"}
                             readOnly={true}
                           />
@@ -174,12 +148,10 @@ const NavBar = () => {
                             {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                           </div>
                         </div>
-                      </label>
+                      </label> */}
 
                       <br/>
-                    <button className="editButton" type="submit">Reset Password</button>
-
-                  </form>
+                    <Link to="/resetpassword"><button className="editButton" type="submit" onClick={() => close()}>Reset Password</button></Link>
                 </div>
             )}
           </Popup>}

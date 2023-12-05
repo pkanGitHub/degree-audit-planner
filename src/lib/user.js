@@ -136,7 +136,7 @@ export async function read(id) {
     }) 
     .then(response => {
         console.log(response);
-        // new Cookies().set("user", {id: response.id, email: response.email});
+        new Cookies().set("user", {id: response.id, email: response.email});
         const courseMap = response.courses.map(course => new Course(course.id, course.plan[0], course.plan[1], course.credits).setStatus(course.status));
         clearAndFill(courses, courseMap);
         clearAndFill(majors, response.major);

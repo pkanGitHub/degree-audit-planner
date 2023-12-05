@@ -112,16 +112,20 @@ app.post('/auth/signup', async (req, res) => {
     // Set the expiration time in cron-config
     const expirationTime = codeExpirationTime()
 
-    await User().create({ 
+    const user = await User().create({ 
         email: email, 
         password: hashedPassword, 
         verificationCode: verificationCode, 
-        verificationCodeExpires: expirationTime 
+        verificationCodeExpires: expirationTime,
+        // TEMP ************************************************************!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        emailVerified: true
     })
 
-    const emailResult = await sendVerificationCode(email, verificationCode);
+    // const emailResult = await sendVerificationCode(email, verificationCode);
+    const emailResult = "email not set up";
     
-    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.', result: emailResult })
+    return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.', result: emailResult, id: user._id })
+    // return res.status(201).json({ msg: 'Sign up successfully, check your email for verification code.', result: emailResult })
   } catch (error) {
     return res.status(500).json({ error: 'Sign up failed' })
   }
@@ -208,6 +212,33 @@ app.post("/auth/user/save", (req, res) => {
         error: err
     }))
 })
+
+app.post("/auth/resetpassword", async(req, res) => {
+    const { email, password } = req.body 
+  
+    try{
+      // check if user already exists
+      const existUser = await User().findOne({ email })
+      if (!existUser) {
+        return res.status(400).json({ msg: 'User does not exist' })
+      }
+  
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(password, salt)
+      // Generate a verification code
+    
+      existUser.password = hashedPassword;
+      await existUser.save()
+      res.status(200).json({ success: true, msg: 'Password Successfully changed' })
+  
+  
+    }catch (error) {
+      console.error(error)
+      res.status(500).json({ success: false, msg: 'Failed to update password.' })
+    }
+  
+  
+  }); 
 
 app.listen(3000, function() {
 });
