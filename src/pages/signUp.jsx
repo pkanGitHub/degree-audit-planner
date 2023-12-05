@@ -13,6 +13,9 @@ const SignUp = () => {
         password: '',
         confirmPassword: '',
     })
+    const [againBorder, setAgain] = useState({border: "2px solid lightgray"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
+    const [emailBorder, setEmail] = useState({border: "2px solid lightgray"})
 
     const handleChange = (event) => {
         const { name, value } = event.target
@@ -31,22 +34,44 @@ const SignUp = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match.");
-            return
-        }
-        else if(!formData.email){
+        if(!formData.email){
             setError("You must enter an email.")
+            setEmail({border: "2px solid red"})
+            setAgain({border: "2px solid lightgray"})
+            setPasswordBorder({border: "2px solid lightgray"})
+            
         }
         else if(!formData.password){
             setError("You must enter a password.")
+            setEmail({border: "2px solid lightgray"})
+            setAgain({border: "2px solid lightgray"})
+            setPasswordBorder({border: "2px solid red"})
+            
+        }
+        else if(formData.password.length < 9){
+            setError("Your password must be longer than 8 characters.")
+            setEmail({border: "2px solid lightgray"})
+            setAgain({border: "2px solid lightgray"})
+            setPasswordBorder({border: "2px solid red"})
+            
         }
         else if(!formData.confirmPassword){
             setError("You must re-enter your password.")
+            setEmail({border: "2px solid lightgray"})
+            setAgain({border: "2px solid red"})
+            setPasswordBorder({border: "2px solid lightgray"})
+            
+        }
+        else if (formData.password !== formData.confirmPassword) {
+            setError("Passwords do not match.");
+            setEmail({border: "2px solid lightgray"})
+            setAgain({border: "2px solid red"})
+            setPasswordBorder({border: "2px solid red"})
+            
         }
         else if(isChecked === false){
             setError("You must agree to the terms and conditions.")
-            return
+            
         }
 
         try {
@@ -72,7 +97,7 @@ const SignUp = () => {
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
                         <label>Email
-                            <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange}/>
+                            <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange} style={emailBorder}/>
                         </label>
                         <br/>
                         <label>Password
@@ -83,6 +108,7 @@ const SignUp = () => {
                                 placeholder="Enter password here..."
                                 value={formData.password}
                                 onChange={handleChange}
+                                style={passwordBorder}
                               />
                               <div className="eye-icon" onClick={() => setVisible(!visible)}>
                                 {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
@@ -98,6 +124,7 @@ const SignUp = () => {
                                 placeholder="Enter password again..."
                                 value={formData.confirmPassword}
                                 onChange={handleChange}
+                                style={againBorder}
                               />
                               <div className="eye-icon" onClick={() => setVisible(!visible)}>
                                 {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
