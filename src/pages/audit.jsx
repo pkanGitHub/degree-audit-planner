@@ -174,7 +174,7 @@ const Audit = () => {
                         <button id="no" onClick={onClose}>No</button>
                         <button id="yes"
                         onClick={() => {
-                            refreshPage();
+                            clear();
                             onClose();
                         }}
                         >
@@ -338,7 +338,7 @@ const Audit = () => {
                         {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
                         <button id='deleteButton' onClick={deleteAlert}>DELETE</button>
                         <button id='exportButton' onClick={exportData}>EXPORT</button>
-                        <button id='saveButton'>SAVE</button>
+                        <button id='saveButton' onClick={saveData}>SAVE</button>
 
                     </div>
                 </div>
