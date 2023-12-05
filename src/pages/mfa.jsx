@@ -22,9 +22,9 @@ const MFA = () => {
         try {
             const response = await API.post('DatabaseAPI', "/auth/verify-email", { body: { verificationCode: verificationCode }})
             console.log('Server Response:', response);
-            if (response.data.success) {
+            if (response.success) {
                 console.log('Email verification successful!')
-                cookies.set("user", {id: response.data.id}, {expires: tomorrow}) // takes data and adds it to cookie
+                cookies.set("user", {id: response.id}, {expires: tomorrow}) // takes data and adds it to cookie
                 navigate('/login');
 
             } else {

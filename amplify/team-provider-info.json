@@ -26,7 +26,7 @@
         },
         "Authentication": {
           "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
-          "s3Key": "amplify-builds/Authentication-7530686d364241706f55-build.zip"
+          "s3Key": "amplify-builds/Authentication-556559584570504a594d-build.zip"
         }
       },
       "api": {
