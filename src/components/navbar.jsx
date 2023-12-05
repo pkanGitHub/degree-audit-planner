@@ -124,7 +124,7 @@ const NavBar = () => {
         {showLogin ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
 
         {showLogin ? null : <Popup
-            contentStyle={{ borderRadius: '0px', width: '40%', height: '50%' }}
+            contentStyle={{ borderRadius: '0px', width: '40%', height: '40%' }}
             trigger={<Link to="/" className="navbarlink" onClick={() => handleButtonClick()}>Profile</Link>}
             modal nested
           >
@@ -163,7 +163,7 @@ const NavBar = () => {
                       
                       <br/>
 
-                      <label>Password
+                      {/* <label>Password
                         <div className="password-input" id="formContent">
                           <input className="userInfo"
                             value={testAuth.password}
@@ -174,7 +174,7 @@ const NavBar = () => {
                             {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                           </div>
                         </div>
-                      </label>
+                      </label> */}
 
                       <br/>
                     <button className="editButton" type="submit">Reset Password</button>

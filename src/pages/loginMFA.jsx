@@ -10,6 +10,7 @@ const LoginMFA = () => {
 
     const cookies = new Cookies(null);
     if (cookies.get("user")?.id) window.location.href = '/audit';
+    const userEmail = cookies.get("email")?.email
 
     const handleVerification = async (e) => {
         e.preventDefault()
@@ -21,7 +22,8 @@ const LoginMFA = () => {
             console.log('Server Response:', response);
             if (response.data.success) {
                 console.log('Login verification successful!')
-                cookies.set("user", {id: response.data.id}, {expires: tomorrow}) // takes data and adds it to cookie
+                cookies.set("user", {id: response.data.id, email: userEmail}, {expires: tomorrow}) // takes data and adds it to cookie
+                cookies.remove("email")
                 window.location.href = '/audit'
 
             } else {
@@ -42,13 +44,13 @@ const LoginMFA = () => {
         <div className="formSection">
             <div id="formDesign" className="mfa">
                 <h1>2-Step Verification</h1>
-                <h2>Please confirm this is you. We sent a verification code to your email.</h2>
+                <h2>We sent a verification code to your email. Please enter the code from your email here to confirm this is you.</h2>
                 {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
                 <form>
                     <div id="formContent">
                         <label htmlFor="code">Enter Code</label>
                         <input type="text" name="code" value={loginVerificationCode} onChange={(e) => setLoginVerificationCode(e.target.value)} />
-                        <button onClick={handleVerification}>Verify Login</button>
+                        <button id="mfaSubmit" onClick={handleVerification}>Verify Login</button>
                     </div>
                     <br/>
                 </form>

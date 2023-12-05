@@ -2,8 +2,11 @@ import "../styles/password.css"
 import Cookies from "universal-cookie";
 import { useState } from "react";
 import axios from "axios";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 const ResetPassword = () => {
+    const [visible, setVisible] = useState(false);
+    const [visible2, setVisible2] = useState(false);
     const cookies = new Cookies(null);
 
     let testAuth = null;
@@ -63,11 +66,21 @@ const ResetPassword = () => {
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
                         <label>New Password
-                            <input type="password" name="password" value={data.password} onChange={handleChange}/>
+                            <div className="password-input">
+                                <input type={visible ? "text" : "password"} name="password" value={data.password} onChange={handleChange}/>
+                                <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                                    {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                </div>
+                            </div>
                         </label>
                         <br/>
                         <label>Confirm New Password
-                            <input type="password" name="passwordAgain" value={data.passwordAgain} onChange={handleChange}/>
+                            <div className="password-input">
+                                <input type={visible2 ? "text" : "password"} name="passwordAgain" value={data.passwordAgain} onChange={handleChange}/>
+                                <div className="eye-icon" onClick={() => setVisible2(!visible2)}>
+                                    {visible2 ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                </div>
+                            </div>
                         </label>
                     </div>
                     <br/>

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import "../styles/formStyle.css";
-// import Cookies from 'universal-cookie';
+import Cookies from 'universal-cookie';
 import CookiePopup from '../components/cookiepopup';
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
@@ -10,11 +10,12 @@ const Login = () => {
     const [errorMsg, setErrorMsg] = useState(null)
 
 
-    // const cookies = new Cookies(null);
+    const cookies = new Cookies(null);
     // if (cookies.get("user")?.id) window.location.href = '/audit';
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
     
         try {
             const response = await fetch('http://localhost:4001/login', {
@@ -31,8 +32,7 @@ const Login = () => {
                 console.log('Login successful on the frontend')
                 console.log(response)
                 // grabs today's date and then sets the date to tomorrow, used for cookie expiry
-                // var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-                // cookies.set("user", {email: formData.email, id: data.id}, {expires: tomorrow}) // takes data and adds it to cookie
+                cookies.set("email", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
                 // Redirect
                 window.location.href = '/loginMFA'
             } else {
