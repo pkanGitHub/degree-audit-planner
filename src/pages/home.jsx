@@ -172,10 +172,10 @@ const Home = () => {
                     If you have never used the Mizzou Degree Planner before and need to create your first audit, we have two ways to start.
                     <br />
                     <br></br>
-                    You can create your first degree planner by <a href="/audit">(1) uploading your degree audit so that our tool can auto-populate your credits and progress</a> OR <a href="/audit">(2) manually choose your classes and credits based on your major(s) and/or minor(s)</a>. Please keep in mind that <em>your degree information will not be saved for you to revisit upon leaving this website unless you have an account and are logged in</em>.
+                    You can create your first degree planner by <a href="/audit">(1) uploading your degree audit so that our tool can auto-populate your credits and progress</a> OR <a href="/audit">(2) manually choose your classes and credits based on your major(s) and/or minor(s)</a>.
                     <br />
                     <br></br>
-                    When you are ready to create your degree plan you will find the necessary links below to redirect you to where you need to go on our website. If you aren't quite sure on how to start, we have video tutorials that provide a general introduction to this tool. Please keep in mind that <em><b>your degree information will not be saved for you to revisit upon leaving this website unless you have an account and are logged in</b></em>
+                    When you are ready to create your degree plan you will find the necessary links below to redirect you to where you need to go on our website. If you aren't quite sure on how to start, we have video tutorials that provide a general introduction to this tool. Please keep in mind that <em><b>your degree information will not be saved for you to revisit upon leaving this website unless you have an account and are logged in.</b></em>
                     </p>
                 </div>
             </div>
