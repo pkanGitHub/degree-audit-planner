@@ -201,7 +201,7 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                     
                 }})}
 
-                <h4><em>Categories denoted with a * means that there was not enough information for our database to produce a result. For a more accurate understanding of what classes are needed for these programs/sections, please visit the program site at: <a href={selectedOption?.url}>{selectedOption?.title}.</a></em></h4>
+                <h4><em>Categories denoted with a * means that there was not enough information for our database to produce a result. For a more accurate understanding of what classes are needed for these programs/sections, please visit the program site at: <a  target="_blank"  href={selectedOption?.url}>{selectedOption?.title}.</a></em></h4>
                
             </div>
 
