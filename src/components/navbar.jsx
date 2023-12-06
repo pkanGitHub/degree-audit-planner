@@ -101,8 +101,8 @@ const NavBar = () => {
         {!loggedIn ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
 
         {!loggedIn ? null : <Popup
-            contentStyle={{ borderRadius: '0px', width: '40%', height: '50%' }}
-            trigger={<Link className="navbarlink" onClick={() => handleButtonClick()}>Profile</Link>}
+            contentStyle={{ borderRadius: '0px', width: '40%', height: '40%' }}
+            trigger={<Link to="/" className="navbarlink" onClick={() => handleButtonClick()}>Profile</Link>}
             modal nested
           >
             {(close) => (

@@ -43,8 +43,7 @@ const PasswordMFA = () => {
         <div className="formSection">
             <div id="formDesign" className="mfa">
                     <h1>2-Step Verification</h1>
-                    <h2>User: {testAuth.email}</h2>
-                    <h2>Please confirm this is you. We sent a verification code to your email.</h2>
+                    <h2>We sent an email to {testAuth.email}. Please enter the verification code sent to your email to proceed.</h2>
                     {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
                 <form>
                     <div id="formContent">

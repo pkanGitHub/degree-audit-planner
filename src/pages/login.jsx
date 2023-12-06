@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import "../styles/formStyle.css";
-// import Cookies from 'universal-cookie';
+import Cookies from 'universal-cookie';
 import CookiePopup from '../components/cookiepopup';
 import { API } from 'aws-amplify';
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
@@ -12,18 +12,40 @@ const Login = () => {
     const [errorMsg, setErrorMsg] = useState(null)
 
     const navigate = useNavigate();
+    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
+    const [emailBorder, setEmail] = useState({border: "2px solid lightgray"})
+
+
+    const cookies = new Cookies(null);
+    if (cookies.get("user")?.id) navigate('/audit');
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        if(!formData.email){
+          setEmail({border: "2px solid red"})
+          setPasswordBorder({border: "2px solid lightgray"})
+          setErrorMsg("You must enter an email.")
+          return
+        }
+        else if(!formData.password){
+          setEmail({border: "2px solid lightgray"})
+          setPasswordBorder({border: "2px solid red"})
+          setErrorMsg("You must enter a password.")
+          return
+        }
     
 
         API.post('DatabaseAPI', "/auth/login", { body: formData })
         .then(response => {
             console.log('Login successful on the frontend')
+            cookies.set("email", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
             console.log(response)
             navigate('/loginMFA');
         })
         .catch(error => {
+            setEmail({border: "2px solid red"})
+            setPasswordBorder({border: "2px solid red"})
             setErrorMsg(error.response.data.message)
             console.log('Login failed on the frontend:', error.response.data.message)
         })
@@ -45,7 +67,7 @@ const Login = () => {
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
                         <label>Email</label>          
-                        <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange}/>
+                        <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange} style={emailBorder}/>
                         <br/>
                         <label>Password</label>
                             <div className="password-input">
@@ -55,6 +77,7 @@ const Login = () => {
                                 placeholder="Enter password here..."
                                 value={formData.password}
                                 onChange={handleChange}
+                                style={passwordBorder}
                               />
                               <div className="eye-icon" onClick={() => setVisible(!visible)}>
                                 {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}

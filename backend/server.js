@@ -18,6 +18,7 @@ modelNames.forEach(modelName => {
 const cron = require('node-cron')
 const { removeUnverifiedEmailCron } = require('./cron/removeUnverifiedEmail')
 const { removeExpiredCodesCron } = require('./cron/emptyExpiredCode')
+const mongoSanitize = require('express-mongo-sanitize');
 
 /**
  * Set up CORS
@@ -46,6 +47,15 @@ app.use(
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
+
+
+// used to santitize mongodb queries, is slightly reduntant since all incoming information is string so it would not be processed as a query anyway. it is all string due to bodyParser.urlencoded({extended:false}) which only allows data in string format 
+app.use(
+  mongoSanitize({
+    replaceWith: '_',
+  }),
+);
+
 
 //middlewares
 app.use((req, res, next) => {

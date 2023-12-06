@@ -5,9 +5,12 @@ import axios from "axios";
 import { read } from '../lib/user';
 import { API } from 'aws-amplify';
 import { useNavigate } from "react-router-dom";
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";    
 
 const ResetPassword = () => {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
+    const [visible, setVisible] = useState(false);
+    const [visible2, setVisible2] = useState(false);
     const cookies = new Cookies(null);
     const user = cookies.get("user");
     const loggedIn = Boolean(user?.id);
@@ -18,6 +21,9 @@ const ResetPassword = () => {
         if (!user?.email) read(user.id);
     })
 
+    const [againBorder, setAgain] = useState({border: "2px solid lightgray"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
+
     const [error, setError] = useState("")
 
 
@@ -25,13 +31,24 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if(!data.password || !data.passwordAgain)
+        if(!data.password)
         {
-            setError("You must enter a password in both fields.")
+            setError("You must enter a password")
+            setAgain({border: "2px solid lightgray"})
+            setPasswordBorder({border: "2px solid red"})
+            return
+        }
+        else if(data.password.length < 9)
+        {
+            setError("Your password must be longer than 8 characters.")
+            setAgain({border: "2px solid lightgray"})
+            setPasswordBorder({border: "2px solid red"})
             return
         }
         else if (data.password !== data.passwordAgain) {
             setError("Passwords do not match.");
+            setAgain({border: "2px solid red"})
+            setPasswordBorder({border: "2px solid red"})
             return
         }
 
@@ -63,11 +80,21 @@ const ResetPassword = () => {
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
                         <label>New Password
-                            <input type="password" name="password" value={data.password} onChange={handleChange}/>
+                            <div className="password-input">
+                                <input type={visible ? "text" : "password"} name="password" value={data.password} onChange={handleChange} style={passwordBorder}/>
+                                <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                                    {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                </div>
+                            </div>
                         </label>
                         <br/>
                         <label>Confirm New Password
-                            <input type="password" name="passwordAgain" value={data.passwordAgain} onChange={handleChange}/>
+                            <div className="password-input">
+                                <input type={visible2 ? "text" : "password"} name="passwordAgain" value={data.passwordAgain} onChange={handleChange} style={againBorder}/>
+                                <div className="eye-icon" onClick={() => setVisible2(!visible2)}>
+                                    {visible2 ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                                </div>
+                            </div>
                         </label>
                     </div>
                     <br/>
