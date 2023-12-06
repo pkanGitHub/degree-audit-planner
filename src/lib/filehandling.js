@@ -1,4 +1,3 @@
-import{ saveAs } from 'file-saver';
 import { jsPDF } from "jspdf";
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 import * as PDFWorker from 'pdfjs-dist/build/pdf.worker.mjs'

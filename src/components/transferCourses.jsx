@@ -71,7 +71,7 @@ const TransferCourse = () => {
                     Credit Hours:&nbsp;&nbsp;
                     <input type="text" name="creditHour" onChange={handleChange}/>
                 </label>
-                <p><b>NOTE:</b> If you do not know how many credits your classes count for, please consult your <a href="https://advising.missouri.edu/contact/" target="_blank">advisor</a>.</p>
+                <p><b>NOTE:</b> If you do not know how many credits your classes count for, please consult your <a href="https://advising.missouri.edu/contact/" target="_blank" rel="noreferrer">advisor</a>.</p>
             </div>
 
             <button id='addCourseButton' onClick={handleSubmit}>Add Course</button>

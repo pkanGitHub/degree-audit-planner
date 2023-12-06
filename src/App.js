@@ -12,8 +12,6 @@ import LoginMFA from './pages/loginMFA';
 import PasswordMFA from './pages/passwordMFA';
 
 import './styles/App.css';
-import { useEffect } from 'react';
-import { getCerts, getCourseList, getMajors, getMinors } from './lib/data';
 
 
 // to run app, type: npm run start

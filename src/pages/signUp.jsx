@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import axios from 'axios'
 import TermsCondition from "../components/termsConditions";
 import { API } from 'aws-amplify';
 import "../styles/formStyle.css"
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 import Cookies from 'universal-cookie';
-import { redirect, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 
 const SignUp = () => {
     const [visible, setVisible] = useState(false);

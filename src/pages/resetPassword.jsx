@@ -1,7 +1,6 @@
 import "../styles/password.css"
 import Cookies from "universal-cookie";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { read } from '../lib/user';
 import { API } from 'aws-amplify';
 import { useNavigate } from "react-router-dom";

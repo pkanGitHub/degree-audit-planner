@@ -4,7 +4,6 @@ import './styles/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 /* Amplify stuff */
 import { Amplify } from 'aws-amplify';
@@ -12,7 +11,6 @@ import awsExports from './aws-exports';
 Amplify.configure(awsExports);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const queryClient = new QueryClient();
 
 root.render(
     <React.StrictMode>

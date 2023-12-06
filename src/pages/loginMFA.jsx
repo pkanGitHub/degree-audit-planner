@@ -11,8 +11,10 @@ const LoginMFA = () => {
 
     const navigate = useNavigate();
     const cookies = new Cookies(null);
-    if (cookies.get("user")?.id) navigate('/audit');
+    console.log("at loginMFA")
+    // if (cookies.get("user")?.id) navigate('/audit');
     const userEmail = cookies.get("email")?.email
+    if (!userEmail) navigate('/login');
 
     const handleVerification = async (e) => {
         e.preventDefault()
@@ -23,7 +25,7 @@ const LoginMFA = () => {
             API.post('DatabaseAPI', "/auth/verify-login", { body: {loginVerificationCode: loginVerificationCode} })
             .then(response => {
                 console.log('Login verification successful!')
-                cookies.set("user", {id: response.data.id, email: userEmail}, {expires: tomorrow}) // takes data and adds it to cookie
+                cookies.set("user", {id: response.id, email: userEmail}, {expires: tomorrow}) // takes data and adds it to cookie
                 cookies.remove("email")
                 navigate('/audit');
             })

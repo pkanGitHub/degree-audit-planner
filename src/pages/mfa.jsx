@@ -1,7 +1,6 @@
 import "../styles/formStyle.css"
 
 import React, { useState } from 'react'
-import axios from 'axios'
 import { API } from 'aws-amplify';
 import Cookies from 'universal-cookie';
 import { useNavigate } from "react-router-dom";
@@ -60,8 +59,5 @@ const MFA = () => {
         </div>
     )
 }
-                /* <a href="/resetpassword" className="submitButton" id="mfabutton">Submit</a>
-                    <br/>
-                    <a href="/forgotpassword">Cancel</a> */
 
 export default MFA;

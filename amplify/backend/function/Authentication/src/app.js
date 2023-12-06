@@ -7,8 +7,6 @@ const session = require("express-session");
 const bodyParser = require('body-parser')
 const passport = require('passport')
 const bcrypt = require('bcryptjs')
-// const aws = require("@aws-sdk/client-ses");
-// const nodemailer = require('nodemailer');
 const { sendVerificationCode } = require('nodemailer-config')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 
@@ -19,8 +17,6 @@ app.use(awsServerlessExpressMiddleware.eventContext())
 
 const User = () => mongoose.model('User', require('./user'));
 
-const timeZone = 'America/Chicago'
-// .toLocaleString('en-US', { timeZone })
 const codeExpirationTime = () => {
     const min = 5
     const codeExpires = new Date(Date.now() + min * 60 * 1000)

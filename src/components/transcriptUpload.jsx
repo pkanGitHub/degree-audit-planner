@@ -1,12 +1,10 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useDropzone } from "react-dropzone"
 import { useCallback } from 'react';
 import { GetInfo } from "../lib/filehandling";
-import { Course } from "../lib/course";
 import "../styles/transcriptUpload.css"
 import { getProgramsBySearch } from "../lib/data";
 import TermsCondition from "./termsConditions";
-import { confirmAlert } from "react-confirm-alert";
 
 export default function TranscriptUpload({setCatalog, setCourses, hasData}) {    
 
@@ -97,7 +95,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
 
     const addPrograms = programs => {
         const list = programs.map(program => {
-                var [name, type] = program.title.split("-");
+                var [name, ] = program.title.split("-");
                 const search = getProgramsBySearch(name.replace(/\s+/g, ' ').trim(), program.year, undefined);
                 console.log(search);
                 return {original: program.title, year: program.year, results: search}

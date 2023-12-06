@@ -1,6 +1,5 @@
 import "../styles/semesterPlan.css";
-import { getProgramsBySearch } from "../lib/data";
-import { Course, STATUS } from "../lib/course";
+import { STATUS } from "../lib/course";
 import { useState, memo } from "react";
 import Popup from "reactjs-popup";
 
@@ -189,34 +188,6 @@ function DeleteDuplicates(years) {
     });
 }
 
-function addProgramPlans(years, data) {
-
-    data.map(program => getProgramsBySearch(program.category, program.year, program.type))
-    .filter(programs => programs && programs[0].years)
-    .map(programs => programs[0])
-    .reduce((YEARS, program) =>
-        program.years.reduce((YEARS, year, i) => {
-            if (!YEARS[i]?.semesters) YEARS[i] = {semesters: []};
-
-            for (var s in year?.semesters) {
-                if (YEARS[i]?.semesters[s] === undefined) { YEARS[i].semesters[s] = [];}
-                YEARS[i].semesters[s] = YEARS[i].semesters[s].concat(year?.semesters[s]?.courses
-                                     .filter(course => course?.id).map(course => new Course(course.id, i, 0).planned()));
-            }
-
-            // NEED TO FIX THIS YOU BIG DUMBY
-            if (program.years[i]?.courses) {
-                const total = program.years[i].courses
-                for (const k in total) {
-                    if (k <= total.length / 2) YEARS[i].semesters[0].push(total[k]?.id)
-                    else YEARS[i].semesters[1].push(total[k]?.id);
-                }
-                return YEARS;
-            }
-            return YEARS;
-
-        }, YEARS), years)  
-}
 
 function addFromUser(years, courses) {
     if (courses.length < 1) return courses;

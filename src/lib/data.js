@@ -6,39 +6,6 @@ var Courses;
 var GenEds;
 var Years;
 
-// export async function getMajors(pull) {
-//     if (pull || Majors === undefined) {
-//         const years = await getYears();
-//         // const years = await fetchGet('years');
-//         if (!years) return;
-//         const programs = [];
-//         for (var year of years) {
-//             const program = await fetchGet('majors', year)
-//             programs.push({year: year, programs: program})
-//         }
-//         Majors = planFormat(programs);
-//         return Majors;
-// =======
-// var Test;
-
-// export async function getTest() {
-//     if (Test === undefined) {
-//         const storage = JSON.parse(localStorage.getItem("test"));
-//         if (storage) {
-
-//             return Test = storage;
-//         }
-//         else {
-//             Test = await fetchGet('majors')
-//                 .then(majors => planFormat(majors));
-
-//             localStorage.setItem("test", JSON.stringify(Test));
-//             return Test;
-//         }
-//     }
-//     return Test;
-// }
-
 export async function getMajors(pull) {
     if (pull || Majors === undefined) {
 
@@ -113,7 +80,6 @@ export function getProgramsBySearch(name_segment, year, category = undefined) {
     return program;
 }
 
-var runningCoursePull = false
 export async function getCourseList(pull) {
     if (pull || Courses === undefined) {
         return Courses = await getData('courses');
@@ -150,17 +116,6 @@ export async function getYears(pull) {
     return Years;
 }
 
-// async function fetchGet(type, year) {
-//     return await fetch(url + type + (year ? `/${year}` : "")) 
-//     .then(response => response.json())
-//     .then(reponse => {console.log(reponse); return reponse})
-//     .then(data => data[type])
-//     .then(data => {console.log(data); return data})
-//     .catch(error => {
-//         console.error(`Error fetching ${type}${year ? ` for ${year}`: ""} data: ${error}`);
-//     });
-// }
-
 export async function fetchGet(type, year) {
     return await API.get('DatabaseAPI', "/api/" + type + (year ? `/${year}` : ""))
     .then(data => data[type])
@@ -169,7 +124,6 @@ export async function fetchGet(type, year) {
     });
 
 }
-
 
 function planFormat(plan) {
     if (!plan) return [];

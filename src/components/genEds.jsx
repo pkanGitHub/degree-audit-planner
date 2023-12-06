@@ -1,8 +1,5 @@
 import MassSelectCourse from "./massSelectCourse"
 import RequiredCourse from "./requiredCourse" 
-import { useState } from "react";
-import RequiredChoice from "./requiredChoice";
-import ClassInfo from "./classInfoPopup";
 
 const GenEdsModel = ({genEds, coursesList}) => {
 
@@ -24,7 +21,8 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                     <p>Credit hours: {area?.hours}</p>
                                     <p>{area?.info}</p>
 
-                                    {coursesList.filter((area) => area.courses.some((course) => course.courseID === "ENGLSH_1000")).map((area)=> area.courses.filter((course) => course.courseID.match("ENGLSH_1000")).map((selectedCourse, index)=> {if(index === 0 || index === 1){ return(<RequiredCourse key={index} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>)}}))}
+                                    {/* eslint-disable-next-line array-callback-return */}
+                                    {coursesList.filter((area) => area.courses.some((course) => course.courseID === "ENGLSH_1000")).map((area)=> area.courses.filter((course) => course.courseID.match("ENGLSH_1000")).map((selectedCourse, index) => {if(index === 0 || index === 1){ return(<RequiredCourse key={index} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>)}}))}
 
                                     {area?.sub && area.sub.map((subareas)=> {if(subareas?.categories && subareas.categories.length > 0){return(
                                         <div key={subareas?._id}>

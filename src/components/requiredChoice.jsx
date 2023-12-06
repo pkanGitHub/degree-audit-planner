@@ -1,6 +1,6 @@
 // this is for courses that are like major electives where you get to choose from a very select set of courses
 import "../styles/audit.css"
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 
 const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse}) => {

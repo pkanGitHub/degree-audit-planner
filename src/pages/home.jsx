@@ -4,7 +4,6 @@ import autoCard from "../auto.jpg"
 import manualCard from "../manual.jpg"
 import tutorialCard from "../tutorial.jpg"
 import mizzouLogo from "../MU-StackedMU-4C.png";
-import { RightOutlined } from "@ant-design/icons";
 import React, { useEffect } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 
@@ -89,7 +88,7 @@ const Home = () => {
             {/* might need to use columns if possible */}
             <div className="miniTutorial">
                 <div className="transcript1">
-                    <img src={autoCard}></img>
+                    <img src={autoCard} alt="Upload Transcript"></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Upload Transcript</h3>
                             <p id = "cardParagraph">Download your unofficial transcript from MyZou and upload it here for easy use!</p>
@@ -99,7 +98,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="transcript2">
-                    <img src={manualCard}></img>
+                    <img src={manualCard} alt="Do It Yourself"></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Do It Yourself</h3>
                             <p id = "cardParagraph">Use this feature when you do not have your unofficial transcript on hand.</p>
@@ -109,7 +108,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="transcript2">
-                    <img src={tutorialCard}></img>
+                    <img src={tutorialCard} alt="Still confused?"></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Still Confused?</h3>
                             <p id = "cardParagraph">Still not sure on how to start? Do not fear - we have several tutorials to get you started!</p>

@@ -3,27 +3,19 @@ const nodemailer = require('nodemailer');
 const aws = require("@aws-sdk/client-ses");
 
 // Configure Nodemailer with your email provider's settings
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.ADMIN_EMAIL,
-      pass: process.env.ADMIN_PASS // uses app password
-    },
-    logger: true,
-  })
 
-// const transporter = nodemailer.createTransport({
-//     SES: {
-//       ses: new aws.SES({
-//         region: 'us-east-1',
-//         credentials: {
-//             accessKeyId: process.env.ACCESS_KEY',
-//             secretAccessKey: process.env.SECRET_ACCESS_KEY,
-//         }
-//       }),
-//       aws
-//     }
-//   });
+const transporter = nodemailer.createTransport({
+    SES: {
+      ses: new aws.SES({
+        region: 'us-east-1',
+        credentials: {
+            accessKeyId: process.env.ACCESS_KEY,
+            secretAccessKey: process.env.SECRET_ACCESS_KEY,
+        }
+      }),
+      aws
+    }
+  });
   // Function to send verification code via email
   const sendVerificationCode = async(email, code, res) => {
     try { 
