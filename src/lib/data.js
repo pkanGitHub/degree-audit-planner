@@ -195,16 +195,6 @@ function checkCache(type) {
                 console.error('Error checking for data:', event.target.error);
                 reject(event.target.error);
             };
-
-            // Ensure that the transaction is properly closed
-            transaction.oncomplete = function () {
-                console.log('Transaction completed');
-            };
-
-            transaction.onerror = function (event) {
-                console.error('Transaction error:', event.target.error);
-                reject(event.target.error);
-            };
         };
 
         openRequest.onerror = event => {
@@ -245,16 +235,6 @@ function makeCache(type) {
 
                 addRequest.onerror = event => {
                     console.error('Error adding data:', event.target.error);
-                    reject(event.target.error);
-                };
-
-                // Ensure that the transaction is properly closed
-                transaction.oncomplete = function () {
-                    console.log('Transaction completed');
-                };
-
-                transaction.onerror = function (event) {
-                    console.error('Transaction error:', event.target.error);
                     reject(event.target.error);
                 };
             };
