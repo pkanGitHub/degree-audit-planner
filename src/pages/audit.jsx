@@ -18,10 +18,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 const Audit = () => {
 
     // === State Variables === //
-//----------------------------------------------------------------------------------------------
-
-//----------------------------------------------------------------------------------------------
-
     const [selectType, setType] = useState("");
     const [selectCategory, setCategory] = useState("");
     const [selectTerm, setTerm] = useState(null);
@@ -79,7 +75,7 @@ const Audit = () => {
     
     const handleTermChange = (e, index) => {
         setTerm(e.target.value);
-    };
+    };    
     
     const handleEnrollFieldChange = (i, e) =>{
         let newFormValues = [...enrollFields];
@@ -124,6 +120,7 @@ const Audit = () => {
     }
 
 
+
     // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
     
     const getCourses = (type, category, year, index) => {
@@ -143,6 +140,7 @@ const Audit = () => {
         else if (category === ""){
             category = "default"
         }
+
         return(
             <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(category, year, type)}/>
         )
@@ -234,6 +232,9 @@ const Audit = () => {
             }
         })
     }
+
+  
+    return (
         <div id="fullpage">
             <div id="header">
                 <TranscriptUpload 
@@ -289,10 +290,11 @@ const Audit = () => {
                     </div>
                     <hr/>
 
+                    
                     <GenEdsModel key={state} genEds={genEds} coursesList={coursesList}/>
 
             
-                    {/* this is a map that gets all user input programs here, user can delete or add programs. display all the credit totals*/}
+                    {/* this is a map that gets all user input programs here, user can delete or add programs */}
                     { userCatalog.map((key, index) =>
                         <div key={index}>
 
@@ -301,7 +303,6 @@ const Audit = () => {
                         </div>
                         )
                     }
-                    
 
                     {/* <MajorTest majors={majors} coursesList={coursesList}/> */}
 

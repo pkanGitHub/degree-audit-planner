@@ -210,8 +210,8 @@ useEffect(() =>
                             updateCreditInfo(creditInfo, course, 0, null, null, null);
                         return(
                             <ul>
-                                <p className="accordion" htmlFor={course?._id}>
-                                                    <u>{course?.label}</u> - (Required Credit Hours: {course?.credits})
+                                <h3><p id="genReqLabel2" className="accordion" htmlFor={course?._id}>
+                                                    {course?.label} - (Required Credit Hours: {course?.credits})
                                                     (Credits Taken: {
                                                         parseInt(
                                                             creditInfo.find(
@@ -225,7 +225,7 @@ useEffect(() =>
                                                                 credit => credit.id === course?._id && credit.label === course?.label
                                                             )?.selectedCredits || 0
                                                         )
-                                                    }) </p>
+                                                    }) </p></h3>
                             </ul>
                         )
                         }
@@ -265,7 +265,7 @@ useEffect(() =>
                                     <li>
                                         <input type="checkbox" name="accordion" id={course?._id} />
                                         {/* <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - (Required Credit Hours: {course?.credits})  (Credits Taken:  {parseInt(creditInfo.takenCredits)}) (Credits Selected: {creditInfo.selectedCredits + 0} )</label> */}
-                            <label id="genReqLabel" htmlFor={course?._id}>
+                                        <label id="genReqLabel" htmlFor={course?._id}>
                                                     <u>{course?.label}</u> - (Required Credit Hours: {course?.credits})
                                                     (Credits Taken: {
                                                         parseInt(

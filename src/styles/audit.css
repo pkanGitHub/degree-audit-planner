@@ -338,6 +338,14 @@ hr{
     font-weight: 600;
 }
 
+
+#genReqLabel2::before{
+    content: '*';
+    margin-right: 10px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
 .accordion input[type="checkbox"]{
     display: none;
 }
