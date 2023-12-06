@@ -97,6 +97,12 @@ const Audit = () => {
         setUserCatalog([...User.removeProgram(category, year, type)]);
     }
 
+    const setCatalog = catalogs => {
+        User.setPrograms(catalogs.map(c => ({title: c.category, year: c.year, type: c.type})))
+        setUserCatalog([...User.getPrograms()])
+        setUserCourses([...User.getCourses()])
+    }
+
     const reformatTitle = title => {
         const split = title.split(/\sin\s/);
         return `${split[1]}${split[0] !== "Minor" && split[0] !== "Certificate" ? ` (${split[0]})` : ""}`;
@@ -104,7 +110,8 @@ const Audit = () => {
 
     const updateCatalog = () => {
         console.log("update catalog")
-        setUserCatalog([...User.getCourses()]);
+        setUserCourses([...User.getCourses()]);
+        User.print()
     }
 
     // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
@@ -247,7 +254,7 @@ const Audit = () => {
         <div id="fullpage">
             <div id="header">
                 <TranscriptUpload
-                    setCatalog={setUserCatalog}
+                    setCatalog={setCatalog}
                     setCourses={(courses) => {
                         User.setCourses(courses);
                         setUserCourses([...User.getCourses()]);

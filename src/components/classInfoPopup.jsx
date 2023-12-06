@@ -10,7 +10,7 @@ import { planYears } from '../lib/user';
 //tried tooltip, collision, and set boundaries. none of these seem to keep this inside the page. might just do hard coded margin to se eif that will work
 //contentStyle={{maxWidth: '100vh', width: '30%', overflowX: "scroll", overflowX: 'scroll', maxHeight: '100vh', margin: 'auto'}}
 
-const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, preReq, lastOffered, fromUser, add, remove }) => {
+const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, preReq, lastOffered, fromUser, add, remove, select}) => {
     const [error, setError] = useState(false);
     const [plan, setPlan] = useState([-1, -1]);
     const setPosition = (year, semester) => {
@@ -33,8 +33,8 @@ const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, pre
 
     return (
         <Popup contentStyle={{ overflowX: "scroll", overflowY: 'scroll', height: "40%", width: "40%", margin: 'auto', padding: "10px" }} trigger=
-            {<button id='classInfoButton'>{className}</button>}
-            position={'top center'} keepTooltipInside={true} >
+            {<button id='classInfoButton'>{className.replace(/-/g, " ")}</button>}
+            position={'top center'} keepTooltipInside={true} onOpen={() => select(className)}>
             {
                 <div className='classInfoPopup'>
                     <h3>{className}: {classTitle}</h3>
@@ -44,7 +44,7 @@ const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, pre
                     <p><b>Last offered:</b> {lastOffered}</p>
                     <p id='notice'>{notice}</p>
 
-                    <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
                         {!fromUser ?
                             <button 
                                 className='addButton' 
@@ -64,7 +64,7 @@ const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, pre
                         }
 
                         <PlanPosition years={planYears()} plan={fromUser?.plan || plan} set={setPosition} />
-                    </div>
+                    </div> */}
                 </div>
             }
         </Popup>

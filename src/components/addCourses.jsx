@@ -4,6 +4,7 @@ import RequiredChoice from "./requiredChoice";
 import "../styles/audit.css"
 import * as User from "../lib/user";
 import { sortCourses } from "./massSelectCourse";
+import { Course } from "../lib/course"
 const AddCourses = ({ courses, orCourses, update }) => {
     // console.log(courses);
 
@@ -32,8 +33,9 @@ const AddCourses = ({ courses, orCourses, update }) => {
         }
         return 0;
     })
-    // .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id === course.courseID) }))
-    // .sort(sortCourses)
+        .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id === course.courseID) }))
+        .sort(sortCourses)
+
 
     const handleChangeCourse = (e) => {
         setCourse(e.target.value)
@@ -47,11 +49,37 @@ const AddCourses = ({ courses, orCourses, update }) => {
     //         ]))
     // }
 
-    const removeCourse = (index) => {
-        let data = [...userCourses]
-        data.splice(index, 1)
-        setUserCourses(data)
+
+    const [selectCourse, setSelectCourse] = useState('');
+    const handleCourseSelect = (e) => {
+        setSelectCourse(e.target.value)
     }
+    const selectCourseNow = (course) => {
+        setSelectCourse(course);
+    }
+
+    const addCourse = (course) => {
+        User.addCourse(new Course(course.courseID, -1, -1, course.credit));
+        setUserCourses([...User.getCourses()]);
+        update();
+    }
+    const removeCourse = course => {
+        User.removeCourse(course);
+        setUserCourses([...User.getCourses()]);
+        update();
+    }
+
+    const [searchFilter, setSearchFilter] = useState("");
+    const handleSearch = event => {
+        setSearchFilter(event.target.value);
+        // getOptions.filter(course => course.name?.match(searchFilter, "g") || course.courseID?.match(searchFilter, "g"));
+    }
+
+    // const removeCourse = (index) => {
+    //     let data = [...userCourses]
+    //     data.splice(index, 1)
+    //     setUserCourses(data)
+    // }
 
     const [isOrOpen, setIsOrOpen] = useState(false)
 
@@ -62,7 +90,8 @@ const AddCourses = ({ courses, orCourses, update }) => {
     return (
         <div id='specifcElective'>
 
-            {userCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={() => removeCourse(index)} />)}
+            {/* {userCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={() => removeCourse(index)} />)} */}
+            {sortedCourses.filter(course => course.inUser).map((key, index) => <RequiredChoice key={index} classId={key.courseID} creditHours={key.credit} preReq={key.prerequisites} course={key.inUser} removeCourse={removeCourse} update={update} />)}
 
             <p><b>Available Courses:</b></p>
 
@@ -75,7 +104,7 @@ const AddCourses = ({ courses, orCourses, update }) => {
                                 <div style={{ display: "flex" }}>
 
 
-                                    <div className={`courseSelectButton ${singleCourse.inUser ? "selected" : ""}`} >
+                                    <div className={`courseSelectButton ${selectCourse === singleCourse.classId ? "selected" : ""}`} >
                                         <ClassInfo
                                             key={index}
                                             className={singleCourse.classId}
@@ -85,8 +114,9 @@ const AddCourses = ({ courses, orCourses, update }) => {
                                             preReq={singleCourse.preReq}
                                             lastOffered={singleCourse.lastOffered}
                                             fromUser={singleCourse.inUser}
-                                            // add={addCourse}
-                                            // remove={removeCourse}
+                                            add={addCourse}
+                                            remove={removeCourse}
+                                            select={selectCourseNow}
                                         />
                                     </div>
 
@@ -103,7 +133,21 @@ const AddCourses = ({ courses, orCourses, update }) => {
 
                                         <div style={{ display: "flex" }}>
                                             <p>or:</p>
-                                            <ClassInfo key={index} className={chosenCourse.classId} classTitle={chosenCourse.name} classDescript={chosenCourse.description} creditHours={chosenCourse.creditHours} preReq={chosenCourse.preReq} lastOffered={chosenCourse.lastOffered} />
+                                            <div className={`courseSelectButton ${selectCourse === singleCourse.classId ? "selected" : ""}`} >
+                                                <ClassInfo
+                                                    key={index}
+                                                    className={singleCourse.classId}
+                                                    classTitle={singleCourse.name}
+                                                    classDescript={singleCourse.description}
+                                                    creditHours={singleCourse.creditHours}
+                                                    preReq={singleCourse.preReq}
+                                                    lastOffered={singleCourse.lastOffered}
+                                                    fromUser={singleCourse.inUser}
+                                                    add={addCourse}
+                                                    remove={removeCourse}
+                                                    select={selectCourseNow}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 )
@@ -116,7 +160,21 @@ const AddCourses = ({ courses, orCourses, update }) => {
                         return (
                             <div key={singleCourse.id}>
 
-                                <ClassInfo key={index} className={singleCourse.classId} classTitle={singleCourse.name} classDescript={singleCourse.description} creditHours={singleCourse.creditHours} preReq={singleCourse.preReq} lastOffered={singleCourse.lastOffered} />
+                                <div className={`courseSelectButton ${selectCourse === singleCourse.classId ? "selected" : ""}`} >
+                                    <ClassInfo
+                                        key={index}
+                                        className={singleCourse.classId}
+                                        classTitle={singleCourse.name}
+                                        classDescript={singleCourse.description}
+                                        creditHours={singleCourse.creditHours}
+                                        preReq={singleCourse.preReq}
+                                        lastOffered={singleCourse.lastOffered}
+                                        fromUser={singleCourse.inUser}
+                                        add={addCourse}
+                                        remove={removeCourse}
+                                        select={selectCourseNow}
+                                    />
+                                </div>
 
 
                             </div>
@@ -124,16 +182,26 @@ const AddCourses = ({ courses, orCourses, update }) => {
                     }
                 })}
             </div>
-            <label>
+            {/* <label>
                 Course number:&nbsp;&nbsp;
                 <select id='chooseNumber' name='course' onChange={handleChangeCourse}>
                     <option value=""></option>
                     {sortedTotalCourses.map((key) => (
                         <option key={key.classId} value={key.classId}>{key.classId}</option>))}
                 </select>
-            </label>
+            </label> */}
 
-            {/* <button id='addCourseButton' onClick={handleAddCourse}>ADD COURSE</button> */}
+            {sortedCourses.length > 10 ?
+                <label>
+                    Search:
+                    <input type="text" name="searchBox" id="searchBox" onChange={handleSearch} />
+                </label>
+                :
+                null
+            }
+
+
+            <button id='addCourseButton' onClick={() => addCourse(selectCourse)}>ADD COURSE</button>
 
         </div>
     )

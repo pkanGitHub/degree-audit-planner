@@ -125,6 +125,16 @@ export function addPrograms(title, year, type) {
     }
 }
 
+export function setPrograms(programs) {
+    console.log(programs);
+    clearAndFill(majors, [])
+    clearAndFill(minors, [])
+    clearAndFill(certificates, [])
+    programs.forEach(program => {
+        addPrograms(program.title, program.year, program.type);
+    })
+}
+
 export function clear() {
     const pop = array => {
         do {
@@ -147,6 +157,7 @@ export function print() {
 }
 
 export function save(id) {
+    console.log(majors);
     fetch(url + "user/save", {
         method: "POST",
         headers: {

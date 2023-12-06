@@ -17,13 +17,12 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
         setSelectCourse(e.target.value)
     }
     function selectCourseNow(course) {
-        console.log(course);
         setSelectCourse(course);
     }
 
     const [userCourses, setUserCourses] = useState(User.getCourses());
-    const addCourse = (id, year, semester, credits) => {
-        User.addCourse(new Course(id, year, semester, credits));
+    const addCourse = (course) => {
+        User.addCourse(new Course(course.courseID, -1, -1, course.credit));
         setUserCourses([...User.getCourses()]);
         update();
     }
@@ -44,11 +43,13 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
     const handleLargeCourseClick = () => {
         const courseInfo = selectCourse
 
-        getOptions.filter(singleClass => singleClass.courseID.match(courseInfo)).map(filteredClass => (
+        getOptions.filter(singleClass => singleClass.courseID.match(courseInfo)).forEach(course => addCourse(course))
+        
+        // .map(filteredClass => (
 
-            setSelectedCourses([...selectedCourses, { key: filteredClass._id, classId: filteredClass.courseID, creditHours: filteredClass.credit, preReq: filteredClass.prerequisites }])
+        //     setSelectedCourses([...selectedCourses, { key: filteredClass._id, classId: filteredClass.courseID, creditHours: filteredClass.credit, preReq: filteredClass.prerequisites }])
 
-        ))
+        // ))
 
 
     }
@@ -84,8 +85,6 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
             .map(course => getOptions.push(course)))
     }
 
-    getOptions.filter(course => course.name?.match(searchFilter, "g") || course.courseID?.match(searchFilter, "g"))
-
     useEffect(() => {
         if (filteredCategory.length === 1) setCourseType(filteredCategory[0].id);
     }, []);
@@ -95,14 +94,12 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
     }, [userCourses, getOptions, searchFilter]);
 
 
-    console.log("test");
-
     return (
 
         <div id='largeClassSelect'>
 
 
-            {selectedCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={removeCourse} />)}
+            {getOptions.filter(course => course.inUser).map((key, index) => <RequiredChoice key={index} classId={key.courseID} creditHours={key.credit} preReq={key.prerequisites} course={key.inUser} removeCourse={removeCourse} update={update}/>)}
 
 
             {filteredCategory.length > 1 ?
@@ -126,9 +123,9 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
             </p>
             <div id="popupDiv">
 
-                {getOptions.map(item => {
+                {getOptions.filter(course => course.name?.match(new RegExp(searchFilter, "gi")) || course.courseID?.match(new RegExp(searchFilter, "gi"))).map(item => {
                     return (
-                        <div className={`courseSelectButton ${item.inUser ? "selected" : ""}`} >
+                        <div className={`courseSelectButton ${selectCourse === item.courseID ? "selected" : ""}`} >
                             <ClassInfo
                                 key={item._id}
                                 className={item.courseID}
@@ -140,6 +137,7 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
                                 fromUser={item.inUser}
                                 add={addCourse}
                                 remove={removeCourse}
+                                select={selectCourseNow}
                             />
                         </div>
                     )
@@ -168,7 +166,7 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
             </label> */}
 
 
-            {/* <button onClick={handleLargeCourseClick} id='addCourseButton'>Add Course</button> */}
+            <button onClick={handleLargeCourseClick} id='addCourseButton'>Add Course</button>
 
 
         </div>
