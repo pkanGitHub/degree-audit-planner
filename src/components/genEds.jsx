@@ -10,7 +10,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
         
         genEds.map((genEd) => 
             <div key={genEd?._id}>
-                <h2>General Requirements</h2>
+                <h2 id = "auditHeaders">General Requirements</h2>
                 <ul className="accordion">
                     <li>
                         <input type="checkbox" name="accordion" id="genEd" />

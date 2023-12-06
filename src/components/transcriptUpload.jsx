@@ -7,8 +7,6 @@ import "../styles/transcriptUpload.css"
 import { getProgramsBySearch } from "../lib/data";
 import TermsCondition from "./termsConditions";
 import { confirmAlert } from "react-confirm-alert";
-// https://medium.com/web-dev-survey-from-kyoto/how-to-customize-the-file-upload-button-in-react-b3866a5973d8 
-// https://spacejelly.dev/posts/uploading-files-in-react-from-a-form-with-drag-and-drop/
 
 export default function TranscriptUpload({setCatalog, setCourses, hasData}) {    
 
@@ -22,7 +20,6 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
     const [overwrite, setOverwrite] = useState(false);
 
     // === Variables from React Dropzone === //
-    // const onDrop = 
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone(
         { onDrop: 
@@ -34,10 +31,6 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         }
     );
 
-    const consentCheck = e => {
-        setConsent(e.target.checked);
-    }
-
     const readFile = e => {
         if (uploadedFile === null) {
             setError("Please upload a file.")
@@ -46,7 +39,9 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         GetInfo(uploadedFile).then(data => {
             console.log(data);
             addPrograms(data.Programs);
-            setCourses(Object.entries(data.CourseWork)
+            console.log(data.Courses);
+            setCourses(data.Courses);
+            /*setCourses(Object.entries(data.CourseWork)
                                 .map(term => {
                                         const formatted = term[0].split("_");
                                         formatted[0] = (() => {
@@ -78,7 +73,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                                 })
                                 .reduce((([total, year, prevSem, semCnt], semester) => { 
                                     
-                                    if (semester[0][0] === 2 ^ semester[0][0] <= prevSem && prevSem !== 2) {
+                                    if (semester[0][0] === 2 ^ (semester[0][0] <= prevSem && prevSem !== 2)) {
                                         year++;
                                         semCnt = 0;
                                     }
@@ -91,22 +86,21 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                                         return course;
                                     }));          
                                     return [total, year, semester[0][0], ++semCnt]; 
-                                }), [[], -1, 3, 0])
-                                [0])
-            // closeModal(null);
+                                }), [[], 0, 3, 0])
+                                [0])*/
         })
         .catch(error => {
             console.error(error);
             setError("Please upload accepted file.");
         });;
-        // .then(data => props.set("Major", data.Major.split("-")[0]));
     }
 
     const addPrograms = programs => {
         const list = programs.map(program => {
-            var [name, type] = program.title.split("-");
-            const search = getProgramsBySearch(name, program.year, undefined);
-            return {original: program.title, year: program.year, results: search}
+                var [name, type] = program.title.split("-");
+                const search = getProgramsBySearch(name.replace(/\s+/g, ' ').trim(), program.year, undefined);
+                console.log(search);
+                return {original: program.title, year: program.year, results: search}
         })
 
         setPrograms(list);
@@ -131,9 +125,8 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
     }
 
     const closeModal = e => {
-        if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close" && e.target.id != "no") return;
+        if (e != null && e !== "close" && e.target.id !== "uploadModal" && e.target.id !== "close" && e.target.id !== "no") return;
         setHidden(true);
-        setConsent(false);
         setFile(null);
         setPreview(null);
         setError(null);
@@ -172,11 +165,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                         </>
                     }
                 </div>
-                <a href="/tutorial#uploading">What can I upload?</a>
-                <div id="consent">
-                    <input type="checkbox" name="consentCheck" onChange={consentCheck}/>
-                    <p>I consent to the collection and processing of essential information and understand it will be handled confidentially, used solely for the intended purpose.</p>
-                </div>
+                <a href="/tutorial#uploading" style={{width: "100%", display: "block"}}>What can I upload?</a>
                 <button type="button" disabled={!userConsents} onClick={readFile}>Upload</button>
                 { error ? <p className="error">{ error }</p> : <p>&nbsp;</p> }
                 
@@ -194,8 +183,8 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                 { programs.map(program => (
                     <>
                         <p>{ program.original } | { program.year }</p>
-                        { program.results.length > 1 ?
-                            <select>
+                        { program.results.length > 0 ?
+                            <select style={program.results.length === 1 ? {display: "none"} : {}}>
                                 { program.results?.map(result => (
                                     <option>{result.title}</option>
                                 ))}
@@ -233,19 +222,19 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
         
         return (
             <div className='confirmButton'>
-            <h1>Upload Notice</h1>
-            <p>By clicking Yes, you are agreeing to the <TermsCondition/>. If you do not agree, hit no and return to the audit page.</p>
-                    
-            <div id="confirmButtonsDiv">
-                <button id="no" onClick={closeModal}>No</button>
-                <button id="yes"
-                onClick={() => {
-                    setConsent(true);
-                }}
-                >
-                Yes
-                </button>
-            </div>
+                <h1>Upload Notice</h1>
+                <p>By clicking Yes, you are agreeing to the <TermsCondition/>. If you do not agree, hit no and return to the audit page.</p>
+                        
+                <div id="confirmButtonsDiv">
+                    <button id="no" onClick={closeModal}>No</button>
+                    <button id="yes"
+                    onClick={() => {
+                        setConsent(true);
+                    }}
+                    >
+                    Yes
+                    </button>
+                </div>
             
             </div>
         );
@@ -253,7 +242,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
 
     return (
         <>
-            <button id="transcriptButton" onClick={openModal}>Upload Unoffical Transcript</button>
+            <button id="transcriptButton" onClick={openModal}>UPLOAD UNOFFICIAL TRANSCRIPT</button>
             { hideModal ? null :        
                 <div id="uploadModal" onClick={closeModal}>
                 { !userConsents ? 

@@ -1,6 +1,5 @@
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
-import image from "../Cookie.png"
 import "../styles/cookie.css"
 import { useNavigate } from 'react-router-dom';
 
@@ -28,13 +27,6 @@ const CookiePopup = () => {
                                 </button>
                             </div>
                         </div>
-
-
-                        <div id='cookie'>
-                            <img src={image} alt='cookie' id='cookieImage'></img>
-                        </div>
-                        
-                        
                     </div>
                     
                 )

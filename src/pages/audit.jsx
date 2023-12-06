@@ -5,37 +5,81 @@ import GenEdsModel from "../components/genEds";
 import ExtraCourses from "../components/extraCourses";
 import TransferCourse from "../components/transferCourses";
 import SemesterPlan from "../components/semesterplan";
-import { getCerts, getCourseList, getGenEds, getMajors, getMinors } from "../lib/data";
+import { getCerts, getCourseList, getGenEds, getMajors, getMinors, getTest } from "../lib/data";
 import TranscriptUpload from "../components/transcriptUpload";
 import * as User from "../lib/user";
 import { exportData } from "../lib/filehandling";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Cookies from "universal-cookie";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Audit = () => {
+
+    // === State Variables === //
 //----------------------------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------------------------
 
     const [selectType, setType] = useState("");
+    const [selectCategory, setCategory] = useState("");
+    const [selectTerm, setTerm] = useState(null);
+
+    const [enrollFields, setEnrollFields] = useState([{type: "", category: "", year: ""}]);
+    const [userCatalog, setUserCatalog] = useState([{type: "", category: "", year: ""}]);
+    const [userCourses, setUserCourses] = useState(User.getCourses());
+    
+    const [minors, setMinors] = useState({});
+    const [majors, setMajors] = useState({});
+    const [certificates, setCertificates] = useState({});
+    const [coursesList, setCourses] = useState([]);
+    const [genEds, setGenEds] = useState([]);
+
+    const [state, setState] = useState(0) // when clicked, refreshes state on the gen eds, transfer, and elective courses
+
+    // === Cookies === //
+    const cookies = new Cookies();
+    const userCookie =  cookies.get("user")
+    const loggedIn = Boolean(userCookie?.id);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const controller = new AbortController();
+        User.checkStorage();
+
+        getMajors().then(val => setMajors(val));
+        getCourseList().then(val => setCourses(val))
+        .then(() => {
+            if (!loggedIn) return;
+            User.read(userCookie.id).then(() => {
+                setUserCourses([...User.getCourses()]);
+                setUserCatalog([...User.getPrograms()]);
+            });
+        })
+
+        getMinors().then(val => setMinors(val));
+        getCerts().then(val => setCertificates(val));
+        getGenEds().then(val => setGenEds(val));
+        return () => controller.abort();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+
+    // === Event Handlers === //
     const handleTypeChange = (e, index) => {
         setType(e.target.value);
     };
 
-    const [selectCategory, setCategory] = useState("");
-    
     const handleCategoryChange = (e, index) => {
         setCategory(e.target.value);
     };
-
-    const [selectTerm, setTerm] = useState(null);
+    
     const handleTermChange = (e, index) => {
         setTerm(e.target.value);
     };
-
-    // testing add function! this is applied to the mass select, will need to get this to work on the top and other select course
-    const [enrollFields, setEnrollFields] = useState([{type: "", category: "", year: ""}])
     
     const handleEnrollFieldChange = (i, e) =>{
         let newFormValues = [...enrollFields];
@@ -43,53 +87,27 @@ const Audit = () => {
         setEnrollFields(enrollFields);
     }
 
-    
-
-    // gets database data and turns it into a list of objects
-
-    const [minors, setMinors] = useState({});
-    const [majors, setMajors] = useState({});
-    const [certificates, setCertificates] = useState({});
-    const [coursesList, setCourses] = useState([]);
-    const [genEds, setGenEds] = useState([])
-
-    useEffect(() => {
-        getMajors(true).then(val => setMajors(val));
-
-        getCourseList(true).then(val => setCourses(val))
-        // .then(() => User.read('655f96b827fb470cd02a3e1b'))
-        // .then(() => setUserCourses([...User.getCourses()]));
-
-        getMinors(true).then(val => setMinors(val));
-        getCerts(true).then(val => setCertificates(val));
-        getGenEds(true).then(val => setGenEds(val));
-    }, []);
-
-
     // this is the user catalog section. this is a list of the type and category that the user has chosen. this is used to loop through database data
-
-    const [userCatalog, setUserCatalog] = useState([{type: "", category: "", year: ""}])
-
     const handleUserCategories = () => {
         User.addPlan(selectCategory, selectTerm, selectType);
         setUserCatalog([...userCatalog, {type: selectType, category: selectCategory, year: selectTerm}])
+        setUserCourses([...User.getCourses()])
     }
 
-    const removeCatalog = (index) =>{
-        let data = [...userCatalog]
-        data.splice(index, 1)
-        setUserCatalog(data)
+    const removeCatalog = (category, year, type) =>{
+        User.removeProgram(category, year, type);
+        setUserCatalog(User.getPrograms());
     }
     
-    const addCatalog = (type, category, year) => {
-        setUserCatalog([...userCatalog, {type: type, category: category, year: year}])
+    const reformatTitle = title => {
+        const split = title.split(/\sin\s/);
+        return `${split[1]}${ split[0] !== "Minor" && split[0] !== "Certificate" ? ` (${split[0]})` : ""}`;
     }
 
     // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
 
     let userType = null;
     let options = null;
-    let yearOptions = null;
 
     if (selectType === "majors"){
         userType = majors
@@ -102,11 +120,13 @@ const Audit = () => {
     }
 
     if (selectTerm && userType) { 
-        options = userType[selectTerm].map((option) => <option key={option?.title}>{option?.title}</option>); 
+        options = userType[selectTerm].map((option) => <option key={option?.title} value={option?.title}>{ reformatTitle(option?.title) }</option>); 
     }
+
+
     // this function checks the selected type and category the user has added, filters through the types of lists and then pushes the information into the Catalog Items component. the index is used for deletion purposes.
     
-    function getCourses(type, category, year, index){
+    const getCourses = (type, category, year, index) => {
         let selectedType = [];
         if (type === "majors" || type === "major"){
             if (!majors[year]) return;
@@ -124,32 +144,39 @@ const Audit = () => {
             category = "default"
         }
         return(
-            <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(index)}/>
+            <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(category, year, type)}/>
         )
 
     }
 
     // delete button/refresh page button
 
-    const [state, setState] = useState(0) // when clicked, refreshes state on the gen eds, transfer, and elective courses
+    
     const refreshPage=()=> {
         setUserCatalog([{type: "", category: ""}])
         setState(state+1)
     }
 
-    const [userCourses, setUserCourses] = useState(User.getCourses());
+    const clear = () => {
+        User.clear();
+        setUserCourses([...User.getCourses()]);
+        setUserCatalog([...User.getPrograms()]);
+    }
+
+    // === Alert Popups === //
     const deleteAlert = () => {
         confirmAlert({
             customUI: ({ onClose }) => {
                 return (
                   <div className='confirmButton'>
                     <h1>Confirm Delete</h1>
-                    <p>Are you sure you want to delete your progress? No programs or classes will be saved.</p>
+                    <p>Are you sure you want to delete your progress? There is no way to undo this action. 
+                        { loggedIn ? " This will not affect your saved data until you click the save button." : "" }</p>
                     <div id="confirmButtonsDiv">
                         <button id="no" onClick={onClose}>No</button>
                         <button id="yes"
                         onClick={() => {
-                            refreshPage();
+                            clear();
                             onClose();
                         }}
                         >
@@ -159,56 +186,68 @@ const Audit = () => {
                     
                   </div>
                 );
-              }
-    })
-    }
-    const cookies = new Cookies(null);
-    const cookieData =  cookies.get("user2")
+    }})}
 
-    let calendarHeading = "" // this is the banner over the calendar
-    let testCatalog = [];
-
-    // testing for adding existing courses to page on load DELETE AFTER FINISH TESTING
-    useEffect(()=> {
-        setUserCatalog(testCatalog)
-    }, [])
-
-    if (cookieData !== undefined){
-        calendarHeading = `${cookieData.email} Degree Planner`
-        if(cookieData.testCategories!== undefined){
-            cookieData.testCategories.map(item => testCatalog.push(item))
-        }
+    const saveData = () => {
+        if (loggedIn) confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                  <div className='confirmButton'>
+                    <h1>Confirm Save</h1>
+                    <p>Are you sure you want to save? This will overwrite any previously saved data.</p>
+                    <div id="confirmButtonsDiv">
+                        <button id="no" onClick={onClose}>No</button>
+                        <button id="yes"
+                        onClick={() => {
+                            User.save(userCookie.id);
+                            onClose();
+                        }}
+                        >
+                        Yes
+                        </button>
+                    </div>
+                    
+                  </div>
+                );
+            }
+        })
+        else confirmAlert({
+            customUI: ({ onClose }) => {
+                return (
+                  <div className='confirmButton'>
+                    <h1>Not signed in</h1>
+                    <p>You are not currently signed in. To save your data you must either sign into an existing account or create a new one.</p>
+                    <div id="confirmButtonsDiv">
+                        <button id="yes" onClick={() => {
+                            onClose();
+                            User.tempStorage();
+                            navigate('/login');
+                        }}>Sign in</button>
+                        {/* <button id="signup" onClick={onClose}>Sign up</button> */}
+                        <button id="no" onClick={onClose}>
+                        Continue without saving
+                        </button>
+                    </div>
+                    
+                  </div>
+                );
+            }
+        })
     }
-    else{
-        calendarHeading = "Degree Planner"
-    }
-
-    // this is testing for user information, may want to use this to query data, can do this in use effect!
-
-    let testAuth = null;
-    try{
-        testAuth = cookies.get("user")
-        if(testAuth === undefined){
-            testAuth = "";
-        }
-    }
-    catch(err){
-        console.log(err)
-    }
-    
- 
-    return (
         <div id="fullpage">
             <div id="header">
-                <TranscriptUpload setCatalog={setUserCatalog} setCourses={(courses) => {User.setCourses(courses);setUserCourses([...User.getCourses()]);}} hasData={userCourses.length > 0}/>
+                <TranscriptUpload 
+                    setCatalog={setUserCatalog} 
+                    setCourses={(courses) => {
+                        User.setCourses(courses);
+                        setUserCourses([...User.getCourses()]);
+                    }} 
+                    hasData={userCourses.length > 0}/>
                 <br/>
-                <a href="/tutorial" target="_blank">Need Help?</a>
             </div>
             <div id='contents'>
             
                 <div id="audit">
-                    <p>{testAuth.email}{testAuth.password}</p>
-
                     <div id="enrollmentSelection">
                         {/* https://www.youtube.com/watch?v=XtS14dXwvwE */}
                         {enrollFields.map((input, index) => {
@@ -241,11 +280,12 @@ const Audit = () => {
                                             { options }
                                         </select>
                                     </label>
-                                
+                                    <div id = "test">
+                                        <button id="programButton" onClick={handleUserCategories}>ADD PROGRAM</button>
+                                    </div>
                                 </div>
                             )
                         })}
-                        <button id="programButton" onClick={handleUserCategories}>Add Program</button>
                     </div>
                     <hr/>
 
@@ -266,7 +306,7 @@ const Audit = () => {
                     {/* <MajorTest majors={majors} coursesList={coursesList}/> */}
 
                     <div>
-                        <h2>Elective Courses</h2>
+                        <h2 id = "auditHeaders">Elective Courses</h2>
                         <p>If you have other courses you have taken that are outside of your major or transfer courses, enter them here:</p>
                         <ul className="accordion">
                             <li>
@@ -295,14 +335,15 @@ const Audit = () => {
 
                     <div id='optionButtons'>
                         {/*onClick={()=> User.save('655f96b827fb470cd02a3e1b')}*/}
-                        <button id='saveButton' >Save</button>
-                        <button id='exportButton' onClick={exportData}>Export</button>
-                        <button id='deleteButton' onClick={deleteAlert}>Delete</button>
+                        <button id='deleteButton' onClick={deleteAlert}>DELETE</button>
+                        <button id='exportButton' onClick={exportData}>EXPORT</button>
+                        <button id='saveButton' onClick={saveData}>SAVE</button>
+
                     </div>
                 </div>
                 <hr/>
 
-                <SemesterPlan data={userCatalog} courses={userCourses} user={calendarHeading}/>
+                <SemesterPlan data={userCatalog} courses={userCourses}/>
 
             </div>
         </div>

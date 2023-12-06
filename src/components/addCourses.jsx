@@ -117,7 +117,7 @@ const AddCourses = ({courses, orCourses}) => {
                 </select>
             </label>
 
-            <button id='addCourseButton' onClick={handleAddCourse}>Add Course</button>
+            <button id='addCourseButton' onClick={handleAddCourse}>ADD COURSE</button>
             
         </div>
     )

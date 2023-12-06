@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Popup from 'reactjs-popup';
 import '../styles/navbar.css';
-import image from "../profilephoto.png";
 import { Link } from 'react-router-dom';
 import mizzouLogo from "../MU-StackedMU-4C.png";
 import { EyeInvisibleOutlined, EyeOutlined, CloseOutlined } from "@ant-design/icons";
@@ -56,7 +55,7 @@ const NavBar = () => {
     try{
       testAuth = cookies.get("user")
       // checks if has cookie, if does, does not render login and sign up, else does render login and sign up
-      if(testAuth !== undefined){
+      if(testAuth?.id){
         setShowLogin(false)
       }
       else{
@@ -66,7 +65,7 @@ const NavBar = () => {
     }catch(err){
       console.log(err)
     }
-  }, [showLogin])
+  }, [])
 
   
 
@@ -125,8 +124,8 @@ const NavBar = () => {
         {showLogin ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
 
         {showLogin ? null : <Popup
-            contentStyle={{ borderRadius: '3px', width: '40%', height: '50%' }}
-            trigger={<button id='pfpButton' onClick={() => handleButtonClick()}><img src={image} alt='profilephoto' id='userprofile' /></button>}
+            contentStyle={{ borderRadius: '0px', width: '40%', height: '40%' }}
+            trigger={<Link to="/" className="navbarlink" onClick={() => handleButtonClick()}>Profile</Link>}
             modal nested
           >
             {(close) => (
@@ -164,7 +163,7 @@ const NavBar = () => {
                       
                       <br/>
 
-                      <label>Password
+                      {/* <label>Password
                         <div className="password-input" id="formContent">
                           <input className="userInfo"
                             value={testAuth.password}
@@ -175,7 +174,7 @@ const NavBar = () => {
                             {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                           </div>
                         </div>
-                      </label>
+                      </label> */}
 
                       <br/>
                     <button className="editButton" type="submit">Reset Password</button>

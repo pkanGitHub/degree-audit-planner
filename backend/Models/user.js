@@ -3,25 +3,21 @@ const mongoose = require('mongoose')
 const userSchema = mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    major: { type: String },
-    coursePlan: {
-        semester: [{
-            date: { type: Date },
-            courses: [{
-                inProgress: { type: Boolean, default: false },
-                completed: { type: Boolean },
-                completion_date: { type: Date }
-            }]
-        }]
-    },
-    generalEducationCompleted: { type: Boolean, required: true, default: false },
-    programRequirements: [{
-        description: String,
-        completed: { type: Boolean, default: false },
-        courses: [String],
-        creditHours: Number
+    major: [{title: String, year: String}],
+    minor: [{title: String, year: String}],
+    certificate: [{title: String, year: String}],
+    courses: [{
+        id: String,
+        plan: [Number],
+        status: String,
+        credits: String
     }],
-    emailVerified: { type: Boolean, default: false } // Add this field for email verification
+    generalEducationCompleted: { type: Boolean, default: false },
+    emailVerified: { type: Boolean, default: false },
+    verificationCode: { type: String },
+    verificationCodeExpires: { type: Date },
+    loginVerificationCode: { type: String },
+    resetPwdVerificationCode: { type: String }
 })
 
 module.exports = mongoose.model('User', userSchema)

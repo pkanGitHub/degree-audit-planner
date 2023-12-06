@@ -2,12 +2,35 @@ import React, {useState} from 'react';
 import "../styles/formStyle.css";
 import Cookies from 'universal-cookie';
 import CookiePopup from '../components/cookiepopup';
+import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
 
 const Login = () => {
+    const [visible, setVisible] = useState(false);
     const [formData, setFormData] = useState({ email: '', password: '' })
     const [errorMsg, setErrorMsg] = useState(null)
+
+    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
+    const [emailBorder, setEmail] = useState({border: "2px solid lightgray"})
+
+
+    const cookies = new Cookies(null);
+    // if (cookies.get("user")?.id) window.location.href = '/audit';
+
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        if(!formData.email){
+          setEmail({border: "2px solid red"})
+          setPasswordBorder({border: "2px solid lightgray"})
+          setErrorMsg("You must enter an email.")
+          return
+        }
+        else if(!formData.password){
+          setEmail({border: "2px solid lightgray"})
+          setPasswordBorder({border: "2px solid red"})
+          setErrorMsg("You must enter a password.")
+          return
+        }
     
         try {
             const response = await fetch('http://localhost:4001/login', {
@@ -22,11 +45,15 @@ const Login = () => {
         
             if (response.ok) {
                 console.log('Login successful on the frontend')
-                cookies.set("user", {email: formData.email, password: formData.password}, {expires: tomorrow}) // takes data and adds it to cookie
+                console.log(response)
+                // grabs today's date and then sets the date to tomorrow, used for cookie expiry
+                cookies.set("email", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
                 // Redirect
-                window.location.href = '/audit'
+                window.location.href = '/loginMFA'
             } else {
                 // show error message on browser or console...
+                setEmail({border: "2px solid red"})
+                setPasswordBorder({border: "2px solid red"})
                 setErrorMsg(data.message)
                 console.log('Login failed on the frontend:', data.message)
             }
@@ -41,32 +68,34 @@ const Login = () => {
         setErrorMsg(null)
       }
 
-  
-    // grabs today's date and then sets the date to tomorrow, used for cookie expiry
-    var tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-
-
-    const cookies = new Cookies(null);
-
-    // this is a test to see how information from that works, DELETE WHEN COMPLETED
-    cookies.set("user2", {email: "test", password: "password", testCategories: [{type: "majors", category: "BS in Information Technology"}, {type: "majors", category: "BS in Information Technology"}]}, {expires: tomorrow})
-
     return (
         <div className="formSection">
-            {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
   
             <p></p>
             <div id="formDesign">
                 <h1>Login</h1>
+                <p id='errorMessage'>{errorMsg}</p>
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">
-                        <label >Email</label>          
-                        <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange}/>
+                        <label>Email</label>          
+                        <input type="text" name="email" placeholder="Enter email here..." value={formData.email} onChange={handleChange} style={emailBorder}/>
                         <br/>
                         <label>Password</label>
-                        <input type="password" name="password" placeholder="Enter password here..." value={formData.password} onChange={handleChange}/>
-        
+                            <div className="password-input">
+                              <input
+                                type={visible ? "text" : "password"}
+                                name="password"
+                                placeholder="Enter password here..."
+                                value={formData.password}
+                                onChange={handleChange}
+                                style={passwordBorder}
+                              />
+                              <div className="eye-icon" onClick={() => setVisible(!visible)}>
+                                {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
+                              </div>
+                            </div>
                         <a href="/forgotpassword">Forgot Password?</a>
+
                     </div>
                     
                     <br/>
