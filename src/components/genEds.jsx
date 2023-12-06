@@ -4,7 +4,7 @@ import { useState } from "react";
 import RequiredChoice from "./requiredChoice";
 import ClassInfo from "./classInfoPopup";
 
-const GenEdsModel = ({genEds, coursesList}) => {
+const GenEdsModel = ({genEds, coursesList, update}) => {
 
     return(
         
@@ -19,7 +19,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                             {genEd?.requirements && genEd?.requirements.map((area) => {if((area.label.includes("English")) === true){return(
                                 <div key={area?._id}>
                                     <h3>{area?.label}</h3>
-                                    <p>Credit hours: {area?.hours}</p>
+                                    {area?.hours ? <p>Credit hours: {area?.hours}</p> : null }
                                     <p>{area?.info}</p>
 
                                     {coursesList.filter((area) => area.courses.some((course) => course.courseID === "ENGLSH_1000")).map((area)=> area.courses.filter((course) => course.courseID.match("ENGLSH_1000")).map((selectedCourse, index)=> {if(index === 0 || index === 1){ return(<RequiredCourse key={index} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>)}}))}
@@ -30,7 +30,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                             <p>{subareas?.info}</p>
                                             
                                                 
-                                            <MassSelectCourse coursesList={coursesList} categories={subareas.categories}/>
+                                            <MassSelectCourse coursesList={coursesList} categories={subareas.categories} update={update}/>
                                                 
                                         </div>
                                     )}
@@ -50,10 +50,10 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                 else if((area.label.includes("Writing Intensive")) === true){return(
                                     <div key={area?._id}>
                                         <h3>{area?.label}</h3>
-                                        <p>Credit hours: {area?.hours}</p>
+                                        {area?.hours ? <p>Credit hours: {area?.hours}</p> : null }
                                         <p>{area?.info}</p>
 
-                                        <MassSelectCourse coursesList={coursesList} categories={["W"]}/>
+                                        <MassSelectCourse coursesList={coursesList} categories={["W"]} update={update}/>
                                         
                                         {area?.sub && area.sub.map((subareas)=> {if(subareas?.categories && subareas.categories.length > 0){return(
                                             <div key={subareas?._id}>
@@ -61,7 +61,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                                 <p>{subareas?.info}</p>
                                                 
                                                     
-                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories}/>
+                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories} update={update}/>
                                                     
                                             </div>
                                         )}
@@ -84,7 +84,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                         <p>Credit hours: {area?.hours}</p>
                                         <p>{area?.info}</p>
 
-                                       <MassSelectCourse coursesList={coursesList} categories={["MQR"]}/>
+                                       <MassSelectCourse coursesList={coursesList} categories={["MQR"]} update={update}/>
 
                                         
                                         {area?.sub && area.sub.map((subareas)=> {if(subareas?.categories && subareas.categories.length > 0){return(
@@ -93,7 +93,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                                 <p>{subareas?.info}</p>
                                                 
                                                     
-                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories}/>
+                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories} update={update}/>
                                                     
                                             </div>
                                         )}
@@ -116,7 +116,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                         <p>Credit hours: {area?.hours}</p>
                                         <p>{area?.info}</p>
 
-                                       <MassSelectCourse coursesList={coursesList} categories={["MSLR"]}/>
+                                       <MassSelectCourse coursesList={coursesList} categories={["MSLR"]} update={update}/>
 
                                         
                                         {area?.sub && area.sub.map((subareas)=> {if(subareas?.categories && subareas.categories.length > 0){return(
@@ -125,7 +125,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                                 <p>{subareas?.info}</p>
                                                 
                                                     
-                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories}/>
+                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories} update={update}/>
                                                     
                                             </div>
                                         )}
@@ -148,7 +148,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                         <p>Credit hours: {area?.hours}</p>
                                         <p>{area?.info}</p>
 
-                                       <MassSelectCourse coursesList={coursesList} categories={["MQR"]}/>
+                                       <MassSelectCourse coursesList={coursesList} categories={["MQR"]} update={update}/>
 
                                         
                                         {area?.sub && area.sub.map((subareas)=> {if(subareas?.categories && subareas.categories.length > 0){return(
@@ -157,7 +157,7 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                                 <p>{subareas?.info}</p>
                                                 
                                                     
-                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories}/>
+                                                <MassSelectCourse coursesList={coursesList} categories={subareas.categories} update={update}/>
                                                     
                                             </div>
                                         )}

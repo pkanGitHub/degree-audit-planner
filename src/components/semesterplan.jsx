@@ -8,6 +8,8 @@ export const SemesterPlan = memo(({data, courses, user}) => {
     const [change, callChange] = useState(1);
     const update = () => callChange(change + 1);
 
+    console.log(courses);
+
     var years = [];
     addFromUser(years, courses);
     years = DeleteDuplicates(years);
@@ -30,7 +32,11 @@ export const SemesterPlan = memo(({data, courses, user}) => {
                             <tr>
                                 {
                                     year.semesters.map((semester, index) => 
-                                        <td colSpan={2} className="semesterHeading">Semester {index + 1}</td>
+                                        <td colSpan={2} className="semesterHeading">{
+                                            index === 0 ? "Fall" :
+                                            index === 1 ? "Summer" : 
+                                                          "Spring"
+                                        }</td>
                                     )
                                 }
                             </tr>

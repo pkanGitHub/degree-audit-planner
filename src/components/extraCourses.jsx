@@ -11,9 +11,14 @@ const ExtraCourses = ({coursesList}) => {
         setSection(e.target.value)
     }
 
-    let allCourseList = []
-    {coursesList.filter(area => area.area === section).map(selectedArea => selectedArea.courses.map(course => allCourseList.push(course)))}
-    
+    const [searchFilter, setSearchFilter] = useState("");
+
+    let allCourseList = coursesList
+                        .filter(area => area.area === section)
+                        .map(selectedArea => selectedArea.courses)
+                        .flat()
+                        .filter(course => course.name.match(searchFilter, "g") || course.courseID.match(searchFilter, "g"))
+
     let sortedTotalCourses = allCourseList.sort(function (a, b) {
         if (a.courseID < b.courseID) {
           return -1;
@@ -35,9 +40,9 @@ const ExtraCourses = ({coursesList}) => {
 
     const handleAddCourse = () => {
         const courseInfo = course
-        {sortedTotalCourses.filter((course) => course.courseID.match(courseInfo)).map((selectedCourse)=> 
+        sortedTotalCourses.filter((course) => course.courseID.match(courseInfo)).map((selectedCourse)=> 
             setUserCourses([...userCourses, selectedCourse
-            ]))}
+            ]))
         
 
     }
@@ -46,6 +51,12 @@ const ExtraCourses = ({coursesList}) => {
         let data = [...userCourses]
         data.splice(index, 1)
         setUserCourses(data)
+    }
+
+    const handleSearch = event => {
+        const text = event.target.value;
+
+        setSearchFilter(text);
     }
 
     return(
@@ -79,6 +90,12 @@ const ExtraCourses = ({coursesList}) => {
                     </div>
                 ))}
             </div>
+
+            <label>
+                Search:
+                <input type="text" name="searchBox" id="searchBox" onChange={handleSearch}/>
+            </label>
+
             <label>
                 Choose course:&nbsp;&nbsp;
                 <select id='chooseNumber' name='course' onChange={handleChangeCourse}>

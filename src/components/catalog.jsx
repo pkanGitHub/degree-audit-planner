@@ -5,7 +5,7 @@ import "../styles/audit.css"
 import AddCourses from "./addCourses";
 
 
-const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
+const CatalogItems = ({year, type, category, coursesList, removeCatalog, update}) => {
     const [isOrOpen, setIsOrOpen] = useState(false)
     const toggleOrCourses = () => {
         setIsOrOpen(!isOrOpen)
@@ -123,7 +123,7 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                                         <input type="checkbox" name="accordion" id={course?._id} />
                                         <label id="genReqLabel" htmlFor={course?._id}>{course?.label}*</label>
                                         <div className="classHistory">
-                                            <p><b>Credits hours needed:</b> {course.credits}</p>
+                                            { course?.credits ? <p><b>Credits hours needed:</b> {course.credits}</p> : null }
                                             {course?.info && course.info.map((info) => (
                                                         <p key={info?._id}>
                                                             <strong>Comment:</strong> {info?.comment}
@@ -150,7 +150,7 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                                         <div className="classHistory">
                                             <p><b>Credits hours needed:</b> {course.credits}</p>
                                 
-                                            <AddCourses courses={manySelect} orCourses={orClasses}/>
+                                            <AddCourses courses={manySelect} orCourses={orClasses} update={update}/>
                                             
                                                 {course?.list && course.list.map ((item) => (
                                                     <div key={item?._id}>
