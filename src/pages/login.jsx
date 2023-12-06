@@ -78,7 +78,7 @@ const Login = () => {
                                 {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                               </div>
                             </div>
-                        <a href="/forgotpassword">Forgot Password?</a>
+                        <a id = "forgotPasswordLink" href="/forgotpassword">Forgot Password?</a>
 
                     </div>
                     
