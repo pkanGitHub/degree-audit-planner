@@ -32,6 +32,8 @@
     text-decoration: none;
     padding: 15px;
     font-size: 17px;
+    background: none;
+    font-weight:normal;
 }
 
 .navbarlink:visited {

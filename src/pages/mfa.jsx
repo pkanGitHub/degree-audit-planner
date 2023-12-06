@@ -25,7 +25,7 @@ const MFA = () => {
             if (response.success) {
                 console.log('Email verification successful!')
                 cookies.set("user", {id: response.id}, {expires: tomorrow}) // takes data and adds it to cookie
-                navigate('/login');
+                navigate('/');
 
             } else {
                 console.log(response);

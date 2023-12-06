@@ -141,14 +141,38 @@ app.post('/auth/verify-email', async (req, res) => {
         if (user.verificationCodeExpires && user.verificationCodeExpires > new Date()) {
             user.emailVerified = true
             await user.save()
-            res.status(200).json({ success: true, msg: 'Email verification successful', ev: user.verificationCodeExpires, lv: new Date(), id: user._id })
+            res.status(200).json({ success: true, msg: 'Email verification successful', id: user._id})
         } else {
-            res.status(400).json({ success: false, error: 'invalid_code', ev: user.verificationCodeExpires, lv: new Date() })
+            res.status(400).json({ success: false, error: 'invalid_code' })
         }
     } catch (error) {
         res.status(500).json({ error: 'Failed to verify email' })
     }
 })
+
+// check email
+app.post("/auth/email", async(req, res) => {
+    const { email } = req.body
+    try {
+      // check if user already exists
+      const existUser = await User().findOne({ email })
+      if (!existUser) {
+        return res.status(400).json({ msg: 'User does not exist' })
+      }
+      // Generate a verification code
+      const verificationCode = Math.floor(100000 + Math.random() * 900000)
+      existUser.resetPwdVerificationCode = verificationCode
+      existUser.save()
+  
+      await sendVerificationCode(email, verificationCode)
+  
+      res.status(201).json({ msg: 'Check your email for verification code.' })
+        
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: 'Email has failed.' })
+    }
+  })
 
 // login
 app.post("/auth/login", (req, res, next) => {
@@ -201,6 +225,28 @@ app.post('/auth/verify-login', async (req, res) => {
     }
 })
 
+
+app.post('/auth/verify-user', async(req, res) => {
+    const { resetPwdVerificationCode } = req.body
+    try {
+      const user = await User().findOne({ resetPwdVerificationCode })
+      if (!user) {
+        return res.status(404).json({ error: 'User not found or invalid verification code' })
+      }
+      // if code match, change code to null upon submit
+      if (user.resetPwdVerificationCode) {
+        user.resetPwdVerificationCode = null
+        await user.save()
+        res.status(200).json({ success: true, msg: 'User verification successful', id: user._id })
+      } else {
+        res.status(400).json({ success: false, error: 'invalid_code' })
+      }
+    } catch (error) {
+      console.error(error)
+      res.status(500).json({ error: 'Failed to verify user' })
+    }
+  })
+
 app.post("/auth/user/load", (req, res) => {
     User().findOne(
         { _id: req.body.id }
@@ -252,7 +298,6 @@ app.post("/auth/resetpassword", async (req, res) => {
 
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(password, salt)
-        // Generate a verification code
 
         existUser.password = hashedPassword;
         await existUser.save()

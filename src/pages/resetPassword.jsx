@@ -12,22 +12,32 @@ const ResetPassword = () => {
     const [visible, setVisible] = useState(false);
     const [visible2, setVisible2] = useState(false);
     const cookies = new Cookies(null);
-    const user = cookies.get("user");
-    const loggedIn = Boolean(user?.id);
 
-    if (!loggedIn) navigate('/');
 
-    useEffect(() => {
-        if (!user?.email) read(user.id);
-    })
+    let testAuth = null;
+    try{
+        const userCookies = cookies.get("user")
+        const forgotPass = cookies.get("forgotpass");
+
+        if (forgotPass?.email) testAuth = forgotPass;
+        else if (userCookies?.id) {
+            testAuth = userCookies;
+            if (!testAuth?.email) read(testAuth.id);
+        }
+        else navigate('/');
+    }
+    catch(err){
+        console.log(err)
+    }
 
     const [againBorder, setAgain] = useState({border: "2px solid lightgray"})
     const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
 
-    const [error, setError] = useState("")
+    const [error, setError] = useState("");
 
 
-    const [data, setData] = useState({email: user.email, password: "", passwordAgain: ""})
+    const [data, setData] = useState({email: testAuth.email, password: "", passwordAgain: ""})
+    console.log(data);
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -51,18 +61,20 @@ const ResetPassword = () => {
             setPasswordBorder({border: "2px solid red"})
             return
         }
+        else {
+            API.post('DatabaseAPI', "/auth/resetpassword", { body: data })
+            .then(response => {
+                console.log('Server Response:', response);
+                console.log('Password change successful!')
+                alert("You have successfully changed your password!")
+                navigate('/login');
+            })
+            .catch(error => {
+                console.error(error)
+                setError('Failed to update password. Please try again.')
+            })
+        }
 
-        API.post('DatabaseAPI', "/auth/resetpassword", { body: data })
-        .then(response => {
-            console.log('Server Response:', response);
-            console.log('Password change successful!')
-            alert("You have successfully changed your password!")
-            navigate('/login');
-        })
-        .catch(error => {
-            console.error(error)
-            setError('Failed to update password. Please try again.')
-        })
     }
 
     const handleChange = (e) => {
@@ -75,7 +87,7 @@ const ResetPassword = () => {
             <div id="formDesign">
                 <h1>Reset Password</h1>
 
-                <p>For User: {user.email}</p>
+                <p>For User: {testAuth?.email}</p>
                 <p id="errorMessage">{error}</p>
                 <form onSubmit={handleSubmit}>
                     <div id="formContent">

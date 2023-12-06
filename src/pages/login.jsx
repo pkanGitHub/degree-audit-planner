@@ -39,9 +39,8 @@ const Login = () => {
         API.post('DatabaseAPI', "/auth/login", { body: formData })
         .then(response => {
             console.log('Login successful on the frontend')
-            cookies.set("email", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
-            console.log(response)
-            navigate('/loginMFA');
+            cookies.set("user", {id: response.id}, {expires: tomorrow}) // takes data and adds it to cookie
+            navigate("/")
         })
         .catch(error => {
             setEmail({border: "2px solid red"})

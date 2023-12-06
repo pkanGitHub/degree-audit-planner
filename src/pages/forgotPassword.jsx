@@ -3,6 +3,7 @@ import image from "../password.png"
 import Cookies from "universal-cookie";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API } from 'aws-amplify';
 
 const ForgotPassword = () => {
     const cookies = new Cookies(null);
@@ -21,30 +22,16 @@ const ForgotPassword = () => {
         }
         
     
-        try {
-            const response = await fetch('http://localhost:4001/email', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(formData),
-            })
-        
-            const data = await response.json()
-        
-            if (response.ok) {
-                console.log('Email exists')
-                cookies.set("forgotpass", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
-                // Redirect
-                navigate('/passwordMFA');
-            } else {
-                // show error message on browser or console...
-                setErrorMsg(data.msg)
-                console.log('Login failed on the frontend:', data.msg)
-            }
-          } catch (error) {
-            console.error('Error during login on the frontend:', error)
-        }
+        API.post('DatabaseAPI', "/auth/email", { body: formData })
+        .then(response => {
+            console.log('Email exists')
+            cookies.set("forgotpass", {email: formData.email}, {expires: tomorrow}) // takes data and adds it to cookie
+            navigate('/passwordMFA');
+        })
+        .catch(error => {
+            setErrorMsg(error.response.data.msg)
+            console.log('Login failed on the frontend:', error.response.data.msg)
+        })
     }
 
     const handleChange = (e) => {

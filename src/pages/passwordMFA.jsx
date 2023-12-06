@@ -26,12 +26,13 @@ const PasswordMFA = () => {
         try {
             API.post('DatabaseAPI', "/auth/verify-user", { body: {resetPwdVerificationCode: resetPwdVerificationCode} })
             .then(response => {
-                console.log(response)
+                console.log(response.msg)
+                cookies.set("forgotpass", {...testAuth, id: response.id});
                 navigate('/resetpassword');
             })
             .catch(error => {
-                setErrorMsg(error)
-                console.log(error.message || 'Invalid verification code. Please try again.')
+                setErrorMsg(error.response.data.message)
+                console.log(error.response.data.message || 'Invalid verification code. Please try again.')
             })
         } catch (error) {
             console.error(error)

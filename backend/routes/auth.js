@@ -179,8 +179,7 @@ router.post("/email", async(req, res) => {
     existUser.resetPwdVerificationCode = verificationCode
     existUser.save()
 
-    const emailResult = await sendVerificationCode(email, verificationCode)
-    console.log(emailResult)
+    await sendVerificationCode(email, verificationCode)
 
     res.status(201).json({ msg: 'Check your email for verification code.' })
       

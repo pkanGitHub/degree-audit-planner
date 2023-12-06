@@ -102,7 +102,7 @@ const NavBar = () => {
 
         {!loggedIn ? null : <Popup
             contentStyle={{ borderRadius: '0px', width: '40%', height: '40%' }}
-            trigger={<Link to="/" className="navbarlink" onClick={() => handleButtonClick()}>Profile</Link>}
+            trigger={<button className="navbarlink" onClick={() => handleButtonClick()}>Profile</button>}
             modal nested
           >
             {(close) => (
@@ -126,29 +126,11 @@ const NavBar = () => {
               </button>
                       <label>Email
                         <div id="formContent">
-                          <input className="userInfo"
-                            value={user.email}
-                            type="text"
-                            placeholder={user.email}
-                            readOnly={true}
-                          />
+                            <p>{user.email}</p>
                           </div>
                       </label>
                       
                       <br/>
-
-                      {/* <label>Password
-                        <div className="password-input" id="formContent">
-                          <input className="userInfo"
-                            value={user.password}
-                            type={visible ? "text" : "password"}
-                            readOnly={true}
-                          />
-                          <div className="eye-icon" onClick={() => setVisible(!visible)}>
-                            {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                          </div>
-                        </div>
-                      </label> */}
 
                       <br/>
                     <Link to="/resetpassword"><button className="editButton" type="submit" onClick={() => close()}>Reset Password</button></Link>
