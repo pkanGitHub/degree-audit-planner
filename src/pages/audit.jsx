@@ -86,13 +86,14 @@ const Audit = () => {
     // this is the user catalog section. this is a list of the type and category that the user has chosen. this is used to loop through database data
     const handleUserCategories = () => {
         User.addPlan(selectCategory, selectTerm, selectType);
-        setUserCatalog([...userCatalog, {type: selectType, category: selectCategory, year: selectTerm}])
+        setUserCatalog([...User.getPrograms()])
         setUserCourses([...User.getCourses()])
     }
 
     const removeCatalog = (category, year, type) =>{
-        User.removeProgram(category, year, type);
-        setUserCatalog(User.getPrograms());
+        console.log(`${category} : ${year} : ${type}`)
+        
+        setUserCatalog([...User.removeProgram(category, year, type)]);
     }
     
     const reformatTitle = title => {
