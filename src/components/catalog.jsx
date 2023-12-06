@@ -3,90 +3,120 @@ import React, { useState, useEffect } from "react";
 import RequiredCourse from "./requiredCourse";
 import "../styles/audit.css"
 import AddCourses from "./addCourses";
-//import { userRequirments } from "./catalog";
-
-
+import setTotalRequiredCredits from "./catalog";
+import creditsSelected from "./catalog";
+import creditInfo from "./catalog";
+import { getCourses } from '../lib/user'
 
 const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
-    const [isOrOpen, setIsOrOpen] = useState(false)
-
-    const [totalRequiredCredits, setTotalRequiredCredits] = useState(0);
-    const [userRequirments, setUserRequirments] = useState([])
-  
-    //need to add create user requirements to the use effect
-    useEffect(() => {
-        createUserRequirments()
-        calculateTotalRequiredCredits()
-    }, [type, category, coursesList]); 
-    
+    const [isOrOpen, setIsOrOpen] = useState(false) 
+     
     const toggleOrCourses = () => {
         setIsOrOpen(!isOrOpen)
     }
+//-------------------------------------------------------------------
+useEffect(() => 
+    {
+        calculateTotalRequiredCredits()
+    }, [type, category, coursesList]); 
 
-    const createUserRequirments = () => {
-        let userRequirments = []
-        type.filter(option => option.title.match(category)).map((selectedOption, index) => {
-            if (index === 0) {
-                selectedOption?.requirements && selectedOption.requirements.map((course) => {
-                    if (course.required === "true" && course.list.lenght !== 0 && course.label !== "Internship" && course.label !== "# Internship") {
-                        //i need to add this information to the user requirements array
-                        userRequirments.push(
-                            { id: course._id, label: course.label, credits: course.credits, list: course.list, userCreditsTitle: course.label, userCredits: 2 })
-                    }
-                    else {
-                        return null;
-                    }
-                })
-               
-            }
-            setUserRequirments(userRequirments)
-        })
+    const [creditInfo, setCreditInfo] = useState([]);
+    const updateCreditInfo = (creditInfo, course, newCredits, reqClass, takenClass, plannedClass) => {
+        if(!creditInfo.some((item) => item.id === course._id && item.label === course.label)){
+            creditInfo.push({id: course._id, label: course.label, requiredCredits: course.credits, takenCredits: newCredits, selectedCredits: newCredits, reqClass: [], takenClas: [], plannedClass: []})
+        }
+        else if(reqClass != null){
+            let index = creditInfo.findIndex((item) => item.id === course._id && item.label === course.label)
+            creditInfo[index].reqClass.push({id: reqClass.id, label: reqClass.label, reqCredits: reqClass.credits})
+        }
+        else if(takenClass != null){
+            let index = creditInfo.findIndex((item) => item.id === course._id && item.label === course.label)
+            creditInfo[index].takenClass.push({id: takenClass.id, label: takenClass.label, takenCredits: takenClass.credits})
+        }
+        else if(plannedClass != null){
+            let index = creditInfo.findIndex((item) => item.id === course._id && item.label === course.label)
+            creditInfo[index].plannedClass.push({id: plannedClass.id, label: plannedClass.label, plannedCredits: plannedClass.credits})
+        }   
+    };
+
+    //Need to update this to remove
+    const deleteCreditInfo = (creditInfo, course, newCredits, reqClass, takenClass, plannedClass) => {
+        if(!creditInfo.some((item) => item.id === course._id && item.label === course.label)){
+            creditInfo.push({id: course._id, label: course.label, requiredCredits: course.credits, takenCredits: newCredits, selectedCredits: newCredits, reqClass: [], takenClas: [], plannedClass: []}) 
+        }
+        else if(reqClass != null){
+            let index = creditInfo.findIndex((item) => item.id === course._id && item.label === course.label)
+            creditInfo[index].reqClass.push({id: reqClass.id, label: reqClass.label, reqCredits: reqClass.credits})
+        }
+        else if(takenClass != null){
+            let index = creditInfo.findIndex((item) => item.id === course._id && item.label === course.label)
+            creditInfo[index].takenClass.push({id: takenClass.id, label: takenClass.label, takenCredits: takenClass.credits})
+        }
+        else if(plannedClass != null){
+            let index = creditInfo.findIndex((item) => item.id === course._id && item.label === course.label)
+            creditInfo[index].plannedClass.push({id: plannedClass.id, label: plannedClass.label, plannedCredits: plannedClass.credits})
+        }   
     }
-
-
-
-                
+    
+    const [totalRequiredCredits, setTotalRequiredCredits] = useState(0);
     const calculateTotalRequiredCredits = () => {
         let totalCredits = 0;
     
         type
-            .filter((option) => option.title.match(category))
-            .forEach((selectedOption) => {
-                selectedOption?.requirements &&
-                    selectedOption.requirements.forEach((course) => {
-                        if (course?.label === "Total Minimum") 
-                        {
-                            const credits = parseInt(course?.credits, 10) || 0;
-                            totalCredits += credits;
-                        }
-                    });
-            });
+          .filter((option) => option.title.match(category))
+          .forEach((selectedOption) => {
+            selectedOption?.requirements &&
+              selectedOption.requirements.forEach((course) => {
+                if (course?.label === "Total Minimum") {
+                  const credits = parseInt(course?.credits, 10) || 0;
+                  totalCredits += credits;
+                }
+              });
+          });
     
         setTotalRequiredCredits(totalCredits);
-    };
-
-
-
+        console.log("Total Minimum Credits:", totalCredits);
+      };
+//-------------------------------------------------------------------
     return(
         type.filter(option => option.title.match(category)).map((selectedOption, index)=> {if(index===0){return(
             // this first if basically says take the first filtered option. did this because would grab names that match but have extra. for example, minor in social justice would also return minor in social justice for educators
             <div key={selectedOption?._id}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
                     {/* <h2>{selectedOption?.title} {year}- Required Credits:{" "} {totalRequiredCredits}</h2> */}
-                    <h2>{selectedOption?.title} {year}</h2>
+                    <h2>{selectedOption?.title} {year} (Minimum Required: {totalRequiredCredits})</h2>
                     <button className="programDelete" onClick={removeCatalog}>Delete</button>
                 </div>
                 
                 {selectedOption?.requirements && selectedOption.requirements.map((course)=> {                   
+                    
                     if(course.required === "true" && course.list.lenght !== 0 && course.label !== "Internship" && course.label !== "# Internship"){
+                        //only push if cousre.id and cousre.label are not present in creditInfo
+                        updateCreditInfo(creditInfo, course, 0, null, null, null);
                         return(
                     // this section if filters based on if the course section is required or not, if not, will do a mass select type of thing
                     <div key={course?._id}>
                         <ul className="accordion">
                             <li>
                             <input type="checkbox" name="accordion" id={course?._id} />
-                            <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - (Required Credit Hours: {course?.credits})  (Credits Taken:  {userRequirments?.userCredits}) (Credits Selected: {userRequirments?.userCredits} )</label>
-                            
+                            {/* <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - (Required Credit Hours: {course?.credits})  (Credits Taken:  {parseInt(creditInfo.takenCredits)}) (Credits Selected: {creditInfo.selectedCredits + 0} )</label> */}
+                            <label id="genReqLabel" htmlFor={course?._id}>
+                                                    <u>{course?.label}</u> - (Required Credit Hours: {course?.credits})
+                                                    (Credits Taken: {
+                                                        parseInt(
+                                                            creditInfo.find(
+                                                                credit => credit.id === course?._id && credit.label === course?.label
+                                                            )?.takenCredits || 0
+                                                        )
+                                                    })
+                                                    (Credits Selected: {
+                                                        parseInt(
+                                                            creditInfo.find(
+                                                                credit => credit.id === course?._id && credit.label === course?.label
+                                                            )?.selectedCredits || 0
+                                                        )
+                                                    })
+                                                </label>
                                 <div className="classHistory">
                                     {/* <p><b>Credits hours needed:</b> {course.credits}</p> */}
                             
@@ -130,7 +160,8 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                                             return(
                                                 <div key={item?._id}>
                                     
-                                                {coursesList.filter((area) => area.courses.some((course) => course.courseID === item?.id)).map((area)=> area.courses.filter((course) => course.courseID.match(item?.id)).map((selectedCourse, index) => {if(index===0){return(
+                                                {coursesList.filter((area) => area.courses.some((course) => course.courseID === item?.id)).map((area)=> area.courses.filter((course) => course.courseID.match(item?.id)).map((selectedCourse, index) => {if(index===0){
+                                                    return(
                                                     <div>
                             
                                                         <RequiredCourse key={selectedCourse._id} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>
@@ -171,9 +202,25 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                       ];
                     if(course.list.length === 0 || course.label === "Internship" || course.label === "# Internship"){
                         if(!UnNeededTitlesArray.includes(course.label)){
+                            updateCreditInfo(creditInfo, course, 0, null, null, null);
                         return(
                             <ul>
-                                <p className="accordion" htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</p>
+                                <p className="accordion" htmlFor={course?._id}>
+                                                    <u>{course?.label}</u> - (Required Credit Hours: {course?.credits})
+                                                    (Credits Taken: {
+                                                        parseInt(
+                                                            creditInfo.find(
+                                                                credit => credit.id === course?._id && credit.label === course?.label
+                                                            )?.takenCredits || 0
+                                                        )
+                                                    })
+                                                    (Credits Selected: {
+                                                        parseInt(
+                                                            creditInfo.find(
+                                                                credit => credit.id === course?._id && credit.label === course?.label
+                                                            )?.selectedCredits || 0
+                                                        )
+                                                    }) </p>
                             </ul>
                         )
                         }
@@ -181,12 +228,30 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                     else{
                     let manySelect = []
                     let orClasses = []
+                    updateCreditInfo(creditInfo, course, 0, null, null, null);
                     return(
                         <div key={course?._id}>
                             <ul className="accordion">
                                 <li>
                                     <input type="checkbox" name="accordion" id={course?._id} />
-                                    <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - Required Credit Hours: {course?.credits}</label>
+                                    {/* <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - (Required Credit Hours: {course?.credits})  (Credits Taken:  {parseInt(creditInfo.takenCredits)}) (Credits Selected: {creditInfo.selectedCredits + 0} )</label> */}
+                            <label id="genReqLabel" htmlFor={course?._id}>
+                                                    <u>{course?.label}</u> - (Required Credit Hours: {course?.credits})
+                                                    (Credits Taken: {
+                                                        parseInt(
+                                                            creditInfo.find(
+                                                                credit => credit.id === course?._id && credit.label === course?.label
+                                                            )?.takenCredits || 0
+                                                        )
+                                                    })
+                                                    (Credits Selected: {
+                                                        parseInt(
+                                                            creditInfo.find(
+                                                                credit => credit.id === course?._id && credit.label === course?.label
+                                                            )?.selectedCredits || 0
+                                                        )
+                                                    })
+                                                </label>
                                 
                                     <div className="classHistory">
                                         {/* <p><b>Credits hours needed:</b> {course.credits}</p> */}
@@ -198,6 +263,7 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                                         
                                                     {coursesList.filter((area) => area.courses.some((course) => course.courseID === item?.id)).map((area)=> area.courses.filter((course) => course.courseID.match(item?.id)).map((selectedCourse, index) => {if(index===0){
                                                             let x = manySelect.push({id: item._id, classId: selectedCourse.courseID, creditHours: selectedCourse.credit, preReq: selectedCourse.prerequisites, description: selectedCourse.description, name: selectedCourse.name, lastOffered: selectedCourse.pastTerms[0]})
+                                                            updateCreditInfo(creditInfo, course, 0, item, null, null)
                                                         }
                                                         else{
                                                             return null;
@@ -207,7 +273,8 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                                                         {item?.or && item.or.map((extra) => (
                                                             <div key={extra}>
                                                             {coursesList.filter((area) => area.courses.some((course) => course.courseID === extra)).map((area)=> area.courses.filter((course) => course.courseID.match(extra)).map((selectedCourse, index) => {if(index===0){
-                                                                let y = orClasses.push({orId: item._id, classId:selectedCourse.courseID, creditHours:selectedCourse.credit, preReq:selectedCourse.prerequisites, description: selectedCourse.description, name: selectedCourse.name, lastOffered: selectedCourse.pastTerms[0]})}
+                                                                let y = orClasses.push({orId: item._id, classId:selectedCourse.courseID, creditHours:selectedCourse.credit, preReq:selectedCourse.prerequisites, description: selectedCourse.description, name: selectedCourse.name, lastOffered: selectedCourse.pastTerms[0]})
+                                                                updateCreditInfo(creditInfo, course, 0, item, null, null)}
                                                                 else{
                                                                     return null;
                                                                 }}))}

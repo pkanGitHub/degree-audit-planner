@@ -2,13 +2,17 @@ import { useState } from "react";
 import ClassInfo from "./classInfoPopup";
 import RequiredChoice from "./requiredChoice";
 import "../styles/audit.css"
-import { userRequirments } from "./catalog";
-
 import { addCourse, concatCourses } from "../lib/user";
+//import updateCreditInfo from "../catalog";
+
 const AddCourses = ({courses, orCourses}) => {
-    // console.log(courses);
+/*     console.log("Courses:");
+    console.log(courses);
+    console.log("OORCourses:" );
+    console.log(orCourses); */
 
     // concatCourses([...courses, ...orCourses]);
+    //create 
 
     const totalCourses = []
     courses.map((course) => totalCourses.push(course))
@@ -38,30 +42,12 @@ const AddCourses = ({courses, orCourses}) => {
         setCourse(e.target.value)
     }
 
-    const [userCreditInputs, setUserCreditInputs] = useState([]);
-
-    const handleUserInput = (courseId, credits) => {
-      const existingCourse = userCreditInputs.find(course => course.courseId === courseId);
-    
-      if (existingCourse) {
-        setUserCreditInputs(prevInputs =>
-          prevInputs.map(course =>
-            course.courseId === courseId ? { ...course, credits } : course
-          )
-        );
-      } else {
-        setUserCreditInputs(prevInputs => [...prevInputs, { courseId, credits }]);
-      }
-    };
-    
 
     const handleAddCourse = () => {
         const courseInfo = course
         totalCourses.filter((course) => course.classId.match(courseInfo)).map((selectedCourse)=> 
             setUserCourses([...userCourses, selectedCourse
-            ]))}
-            handleUserInput(course.courseId , course.creditHours);
-
+            ]))
     }
 
     const removeCourse = (index) =>{
@@ -118,8 +104,6 @@ const AddCourses = ({courses, orCourses}) => {
                         <div key={singleCourse.id}>
                 
                             <ClassInfo key={index} className={singleCourse.classId} classTitle={singleCourse.name} classDescript={singleCourse.description} creditHours={singleCourse.creditHours} preReq={singleCourse.preReq} lastOffered={singleCourse.lastOffered}/>
-
-                        
                         </div>
                     )
                 }})}
@@ -137,6 +121,6 @@ const AddCourses = ({courses, orCourses}) => {
             
         </div>
     )
-
+}
 
 export default AddCourses;
