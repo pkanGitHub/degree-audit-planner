@@ -3,7 +3,6 @@ import ClassInfo from "./classInfoPopup";
 import RequiredChoice from "./requiredChoice";
 import "../styles/audit.css"
 import { addCourse, concatCourses } from "../lib/user";
-//import updateCreditInfo from "../catalog";
 
 const AddCourses = ({courses, orCourses}) => {
 /*     console.log("Courses:");
@@ -14,9 +13,19 @@ const AddCourses = ({courses, orCourses}) => {
     // concatCourses([...courses, ...orCourses]);
     //create 
 
+    const handleAddCourse = () => {
+        const courseInfo = course
+        totalCourses.filter((course) => course.classId.match(courseInfo)).map((selectedCourse)=> 
+            setUserCourses([...userCourses, selectedCourse
+            ]))
+            //updateCreditInfo(creditInfo, course, 0, null, null, userCourses.creditHours);
+    }
+
     const totalCourses = []
     courses.map((course) => totalCourses.push(course))
+    //manySelect.map((course) => totalCourses.push(course))
     orCourses.map((course)=> totalCourses.push(course))
+    //orClasses.map((course)=> totalCourses.push(course))
     let sortedTotalCourses = totalCourses.sort(function (a, b) {
         if (a.classId < b.classId) {
           return -1;
@@ -29,6 +38,7 @@ const AddCourses = ({courses, orCourses}) => {
     const [userCourses, setUserCourses] = useState([])
     const [course, setCourse] = useState('');
     const sortedCourses = courses.sort(function (a, b) {
+    //const sortedCourses = manySelect.sort(function (a, b) {
         if (a.classId < b.classId) {
           return -1;
         }
@@ -43,12 +53,7 @@ const AddCourses = ({courses, orCourses}) => {
     }
 
 
-    const handleAddCourse = () => {
-        const courseInfo = course
-        totalCourses.filter((course) => course.classId.match(courseInfo)).map((selectedCourse)=> 
-            setUserCourses([...userCourses, selectedCourse
-            ]))
-    }
+
 
     const removeCourse = (index) =>{
         let data = [...userCourses]

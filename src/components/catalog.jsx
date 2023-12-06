@@ -14,6 +14,8 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
     const toggleOrCourses = () => {
         setIsOrOpen(!isOrOpen)
     }
+    let manySelect = []
+    let orClasses = []
 //-------------------------------------------------------------------
 useEffect(() => 
     {
@@ -57,7 +59,10 @@ useEffect(() =>
             creditInfo[index].plannedClass.push({id: plannedClass.id, label: plannedClass.label, plannedCredits: plannedClass.credits})
         }   
     }
+
     
+    //------
+
     const [totalRequiredCredits, setTotalRequiredCredits] = useState(0);
     const calculateTotalRequiredCredits = () => {
         let totalCredits = 0;
@@ -86,7 +91,8 @@ useEffect(() =>
             // this first if basically says take the first filtered option. did this because would grab names that match but have extra. for example, minor in social justice would also return minor in social justice for educators
             <div key={selectedOption?._id}>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
-                <h2 id="auditHeaders">{selectedOption?.title} {year} (Minimum Required: {totalRequiredCredits})</h2>
+                {/* <h2 id="auditHeaders">{selectedOption?.title} {year} (Minimum Required: {totalRequiredCredits})</h2> */}
+                <h2 id="auditHeaders">{selectedOption?.title} {year}</h2>
                     <button className="programDelete" onClick={removeCatalog}>Delete</button>
                 </div>
                 
@@ -103,21 +109,21 @@ useEffect(() =>
                             <input type="checkbox" name="accordion" id={course?._id} />
                             {/* <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - (Required Credit Hours: {course?.credits})  (Credits Taken:  {parseInt(creditInfo.takenCredits)}) (Credits Selected: {creditInfo.selectedCredits + 0} )</label> */}
                             <label id="genReqLabel" htmlFor={course?._id}>
-                                                    <u>{course?.label}</u> - (Required Credit Hours: {course?.credits})
-                                                    (Credits Taken: {
+                                                    <u>{course?.label}</u> -  Required Credit Hours: {course?.credits} 
+                                                    {/* (Credits Taken: {
                                                         parseInt(
                                                             creditInfo.find(
                                                                 credit => credit.id === course?._id && credit.label === course?.label
                                                             )?.takenCredits || 0
                                                         )
-                                                    })
-                                                    (Credits Selected: {
+                                                    }) */} / 
+                                                    Credits Selected: {
                                                         parseInt(
                                                             creditInfo.find(
                                                                 credit => credit.id === course?._id && credit.label === course?.label
                                                             )?.selectedCredits || 0
                                                         )
-                                                    })
+                                                    }
                                                 </label>
                                 <div className="classHistory">
                                     {/* <p><b>Credits hours needed:</b> {course.credits}</p> */}
@@ -202,7 +208,6 @@ useEffect(() =>
                     const UnNeededTitlesArray = [
                         "Graduate Level Coursework",
                         "General Education",
-                        "Free Elective",
                         "Total Minimum"
                       ];
                     if(course.list.length === 0 || course.label === "Internship" || course.label === "# Internship"){
@@ -211,21 +216,21 @@ useEffect(() =>
                         return(
                             <ul>
                                 <h3><p id="genReqLabel2" className="accordion" htmlFor={course?._id}>
-                                                    {course?.label} - (Required Credit Hours: {course?.credits})
-                                                    (Credits Taken: {
+                                                    {course?.label} - Required Credit Hours: {course?.credits}
+                                                    {/* (Credits Taken: {
                                                         parseInt(
                                                             creditInfo.find(
                                                                 credit => credit.id === course?._id && credit.label === course?.label
                                                             )?.takenCredits || 0
                                                         )
-                                                    })
-                                                    (Credits Selected: {
+                                                    }) } /
+                                                    Credits Selected: {
                                                         parseInt(
                                                             creditInfo.find(
                                                                 credit => credit.id === course?._id && credit.label === course?.label
                                                             )?.selectedCredits || 0
-                                                        )
-                                                    }) </p></h3>
+                                                        )*/
+                                                    } </p></h3>
                             </ul>
                         )
                         }
@@ -256,8 +261,7 @@ useEffect(() =>
                         )
                     }
                     else{
-                        let manySelect = []
-                        let orClasses = []
+                        
                         updateCreditInfo(creditInfo, course, 0, null, null, null);
                     return(
                             <div key={course?._id}>
@@ -266,21 +270,21 @@ useEffect(() =>
                                         <input type="checkbox" name="accordion" id={course?._id} />
                                         {/* <label id="genReqLabel" htmlFor={course?._id}><u>{course?.label}</u> - (Required Credit Hours: {course?.credits})  (Credits Taken:  {parseInt(creditInfo.takenCredits)}) (Credits Selected: {creditInfo.selectedCredits + 0} )</label> */}
                                         <label id="genReqLabel" htmlFor={course?._id}>
-                                                    <u>{course?.label}</u> - (Required Credit Hours: {course?.credits})
-                                                    (Credits Taken: {
+                                                    <u>{course?.label}</u> - Required Credit Hours: {course?.credits} 
+                                                    {/* (Credits Taken: {
                                                         parseInt(
                                                             creditInfo.find(
                                                                 credit => credit.id === course?._id && credit.label === course?.label
                                                             )?.takenCredits || 0
                                                         )
-                                                    })
-                                                    (Credits Selected: {
+                                                    }) */} / 
+                                                     Credits Selected: {
                                                         parseInt(
                                                             creditInfo.find(
                                                                 credit => credit.id === course?._id && credit.label === course?.label
                                                             )?.selectedCredits || 0
                                                         )
-                                                    })
+                                                    }
                                                 </label>
                                     
                                         <div className="classHistory">

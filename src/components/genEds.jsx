@@ -18,8 +18,8 @@ const GenEdsModel = ({genEds, coursesList}) => {
                         <div className="classHistory">
                             {genEd?.requirements && genEd?.requirements.map((area) => {if((area.label.includes("English")) === true){return(
                                 <div key={area?._id}>
-                                    <h3>{area?.label}</h3>
-                                    <p>Credit hours: {area?.hours}</p>
+                                    <h3>{area?.label} - Credit hours: {area?.hours}</h3>
+                                    {/* <p>Credit hours: {area?.hours}</p> */}
                                     <p>{area?.info}</p>
 
                                     {coursesList.filter((area) => area.courses.some((course) => course.courseID === "ENGLSH_1000")).map((area)=> area.courses.filter((course) => course.courseID.match("ENGLSH_1000")).map((selectedCourse, index)=> {if(index === 0 || index === 1){ return(<RequiredCourse key={index} classId={selectedCourse.courseID} creditHours={selectedCourse.credit} preReq={selectedCourse.prerequisites}/>)}}))}
@@ -49,8 +49,8 @@ const GenEdsModel = ({genEds, coursesList}) => {
                             )}
                                 else if((area.label.includes("Writing Intensive")) === true){return(
                                     <div key={area?._id}>
-                                        <h3>{area?.label}</h3>
-                                        <p>Credit hours: {area?.hours}</p>
+                                        <h3>{area?.label} - Credit hours: {area?.hours}</h3>
+                                        {/* <p>Credit hours: {area?.hours}</p> */}
                                         <p>{area?.info}</p>
 
                                         <MassSelectCourse coursesList={coursesList} categories={["W"]}/>
@@ -80,8 +80,8 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                 )}
                                 else if((area.label.includes("Math and Quantitative Reasoning")) === true){return(
                                     <div key={area?._id}>
-                                        <h3>{area?.label}</h3>
-                                        <p>Credit hours: {area?.hours}</p>
+                                        <h3>{area?.label} - Credit hours: {area?.hours}</h3>
+                                        {/* <p>Credit hours: {area?.hours}</p> */}
                                         <p>{area?.info}</p>
 
                                        <MassSelectCourse coursesList={coursesList} categories={["MQR"]}/>
@@ -112,8 +112,8 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                 )}
                                 else if((area.label.includes("American History or Government")) === true){return(
                                     <div key={area?._id}>
-                                        <h3>{area?.label}</h3>
-                                        <p>Credit hours: {area?.hours}</p>
+                                        <h3>{area?.label} - Credit hours: {area?.hours}</h3>
+                                        {/* <p>Credit hours: {area?.hours}</p> */}
                                         <p>{area?.info}</p>
 
                                        <MassSelectCourse coursesList={coursesList} categories={["MSLR"]}/>
@@ -144,8 +144,8 @@ const GenEdsModel = ({genEds, coursesList}) => {
                                 )}
                                 else {return(
                                     <div key={area?._id}>
-                                        <h3>{area?.label}</h3>
-                                        <p>Credit hours: {area?.hours}</p>
+                                        <h3>{area?.label} - Credit hours: {area?.hours}</h3>
+                                        {/* <p>Credit hours: {area?.hours}</p> */}
                                         <p>{area?.info}</p>
 
                                        <MassSelectCourse coursesList={coursesList} categories={["MQR"]}/>
