@@ -4,6 +4,9 @@ import { getProgramsBySearch } from "./data";
 import Cookies from 'universal-cookie';
 import { API } from 'aws-amplify';
 
+// const openRequest = indexedDB.open("database", 1);
+// const objectStore = db.createObjectStore('data', { keyPath: 'id' });
+
 const courses = [];
 const majors = [];
 const certificates = [];
@@ -39,13 +42,15 @@ export function addPlan(name, year, type) {
     switch (type.toLowerCase()) {
         case "majors":
         case "major": majors.push({ title: program[0].title, year: year }); break;
+        case "minors":
         case "minor": minors.push({ title: program[0].title, year: year }); break;
+        case "certificates":
         case "cert": certificates.push({ title: program[0].title, year: year }); break;
         default: return;
     }
 
     const plan = [];
-    program[0]?.years.forEach((year, y) => 
+    program[0]?.years?.forEach((year, y) => 
         year.semesters.forEach((semester, s) => 
             semester.courses.filter(course => course?.id)
             .forEach(course => 
@@ -57,19 +62,23 @@ export function addPlan(name, year, type) {
 
 export function getPrograms() {
     return majors.map(major => ({category: major.title, year: major.year, type: "major"}))
-        .concat(minors.map(minor => ({category: minor.title, year: minor.year, type: "major"})))
-        .concat(certificates.map(cert => ({category: cert.title, year: cert.year, type: "major"})));
+        .concat(minors.map(minor => ({category: minor.title, year: minor.year, type: "minor"})))
+        .concat(certificates.map(cert => ({category: cert.title, year: cert.year, type: "certificate"})));
 
 }
 
 export function removeProgram(category, year, type) {
     switch (type.toLowerCase()) {
         case "majors":
-        case "major": majors.splice(majors.findIndex(major => major.title === category && major.year === year), 1); break;
-        case "minor": minors.splice(minors.findIndex(minor => minor.title === category && minor.year === year), 1); break;
+        case "major": console.log(majors.splice(majors.findIndex(major => major.title === category && major.year === year), 1)); break;
+        case "minors":
+        case "minor": console.log(minors.splice(minors.findIndex(minor => minor.title === category && minor.year === year), 1)); break;
+        case "certificates":
+        case "certificate":
         case "cert": certificates.splice(certificates.findIndex(cert => cert.title === category && cert.year === year), 1); break;
-        default: return;
+        default: break;;
     }
+    return getPrograms();
 }
 
 export function getCourses() {
@@ -80,19 +89,15 @@ export function addMajor(major, year) {
     majors.push({ title: major, year: year });
 }
 
-export function addPrograms(programs) {
-    for (var p of programs) {
-        var [name, type] = p.title.split("-");
-        console.log(name);
-        console.log(type);
-        switch (type) {
-            case "MI":
-                type = "minor";
-                break;
-            default: type = undefined;
-        }
-        console.log(getProgramsBySearch(name, p.year, type));
-        
+export function addPrograms(title, year, type) {
+    switch (type.toLowerCase()) {
+        case "major": majors.push({ title: title, year: year }); break;
+        case "minors":
+        case "minor": minors.push({ title: title, year: year }); break;
+        case "certificates":
+        case "certificate":
+        case "cert": certificates.push({ title: title, year: year }); break;
+        default: return;
     }
 }
 
