@@ -9,8 +9,8 @@ const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' })
     const [errorMsg, setErrorMsg] = useState(null)
 
-    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
-    const [emailBorder, setEmail] = useState({border: "2px solid lightgray"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid black"})
+    const [emailBorder, setEmail] = useState({border: "2px solid black"})
 
 
     const cookies = new Cookies(null);
@@ -94,15 +94,17 @@ const Login = () => {
                                 {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                               </div>
                             </div>
-                        <a href="/forgotpassword">Forgot Password?</a>
-
+                          <div id = "forgotPasswordContainer">
+                            <a href="/forgotpassword">Forgot Password?</a>
+                          </div>
                     </div>
                     
                     <br/>
                     <button type="submit" className="submitButton">Login</button>
                     <br/>
-                    <a href="/signup">Don't have an account? Sign up here!</a>
-
+                    <div id="signupContainer">
+                      <a href="/signup">Don't have an account? Sign up here!</a>
+                    </div>
                 </form>
             </div>
 

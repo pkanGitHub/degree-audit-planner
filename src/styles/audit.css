@@ -312,11 +312,6 @@ hr{
     text-align: center;
 }
 
-#checkboxDiv input[type=checkbox]{
-    border: 1px solid gray;
-    display: inline-block;
-}
-
 #checkboxlabel{
     display: inline-block;
 }
