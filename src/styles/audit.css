@@ -82,6 +82,7 @@ button{
     color: black;
     margin: 30px;
     border-bottom: 2px solid black;
+    transition: background-color 0.5s ease;
 }
 
 #transcriptButton:hover{
@@ -89,7 +90,7 @@ button{
 }
 
 #programButton {
-    background-color: #ffdb7f;
+    background-color: white;
     color: black;
     border: 2px solid #F1B82D;
     padding: 10px;
@@ -97,10 +98,11 @@ button{
     align-items: center; /* Center vertically */
     justify-content: center; /* Center horizontally */
     min-width: 150px; /* Set your desired minimum width */
+    transition: background-color 0.5s ease;
 }
 
 #programButton:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #addCourseButton {
