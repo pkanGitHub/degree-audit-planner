@@ -21,12 +21,12 @@ const Login = () => {
         const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
         if(!formData.email){
           setEmail({border: "2px solid red"})
-          setPasswordBorder({border: "2px solid lightgray"})
+          setPasswordBorder({border: "2px solid black"})
           setErrorMsg("You must enter an email.")
           return
         }
         else if(!formData.password){
-          setEmail({border: "2px solid lightgray"})
+          setEmail({border: "2px solid black"})
           setPasswordBorder({border: "2px solid red"})
           setErrorMsg("You must enter a password.")
           return
