@@ -5,21 +5,17 @@
     text-align: center;
     width: 100%;
     height: 100%;
-    background-color:#D7D7D7;
     position: absolute;
 }
 #formDesign
 {
-
-    background-color: white;
     padding: 50px;
     width: 50%;
     max-height: fit-content;
-    box-shadow: 5px 10px 8px #c3c3c3;
     display: inline-block;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 15px;
+    border-radius: 1px;
 }
 
 #formContent{
@@ -42,15 +38,16 @@
     margin: auto;
     width: 100%;
     padding: 10px;
-    border-radius: 10px;
-    border: 2px solid lightgray;
+    border-radius: 1px;
+    border: 1px solid black;
     box-sizing: border-box;
     font-weight: normal;
 }
 
 #formContent input[type=checkbox]{
-    border: 1px solid gray;
     display: inline-block;
+    color: black;
+    border-radius: 1px;
 }
 
 
@@ -60,8 +57,9 @@
 
 .submitButton {
     border: none;
-    background-color: black;
-    color: white;
+    background-color: #F1B82D;
+    border-bottom: 2px solid black;
+    color: black;
     padding: 10px;
     text-align: center;
     text-decoration: none;
@@ -69,9 +67,14 @@
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 1px;
     font-weight: bold;
     width: 50%;
+    transition: background-color 0.5s ease;
+}
+
+.submitButton:hover {
+    background-color: #F7D88D;
 }
 
 #buttons{
@@ -92,7 +95,7 @@
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 1px;
     font-weight: bold;
     flex: .25;
 
@@ -109,7 +112,7 @@
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 1px;
     font-weight: bold;
     width: 50%;
     flex: .65;
@@ -152,9 +155,23 @@
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 1px;
     font-weight: bold;
 }
 #mfaBack:hover{
     background-color: rgb(224, 224, 224);
+}
+
+a {
+    text-decoration: none;
+    color: blue;
+    padding-top: 10px;
+}
+
+#forgotPasswordContainer {
+    margin-top: 10px;
+}
+
+#signupContainer {
+    margin-top: 10px;
 }

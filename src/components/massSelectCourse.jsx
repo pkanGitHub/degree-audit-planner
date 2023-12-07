@@ -5,6 +5,7 @@ import RequiredChoice from "./requiredChoice";
 import { Tooltip } from 'react-tooltip'
 import * as User from "../lib/user";
 import { Course } from "../lib/course"
+import { PlusOutlined } from "@ant-design/icons";
 
 const MassSelectCourse = ({ coursesList, categories, update, userCourses }) => {
     // console.log(userCourses);
@@ -176,7 +177,7 @@ const MassSelectCourse = ({ coursesList, categories, update, userCourses }) => {
             </label> */}
 
 
-            <button onClick={handleLargeCourseClick} id='addCourseButton'>Add Course</button>
+            <button onClick={handleLargeCourseClick} id='addCourseButton'><PlusOutlined /> Add Course</button>
 
 
         </div>

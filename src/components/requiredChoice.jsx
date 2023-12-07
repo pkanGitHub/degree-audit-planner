@@ -4,6 +4,7 @@ import "../styles/audit.css"
 import { useState, useEffect } from "react";
 import PlanPosition from "./planPosition";
 import { planYears } from "../lib/user"
+import { UpOutlined, DownOutlined, CloseOutlined } from "@ant-design/icons"; 
 
 
 const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse, course, update}) => {
@@ -54,7 +55,7 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse, course
         preReq = "None"
     }
     else{
-        toggleOption = <button className="prereqButton" onClick={expand}>{isOpen ? "^":"v"}</button>
+        toggleOption = <button className="prereqButton" onClick={expand}>{isOpen ? <UpOutlined />:<DownOutlined />}</button>
     }
     return (
         <div id="choiceCourse">
@@ -62,7 +63,7 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse, course
                 
                 <tr>
                     <th>{classId}</th>
-                    <th id="removeItem" onClick={removeCourse}><button id="removeButton">X</button></th>
+                    <th id="removeItem" onClick={removeCourse}><button id="removeButton"><CloseOutlined /></button></th>
                 </tr>
 
              

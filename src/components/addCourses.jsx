@@ -33,7 +33,7 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
         }
         return 0;
     })
-        .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id?.toLowerCase() === course.courseID?.toLowerCase()) }))
+        .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id?.toLowerCase() === course.classId?.toLowerCase()) }))
         .sort(sortCourses)
 
 
@@ -59,8 +59,9 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
     }
 
     const addCourse = (id) => {
-        const course = sortedTotalCourses.find(course => course.courseID?.toLowerCase() === id?.toLowerCase());
-        User.addCourse(new Course(course.courseID, -1, -1, course.credit));
+        console.log(sortedCourses);
+        const course = sortedCourses.find(course => course.classId?.toLowerCase() === id?.toLowerCase());
+        User.addCourse(new Course(course.classId, -1, -1, course.creditHours));
         update();
     }
     const removeCourse = course => {
@@ -93,9 +94,9 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
             {sortedCourses.filter(course => course.inUser).map((key, index) =>
                 <RequiredChoice
                     key={index}
-                    classId={key.courseID}
-                    creditHours={key.credit}
-                    preReq={key.prerequisites}
+                    classId={key.classId}
+                    creditHours={key.creditHours}
+                    preReq={key.preReq}
                     course={key.inUser}
                     removeCourse={() => removeCourse(course.inUser)}
                     update={update}

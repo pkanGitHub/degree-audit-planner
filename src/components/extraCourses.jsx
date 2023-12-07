@@ -4,6 +4,7 @@ import ClassInfo from "./classInfoPopup";
 import { sortCourses } from "./massSelectCourse";
 import * as User from "../lib/user";
 import { Course } from "../lib/course";
+import { PlusOutlined } from "@ant-design/icons";
 
 const ExtraCourses = ({ coursesList, update, userCourses }) => {
     // gets list of course areas, used in mass select
@@ -124,7 +125,7 @@ const ExtraCourses = ({ coursesList, update, userCourses }) => {
                 </select>
             </label> */}
 
-            <button id='addCourseButton' onClick={() => addCourse(selectCourse)}>Add Course</button>
+            <button id='addCourseButton' onClick={() => addCourse(selectCourse)}><PlusOutlined /> Add Course</button>
 
         </div>
 

@@ -12,8 +12,8 @@ const Login = () => {
     const [errorMsg, setErrorMsg] = useState(null)
 
     const navigate = useNavigate();
-    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
-    const [emailBorder, setEmail] = useState({border: "2px solid lightgray"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid black"})
+    const [emailBorder, setEmail] = useState({border: "2px solid black"})
 
 
     const cookies = new Cookies(null);
@@ -24,12 +24,12 @@ const Login = () => {
         const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
         if(!formData.email){
           setEmail({border: "2px solid red"})
-          setPasswordBorder({border: "2px solid lightgray"})
+          setPasswordBorder({border: "2px solid black"})
           setErrorMsg("You must enter an email.")
           return
         }
         else if(!formData.password){
-          setEmail({border: "2px solid lightgray"})
+          setEmail({border: "2px solid black"})
           setPasswordBorder({border: "2px solid red"})
           setErrorMsg("You must enter a password.")
           return
@@ -83,15 +83,17 @@ const Login = () => {
                                 {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                               </div>
                             </div>
-                        <a href="/forgotpassword">Forgot Password?</a>
-
+                          <div id = "forgotPasswordContainer">
+                            <a href="/forgotpassword">Forgot Password?</a>
+                          </div>
                     </div>
                     
                     <br/>
                     <button type="submit" className="submitButton">Login</button>
                     <br/>
-                    <a href="/signup">Don't have an account? Sign up here!</a>
-
+                    <div id="signupContainer">
+                      <a href="/signup">Don't have an account? Sign up here!</a>
+                    </div>
                 </form>
             </div>
 
