@@ -59,13 +59,12 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
     }
 
     const addCourse = (id) => {
-        console.log(sortedCourses);
         const course = sortedCourses.find(course => course.classId?.toLowerCase() === id?.toLowerCase());
         User.addCourse(new Course(course.classId, -1, -1, course.creditHours));
         update();
     }
     const removeCourse = course => {
-        User.removeCourse(course.inUser);
+        User.removeCourse(course);
         update();
     }
 
@@ -98,7 +97,7 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
                     creditHours={key.creditHours}
                     preReq={key.preReq}
                     course={key.inUser}
-                    removeCourse={() => removeCourse(course.inUser)}
+                    removeCourse={() => removeCourse(key.inUser)}
                     update={update}
                 />
             )}
