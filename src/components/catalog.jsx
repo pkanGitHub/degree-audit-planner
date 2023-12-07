@@ -113,9 +113,15 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                 )}
                 else{
                     // this section is for courses that are not required but need a sort of user input to add the courses to the degree accordingly
-
+                    const UnNeededTitlesArray = [
+                        "Graduate Level Coursework",
+                        "General Education",
+                        "Total Minimum"
+                      ];
                     // if do not have any courses, will only show comments
-                    if(course?.list.length === 0){
+                    //if(course?.list.length === 0){
+                    if(course.list.length === 0 || course.label === "Internship" || course.label === "# Internship"){
+                        if(!UnNeededTitlesArray.includes(course.label)){
                         return(
                             <div key={course?._id}>
                                 <ul className="accordion">
@@ -135,7 +141,9 @@ const CatalogItems = ({year, type, category, coursesList, removeCatalog}) => {
                 
                                 </ul>
                             </div>
+                            
                         )
+                                            }
                     }
                     else{
                         let manySelect = []
