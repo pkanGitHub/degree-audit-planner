@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const CookiePopup = () => {
     const navigate = useNavigate()
     return(
-        <Popup contentStyle={{borderRadius: "25px", maxheight: "fit-content"}} defaultOpen={true} lockScroll={true} keepTooltipInside={true} closeOnDocumentClick={false}
+        <Popup contentStyle={{borderRadius: "1px", maxheight: "fit-content"}} defaultOpen={true} lockScroll={true} keepTooltipInside={true} closeOnDocumentClick={false}
             modal nested>
                 {
                 close => (

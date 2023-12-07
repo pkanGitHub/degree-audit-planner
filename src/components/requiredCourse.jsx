@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import PlanPosition from "./planPosition";
 import { addCourse, planYears } from "../lib/user";
 import { Course } from "../lib/course";
+import { UpOutlined, DownOutlined } from "@ant-design/icons"; 
+
 
 const RequiredCourse = ({ classId, creditHours, preReq, userCourses, update }) => {
     let toggleOption = null;
@@ -55,7 +57,7 @@ const RequiredCourse = ({ classId, creditHours, preReq, userCourses, update }) =
         preReq = "None"
     }
     else {
-        toggleOption = <button className="prereqButton" onClick={expand}>{isOpen ? "^" : "v"}</button>
+        toggleOption = <button className="prereqButton" onClick={expand}>{isOpen ? <UpOutlined /> : <DownOutlined />}</button>
     }
     return (
         <div id="requiredCourse">
