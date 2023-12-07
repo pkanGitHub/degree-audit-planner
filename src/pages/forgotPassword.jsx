@@ -54,7 +54,7 @@ const ForgotPassword = () => {
             <div id="forgotPasswordForm">
                 <form id="passwordForm" onSubmit={handleSubmit}>
                     <h1>Forgot Password?</h1>
-                    <h2>Enter the email address associated with your account.</h2>
+                    <p id="enterEmail">Enter the email address associated with your account.</p>
                     <p id="errorMessage">{errorMsg}</p>
                     
                     <input type="text" placeholder="Enter email address here..." name="email" value={formData.email} onChange={handleChange}/>
