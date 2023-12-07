@@ -4,13 +4,12 @@ import { getProgramsBySearch } from "./data";
 import Cookies from 'universal-cookie';
 import { API } from 'aws-amplify';
 
-// const openRequest = indexedDB.open("database", 1);
-// const objectStore = db.createObjectStore('data', { keyPath: 'id' });
 
 const courses = [];
 const majors = [];
 const certificates = [];
 const minors = [];
+var years = 4;
 
 export function userMajors() { return majors; }
 export function userMinors() { return minors; }
@@ -18,7 +17,21 @@ export function userCerts() { return certificates; }
 
 
 export function addCourse(course) {
+    if (!course?.id) return;
     courses.push(course);
+    console.log(courses);
+    updateYears();
+}
+
+export function removeCourse(course) {
+    const index = course instanceof Course ? 
+                courses.indexOf(course) : 
+                courses.findIndex(c => c.id === course);
+    
+    courses.splice(index, 1);
+    updateYears();
+
+    console.log(courses);
 }
 
 export function concatCourses(courseArr) {
@@ -29,6 +42,13 @@ export function concatCourses(courseArr) {
                      COURSE.plan[1] !== course.plan[1])
     })))
     console.log(courses);
+    updateYears();
+}
+
+function updateYears() {
+    courses
+        .filter(course => course?.id)
+        .reduce((max, course) => Math.max(course?.plan[0] || 0, max), 0);
 }
 
 export function setCourses(courseArr) {
@@ -85,6 +105,10 @@ export function getCourses() {
     return courses;
 }
 
+export function getCourseByID(id) {
+    return courses.find(course => course.id === id);
+}
+
 export function addMajor(major, year) {
     majors.push({ title: major, year: year });
 }
@@ -101,6 +125,16 @@ export function addPrograms(title, year, type) {
     }
 }
 
+export function setPrograms(programs) {
+    console.log(programs);
+    clearAndFill(majors, [])
+    clearAndFill(minors, [])
+    clearAndFill(certificates, [])
+    programs.forEach(program => {
+        addPrograms(program.title, program.year, program.type);
+    })
+}
+
 export function clear() {
     const pop = array => {
         do {
@@ -112,6 +146,10 @@ export function clear() {
     pop(majors);
     pop(minors);
     pop(certificates);
+}
+
+export function planYears() {
+    return courses.reduce((max, course) => Math.max(max, course.plan[0]), -1) + 1
 }
 
 export function print() {

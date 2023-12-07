@@ -12,7 +12,9 @@ import { exportData } from "../lib/filehandling";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Cookies from "universal-cookie";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import PlanPosition from "../components/planPosition";
 
 const Audit = () => {
 
@@ -95,9 +97,21 @@ const Audit = () => {
         setUserCatalog([...User.removeProgram(category, year, type)]);
     }
 
+    const setCatalog = catalogs => {
+        User.setPrograms(catalogs.map(c => ({title: c.category, year: c.year, type: c.type})))
+        setUserCatalog([...User.getPrograms()])
+        setUserCourses([...User.getCourses()])
+    }
+
     const reformatTitle = title => {
         const split = title.split(/\sin\s/);
         return `${split[1]}${split[0] !== "Minor" && split[0] !== "Certificate" ? ` (${split[0]})` : ""}`;
+    }
+
+    const updateCatalog = () => {
+        console.log("update catalog")
+        setUserCourses([...User.getCourses()]);
+        User.print()
     }
 
     // this is used to determine the select options based on user's previous choice. if user chooses majors, shows majors, etc.
@@ -142,7 +156,7 @@ const Audit = () => {
         }
 
         return (
-            <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(category, year, type)} />
+            <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(category, year, type)} update={updateCatalog} userCourses={userCourses} />
         )
 
     }
@@ -232,7 +246,7 @@ const Audit = () => {
         <div id="fullpage">
             <div id="header">
                 <TranscriptUpload
-                    setCatalog={setUserCatalog}
+                    setCatalog={setCatalog}
                     setCourses={(courses) => {
                         User.setCourses(courses);
                         setUserCourses([...User.getCourses()]);
@@ -241,7 +255,6 @@ const Audit = () => {
                 <br />
             </div>
             <div id='contents'>
-
                 <div id="audit">
                     <div id="enrollmentSelection">
                         {/* https://www.youtube.com/watch?v=XtS14dXwvwE */}
@@ -285,7 +298,7 @@ const Audit = () => {
                     <hr />
 
 
-                    <GenEdsModel key={state} genEds={genEds} coursesList={coursesList} />
+                    <GenEdsModel key={state} genEds={genEds} coursesList={coursesList} update={updateCatalog} userCourses={userCourses}/>
 
 
                     {/* this is a map that gets all user input programs here, user can delete or add programs */}
@@ -309,7 +322,7 @@ const Audit = () => {
                                 <label id="genReqLabel" htmlFor="elective">Mizzou Courses:</label>
                                 <div className="classHistory">
 
-                                    <ExtraCourses key={state} coursesList={coursesList} />
+                                    <ExtraCourses key={state} coursesList={coursesList} userCourses={userCourses} update={updateCatalog}/>
                                 </div>
                             </li>
                         </ul>
@@ -320,7 +333,7 @@ const Audit = () => {
                                 <label id="genReqLabel" htmlFor="transfer">Transfer Courses:</label>
                                 <div className="classHistory">
 
-                                    <TransferCourse key={state} />
+                                    <TransferCourse key={state} update={updateCatalog}/>
                                 </div>
                             </li>
                         </ul>
@@ -337,8 +350,8 @@ const Audit = () => {
                 </div>
                 <hr />
 
-                <SemesterPlan data={userCatalog} courses={userCourses} />
-
+                <SemesterPlan data={userCatalog} courses={userCourses} updateParent={updateCatalog} />
+                {/* <PlanPosition/> */}
             </div>
         </div>
 

@@ -21,13 +21,13 @@
 }
 
 .programDelete{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
 
 }
 .programDelete:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #enrollmentSelection {
@@ -222,36 +222,39 @@ hr{
 }
 
 #exportButton{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
     width: 15%;
+    transition: background-color 0.5s ease;
 }
 
 #exportButton:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #saveButton{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
     width: 15%;
+    transition: background-color 0.5s ease;
 }
 
 #saveButton:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #deleteButton{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
     width: 15%;
+    transition: background-color 0.5s ease;
 }
 
 #deleteButton:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #twoSemesterPlan, #threeSemesterPlan, .planTable{
@@ -397,4 +400,34 @@ hr{
     padding: 10px 28px;
     border: 2px solid #F1B82D;
     background-color: transparent;
+}
+
+.courseSelectButton {
+    background: none;
+    padding: 0;
+    margin: 14px 12px;
+    z-index: 2;
+}
+
+.courseSelectButton:hover, .planningCell:hover {
+    background: #FFF3D6;
+}
+
+.courseSelectButton.selected, .planningCell.selected {
+    background: #ffdb7f;
+}
+
+.planningCell {
+    background-color: lightgray;
+    width: 10px;
+    height: 10px;
+    border: darkgray 1px solid;
+}
+
+.planningTable {
+    border-collapse: collapse;
+}
+
+#searchBox {
+    margin-left: 10px;
 }

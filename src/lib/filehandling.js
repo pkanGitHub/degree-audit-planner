@@ -21,9 +21,9 @@ function readFile(file) {
 
                 const numPages = pdf.numPages;
                 var allTextContent = {};
-    
+
                 for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-            
+
                     pdf.getPage(pageNumber).then(async page => {
                         const textContentPromise = page.getTextContent();
                         var previousTranslateY = null
@@ -45,27 +45,27 @@ function readFile(file) {
                             })
 
                             const text = pageTextContent.items
-                            .filter(item => !planner || (item.str !== " " && item.str !== ""))
-                            .map(item => {
-                                var text = item.str;
+                                .filter(item => !planner || (item.str !== " " && item.str !== ""))
+                                .map(item => {
+                                    var text = item.str;
 
-                                if (planner) text = ` ${text} `
+                                    if (planner) text = ` ${text} `
 
-                                const translateY = item.transform[5];
-                                if (translateY !== previousTranslateY) text = "\n" + text;
-                                previousTranslateY = translateY;
+                                    const translateY = item.transform[5];
+                                    if (translateY !== previousTranslateY) text = "\n" + text;
+                                    previousTranslateY = translateY;
 
-                                return text;
-                            });
+                                    return text;
+                                });
 
                             allTextContent[pageNumber] = text.join("");
-                        
+
                             if (Object.entries(allTextContent).length === numPages) {
                                 var combinedText = "";
                                 for (const [, text] of Object.entries(allTextContent)) {
                                     combinedText += text + "\n"
                                 }
-                                resolve({file: combinedText, plan: planner});
+                                resolve({ file: combinedText, plan: planner });
                                 // const blob = new Blob([JSON.stringify(allTextContent)], { type: 'text/plain;charset=utf-8' });
                                 // saveAs(blob, "text.txt" )
                             }
@@ -75,9 +75,9 @@ function readFile(file) {
                 }
 
             })
-            .catch(error => {
-                reject("Could not read PDF");
-            });;
+                .catch(error => {
+                    reject("Could not read PDF");
+                });;
         }
         reader.readAsArrayBuffer(file);
     });
@@ -90,15 +90,17 @@ export function GetInfo(file) {
             if (result.plan) AuditPlan(data, resolve, reject);
             else AcademicProfile(data, resolve, reject);
         })
-        .catch(error => {
-            reject(error);
-        });
+            .catch(error => {
+                reject(error);
+            });
     })
 }
 
 export function exportData() {
     const fileName = `plan-${Math.random().toString(16).slice(2)}.pdf`;
     const doc = new jsPDF();
+
+    // const selects = Array.from(document.getElementById("planner").getElementsByTagName("select")).map(select => select.value);
 
     const table = document.getElementById("planner")?.cloneNode(true);
     if (!table) return;
@@ -114,27 +116,28 @@ export function exportData() {
         if (td.innerText === "") td.innerText = "|"
     });
 
+    // Array.from(table.getElementsByTagName("select")).forEach((select, index) => select.options[0].innerText = select[index] )
+
     const majors = userMajors();
-    console.log(majors);
     const minors = userMinors();
     const certs = userCerts();
 
 
     const html = `
     <h1 style="text-align: center">Audit Plan</h1>
-    ${ majors.length > 0 || minors.length > 0 || certs.length > 0 ? `   
+    ${majors.length > 0 || minors.length > 0 || certs.length > 0 ? `   
         <div style="margin-left: 5%">
             <h2>Degree Programs</h2>
-            ${ majors.length > 0 ? majors.reduce((str, major) => str += `<p style="word-spacing: 8px;">${major.title} - ${major.year}</p>`, "<h3>Major(s):</h3>") : "" }
-            ${ minors.length > 0 ? minors.reduce((str, minor) => str += `<p style="word-spacing: 8px;">${minor.title} - ${minor.year}</p>`, "<h3>Minor(s):</h3>") : "" }
-            ${ certs.length > 0 ? certs.reduce((str, cert) => str += `<p style="word-spacing: 8px;">${cert.title} - ${cert.year}</p>`, "<h3>Certificates(s):</h3>") : "" }
+            ${majors.length > 0 ? majors.reduce((str, major) => str += `<p style="word-spacing: 8px;">${major.title} - ${major.year}</p>`, "<h3>Major(s):</h3>") : ""}
+            ${minors.length > 0 ? minors.reduce((str, minor) => str += `<p style="word-spacing: 8px;">${minor.title} - ${minor.year}</p>`, "<h3>Minor(s):</h3>") : ""}
+            ${certs.length > 0 ? certs.reduce((str, cert) => str += `<p style="word-spacing: 8px;">${cert.title} - ${cert.year}</p>`, "<h3>Certificates(s):</h3>") : ""}
         </div>`
-        : ""
-    }
+            : ""
+        }
     ${table.outerHTML}
     `;
 
-    doc.html(html, {    
+    doc.html(html, {
         callback: doc => {
             doc.setDocumentProperties({
                 title: "Audit Plan"
@@ -161,25 +164,27 @@ function AcademicProfile(data, resolve, reject) {
     var onTerm = false;
     var year = "";
     var allPrograms = [];
+    var addedCourse = false;
 
     var y = 0;
     var s = 0;
 
     for (var line of data) {
         // console.log(line);
-        if (line.match(/.*Local Campus Credits.*/)) {
+        if (line.match(/.*Local Campus Credits.*|.*Exam Credit.*/)) {
+            if (!addedCourse) y--;
             var text = line.split(" ");
 
             if (term === "") y = 0;
             else {
                 const current = termOrder(text[0]);
-                const prev = termOrder(term.split("_")[0]); 
-                if (current === 2 ^ (current <= prev && prev !== 2)) {
+                const prev = termOrder(term.split("_")[0]);
+                if (`${text[0]}_${text[1]}` === term) { }
+                else if (current === 2 ^ (current <= prev && prev !== 2)) {
                     y++;
-                    s = 0;
                 }
-                else s++;
             }
+            s = termVal(text[0]);
 
             term = text[0] + "_" + text[1];
             year = Number(text[1]);
@@ -188,6 +193,7 @@ function AcademicProfile(data, resolve, reject) {
             userData.Programs = [];
             userData.CourseWork[term] = [];
             onTerm = true;
+            addedCourse = false;
             continue;
         }
         if (line.match(/Student Academic Profile/)) continue;
@@ -195,17 +201,18 @@ function AcademicProfile(data, resolve, reject) {
         // if (onTerm && crsCnt === 0) userData["Major"] = line.trim();
         if (line.match(/General Education Met/)) userData.GenEdComplete = true;
         if (onTerm && line !== "" && !line.match(/^\s+$|^\f\s+/)) {
-            const program = line.match(/^[a-zA-Z&\s]+-\w+$/);
+            const program = line.match(/^[a-zA-Z&\s]+-[\w\s]+$/);
             if (program) {
                 userData.Programs.push(program[0])
-                if (!allPrograms.some(program => program.title === program[0])) allPrograms.push({title: program[0], year: year})
+                if (!allPrograms.some(program => program.title === program[0])) allPrograms.push({ title: program[0], year: year })
             }
             // const course = line.match(/^\w*\s*\d*/);
             const course = line.match(/^([a-zA-Z_\s]+)\s+(\d+).*(\d\.\d).*$/)
             if (course) {
                 const inProgress = line.match(/\bIP\b/g);
-                userData.CourseWork[term].push(`${course[1]}_${course[2]}:${course[3]}${inProgress ? ":inProgress" : ""}`.replace(/\s+/, "_"));
-                const courseObject = new Course(`${course[1]}_${course[2]}`, y, s, course[3]).completed();
+                userData.CourseWork[term].push(`${course[1]}_${course[2]}:${course[3]}${inProgress ? ":inProgress" : ""}`.replace(/\s+/g, "_"));
+                const courseObject = new Course(`${course[1]}_${course[2]}`.replace(/\s+/g, "_"), y, s, course[3]).completed();
+                addedCourse = true;
                 if (inProgress) courseObject.inProgress();
                 userData.Courses.push(courseObject);
             }
@@ -226,7 +233,7 @@ function AuditPlan(data, resolve, reject) {
         FileType: "AuditPlan"
     };
     var year = -1;
-    // var totalSemesters = 0;
+    var totalSemesters = [];
     var inPrograms = false;
 
     for (var line of data) {
@@ -234,20 +241,20 @@ function AuditPlan(data, resolve, reject) {
         if (line.match(/Degree Programs|Major\s*\(s\):|Minor\s*\(s\):|Certificates\s*\(s\):/)) {
             inPrograms = true;
         }
-        else if (line.match(/Degree Planner/)) {
+        else if (line.match(/Degree Planner|Degree Plan/)) {
             inPrograms = false;
         }
         else if (inPrograms) {
             const [title, year1, year2] = line.split("-");
-            userData.Programs.push({title: title, year: (year1 + "-" + year2).trim()});
+            userData.Programs.push({ title: title, year: (year1 + "-" + year2).trim() });
         }
         else if (line.match(/Year \d/)) {
             year++;
         }
-        else if (line.match(/Semester \d/g)) {
-            // totalSemesters = line.match(/Semester \d/g).length;
+        else if (line.match(/Fall|Spring|Summer/g)) {
+            totalSemesters.push(line.match(/Fall|Spring|Summer/g))
         }
-        else if (line.match(/Total|Course|Credit|Status|Plan|Planner/g)) {}
+        else if (line.match(/Total|Course|Credit|Status|Plan|Planner|Hour/g)) { }
         else if (line.match(/Planned|Completed|In Progress/g)) {
             const y = year;
             line.match(/Planned|Completed|In Progress/g).forEach((status, sem) => {
@@ -257,7 +264,7 @@ function AuditPlan(data, resolve, reject) {
                             case "Planned": course.planned(); break;
                             case "Completed": course.completed(); break;
                             case "In Progress": course.inProgress(); break;
-                            default: 
+                            default:
                         }
                     }
                 })
@@ -279,6 +286,16 @@ function AuditPlan(data, resolve, reject) {
         }
 
     }
+
+    userData.Courses.forEach(course => {
+        const y = course.plan[0];
+        const s = course.plan[1];
+        const term = totalSemesters[y][s];
+        const val = termVal(term);
+        course.plan[1] = val
+    })
+
+    console.log(totalSemesters);
     resolve(userData);
 
 }
@@ -291,7 +308,23 @@ function termOrder(term) {
             return 1;
         case "FALL":
             return 2;
-        default: 
+        default:
             return 3;
+    }
+}
+
+function termVal(term) {
+    switch (term) {
+        case "Fall":
+        case "FALL":
+            return 0;
+        case "Summer":
+        case "SUM":
+            return 1;
+        case "Spring":
+        case "SPNG":
+            return 2;
+        default:
+            return -1;
     }
 }

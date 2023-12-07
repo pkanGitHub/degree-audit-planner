@@ -28,6 +28,7 @@ export class Course {
     inProgress() { this.status = STATUS.INPROGRESS; return this; }
     suggested() { this.status = STATUS.SUGGESTED; return this; }
 
+    setPlan(year, semester) { this.plan[0] = year; this.plan[1] = semester}
 
 }
 
