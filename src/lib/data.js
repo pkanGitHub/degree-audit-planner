@@ -93,7 +93,7 @@ export function getProgramsBySearch(name_segment, year, category = undefined) {
         default: return undefined;
     }
 
-    const program = list?.filter(program => program.title.match(new RegExp(name_segment, "g")))?.map(program => { program.type = category; return program; });
+    const program = list?.filter(program => program.title.match(new RegExp(name_segment, "gi")))?.map(program => { program.type = category; return program; });
     return program;
 }
 
@@ -201,7 +201,10 @@ function checkCache(type) {
             console.error('Error opening database:', event.target.error);
             reject(event.target.error);
         };
-    });
+    })
+    .catch(error => {
+        console.log(error);
+    })
 }
 
 
@@ -248,5 +251,8 @@ function makeCache(type) {
             console.error('Error fetching data:', error);
             reject(error);
         });
+    })
+    .catch(error => {
+        console.log(error);
     })
 }

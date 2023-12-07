@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import Popup from 'reactjs-popup';
 import { Tooltip } from 'react-tooltip'
+import * as User from '../lib/user';
 
 export default function PlanPosition({ years, plan, set }) {
 
-    if (!years) years = 4;
+    if (!years) years = User.planYears() || 4;
 
     const [planYears, setYears] = useState(years || 4);
     const changeYear = (year) => {

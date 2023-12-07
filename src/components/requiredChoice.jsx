@@ -42,7 +42,7 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse, course
         console.log(event.target.value);
         switch(event.target.value) {
             case "completed": course.completed(); break;
-            case "IP": course.inProgress(); break;
+            case "in-progress": course.inProgress(); break;
             case "planned": course.planned(); break;
             default: break;
         }
@@ -72,10 +72,10 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse, course
                         <b>Credits:</b> {creditHours}
                     </td>
                     <td>
-                    <select className="requiredCourseSelect" name="progressSelect" onChange={statusChanged}>
+                    <select className="requiredCourseSelect" name="progressSelect" onChange={statusChanged} value={course?.status || ""}>
                         <option value="">Status</option>
                         <option value='completed'>Completed</option>
-                        <option value='IP'>In Progress</option>
+                        <option value='in-progress'>In Progress</option>
                         <option value='planned'>Planned</option>
                     </select>
                     </td>

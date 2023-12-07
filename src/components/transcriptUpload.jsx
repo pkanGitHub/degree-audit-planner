@@ -41,53 +41,6 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
             addPrograms(data.Programs);
             console.log(data.Courses);
             setCourses(data.Courses);
-            /*setCourses(Object.entries(data.CourseWork)
-                                .map(term => {
-                                        const formatted = term[0].split("_");
-                                        formatted[0] = (() => {
-                                            switch (formatted[0]) {
-                                                case "SPNG":
-                                                    return 0;
-                                                case "SUM":
-                                                    return 1;
-                                                case "FALL":
-                                                    return 2;
-                                                default: 
-                                                    return 3;
-                                            }
-                                        })();
-                                        return [formatted, term[1], term[0]];
-                                })
-                                .sort((a, b) => {
-                                    
-                                    const aT = a[0]
-                                    const bT = b[0];
-
-                                    if (aT[1] > bT[1]) return 1;
-                                    if (aT[1] < bT[1]) return -1;
-                                        
-                                    if (aT[0] > bT[0]) return 1;
-                                    if (aT[0] < bT[0]) return -1;
-                                    
-                                    return 0;
-                                })
-                                .reduce((([total, year, prevSem, semCnt], semester) => { 
-                                    
-                                    if (semester[0][0] === 2 ^ (semester[0][0] <= prevSem && prevSem !== 2)) {
-                                        year++;
-                                        semCnt = 0;
-                                    }
-                                    total.push(...semester[1].map(id => {
-                                        id = id.split(":");
-                                        
-                                        const course = new Course(id[0], year, semCnt, id[1])
-                                        if (id[2] && id[2] === "inProgress") course.inProgress();
-                                        else course.completed();
-                                        return course;
-                                    }));          
-                                    return [total, year, semester[0][0], ++semCnt]; 
-                                }), [[], 0, 3, 0])
-                                [0])*/
         })
         .catch(error => {
             console.error(error);
@@ -98,7 +51,20 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
     const addPrograms = programs => {
         const list = programs.map(program => {
                 var [name, type] = program.title.split("-");
-                const search = getProgramsBySearch(name.replace(/\s+/g, ' ').trim(), program.year, undefined);
+                if (!type) type = undefined;
+                else if (type.match(/Cert/gi)) type = "cert";
+                else if (type !== "minor") type = "major";
+
+                name = name.replace(/\s+/g, ' ').trim();
+                var newName = "";
+
+                for (let i = 0; i < name.length; i++) {
+                    var char = name[i];  
+                    if (char === '&') char = "and"
+                    newName += char + "\\w*";
+                }
+
+                const search = getProgramsBySearch(newName, program.year, type);
                 console.log(search);
                 return {original: program.title, year: program.year, results: search}
         })
@@ -166,7 +132,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                     }
                 </div>
                 <a href="/tutorial#uploading" style={{width: "100%", display: "block"}}>What can I upload?</a>
-                <button type="button" disabled={!userConsents} onClick={readFile}>Upload</button>
+                <button type="button" onClick={readFile}>Upload</button>
                 { error ? <p className="error">{ error }</p> : <p>&nbsp;</p> }
                 
             </div>

@@ -156,7 +156,7 @@ const Audit = () => {
         }
 
         return (
-            <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(category, year, type)} update={updateCatalog} />
+            <CatalogItems year={year} type={selectedType} category={category} coursesList={coursesList} removeCatalog={() => removeCatalog(category, year, type)} update={updateCatalog} userCourses={userCourses} />
         )
 
     }
@@ -306,7 +306,7 @@ const Audit = () => {
                     <hr />
 
 
-                    <GenEdsModel key={state} genEds={genEds} coursesList={coursesList} update={updateCatalog} />
+                    <GenEdsModel key={state} genEds={genEds} coursesList={coursesList} update={updateCatalog} userCourses={userCourses}/>
 
 
                     {/* this is a map that gets all user input programs here, user can delete or add programs */}
@@ -330,7 +330,7 @@ const Audit = () => {
                                 <label id="genReqLabel" htmlFor="elective">Mizzou Courses:</label>
                                 <div className="classHistory">
 
-                                    <ExtraCourses key={state} coursesList={coursesList} />
+                                    <ExtraCourses key={state} coursesList={coursesList} userCourses={userCourses} update={updateCatalog}/>
                                 </div>
                             </li>
                         </ul>
@@ -341,7 +341,7 @@ const Audit = () => {
                                 <label id="genReqLabel" htmlFor="transfer">Transfer Courses:</label>
                                 <div className="classHistory">
 
-                                    <TransferCourse key={state} />
+                                    <TransferCourse key={state} update={updateCatalog}/>
                                 </div>
                             </li>
                         </ul>
@@ -359,7 +359,7 @@ const Audit = () => {
                 </div>
                 <hr />
 
-                <SemesterPlan data={userCatalog} courses={userCourses} />
+                <SemesterPlan data={userCatalog} courses={userCourses} updateParent={updateCatalog} />
                 {/* <PlanPosition/> */}
             </div>
         </div>

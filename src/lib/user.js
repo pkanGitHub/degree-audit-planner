@@ -18,6 +18,7 @@ export function userCerts() { return certificates; }
 
 
 export function addCourse(course) {
+    if (!course?.id) return;
     courses.push(course);
     console.log(courses);
     updateYears();
@@ -149,7 +150,7 @@ export function clear() {
 }
 
 export function planYears() {
-    return 
+    return courses.reduce((max, course) => Math.max(max, course.plan[0]), -1) + 1
 }
 
 export function print() {

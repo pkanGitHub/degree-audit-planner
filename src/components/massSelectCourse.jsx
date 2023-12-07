@@ -6,7 +6,8 @@ import { Tooltip } from 'react-tooltip'
 import * as User from "../lib/user";
 import { Course } from "../lib/course"
 
-const MassSelectCourse = ({ coursesList, categories, update }) => {
+const MassSelectCourse = ({ coursesList, categories, update, userCourses }) => {
+    // console.log(userCourses);
     const [selectCourseType, setCourseType] = useState('');
     const handleSelect = (e) => {
         setCourseType(e.target.value)
@@ -20,15 +21,15 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
         setSelectCourse(course);
     }
 
-    const [userCourses, setUserCourses] = useState(User.getCourses());
+    // const [userCourses, setUserCourses] = useState(User.getCourses());
     const addCourse = (course) => {
         User.addCourse(new Course(course.courseID, -1, -1, course.credit));
-        setUserCourses([...User.getCourses()]);
+        // setUserCourses([...User.getCourses()]);
         update();
     }
     const removeCourse = course => {
         User.removeCourse(course);
-        setUserCourses([...User.getCourses()]);
+        // setUserCourses([...User.getCourses()]);
         update();
     }
 
@@ -44,7 +45,7 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
         const courseInfo = selectCourse
 
         getOptions.filter(singleClass => singleClass.courseID.match(courseInfo)).forEach(course => addCourse(course))
-        
+
         // .map(filteredClass => (
 
         //     setSelectedCourses([...selectedCourses, { key: filteredClass._id, classId: filteredClass.courseID, creditHours: filteredClass.credit, preReq: filteredClass.prerequisites }])
@@ -74,13 +75,14 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
         coursesList.filter((area) => area.courses
             .some((course) => course?.courseID && course.courseID.endsWith("W")))
             .map((area) => area.courses.filter((course) => course.courseID.endsWith("W"))
-            .sort(sortCourses)
-            .map((selectedCourse) => getOptions.push(selectedCourse)))
+                .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id?.toLowerCase() === course.courseID?.toLowerCase()) }))
+                .sort(sortCourses)
+                .map((selectedCourse) => getOptions.push(selectedCourse)))
     }
     else {
         coursesList.map(area => area.courses
             .filter(course => course?.categories && course.categories.some(category => category === selectCourseType))
-            .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id === course.courseID) }))
+            .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id?.toLowerCase() === course.courseID?.toLowerCase()) }))
             .sort(sortCourses)
             .map(course => getOptions.push(course)))
     }
@@ -93,13 +95,23 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
         getOptions.sort(sortCourses)
     }, [userCourses, getOptions, searchFilter]);
 
+    // console.log(coursesList.filter(course => course.inUser));
 
     return (
 
         <div id='largeClassSelect'>
 
 
-            {getOptions.filter(course => course.inUser).map((key, index) => <RequiredChoice key={index} classId={key.courseID} creditHours={key.credit} preReq={key.prerequisites} course={key.inUser} removeCourse={removeCourse} update={update}/>)}
+            {getOptions.filter(course => course.inUser).map((key, index) =>
+                <RequiredChoice
+                    key={index}
+                    classId={key.courseID}
+                    creditHours={key.credit}
+                    preReq={key.prerequisites}
+                    course={key.inUser}
+                    removeCourse={removeCourse} update={update}
+                />
+            )}
 
 
             {filteredCategory.length > 1 ?
@@ -135,8 +147,6 @@ const MassSelectCourse = ({ coursesList, categories, update }) => {
                                 preReq={item.prerequisites}
                                 lastOffered={item.pastTerms[0]}
                                 fromUser={item.inUser}
-                                add={addCourse}
-                                remove={removeCourse}
                                 select={selectCourseNow}
                             />
                         </div>

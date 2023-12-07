@@ -5,7 +5,7 @@ import "../styles/audit.css"
 import * as User from "../lib/user";
 import { sortCourses } from "./massSelectCourse";
 import { Course } from "../lib/course"
-const AddCourses = ({ courses, orCourses, update }) => {
+const AddCourses = ({ courses, orCourses, update, userCourses }) => {
     // console.log(courses);
 
     // concatCourses([...courses, ...orCourses]);
@@ -22,7 +22,7 @@ const AddCourses = ({ courses, orCourses, update }) => {
         }
         return 0;
     })
-    const [userCourses, setUserCourses] = useState(User.getCourses())
+    // const [userCourses, setUserCourses] = useState(User.getCourses())
     const [course, setCourse] = useState('');
     const sortedCourses = courses.sort(function (a, b) {
         if (a.classId < b.classId) {
@@ -33,7 +33,7 @@ const AddCourses = ({ courses, orCourses, update }) => {
         }
         return 0;
     })
-        .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id === course.courseID) }))
+        .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id?.toLowerCase() === course.courseID?.toLowerCase()) }))
         .sort(sortCourses)
 
 
@@ -58,14 +58,13 @@ const AddCourses = ({ courses, orCourses, update }) => {
         setSelectCourse(course);
     }
 
-    const addCourse = (course) => {
+    const addCourse = (id) => {
+        const course = sortedTotalCourses.find(course => course.courseID?.toLowerCase() === id?.toLowerCase());
         User.addCourse(new Course(course.courseID, -1, -1, course.credit));
-        setUserCourses([...User.getCourses()]);
         update();
     }
     const removeCourse = course => {
-        User.removeCourse(course);
-        setUserCourses([...User.getCourses()]);
+        User.removeCourse(course.inUser);
         update();
     }
 
@@ -90,8 +89,18 @@ const AddCourses = ({ courses, orCourses, update }) => {
     return (
         <div id='specifcElective'>
 
-            {/* {userCourses.map((key, index) => <RequiredChoice key={index} classId={key.classId} creditHours={key.creditHours} preReq={key.preReq} removeCourse={() => removeCourse(index)} />)} */}
-            {sortedCourses.filter(course => course.inUser).map((key, index) => <RequiredChoice key={index} classId={key.courseID} creditHours={key.credit} preReq={key.prerequisites} course={key.inUser} removeCourse={removeCourse} update={update} />)}
+
+            {sortedCourses.filter(course => course.inUser).map((key, index) =>
+                <RequiredChoice
+                    key={index}
+                    classId={key.courseID}
+                    creditHours={key.credit}
+                    preReq={key.prerequisites}
+                    course={key.inUser}
+                    removeCourse={() => removeCourse(course.inUser)}
+                    update={update}
+                />
+            )}
 
             <p><b>Available Courses:</b></p>
 
@@ -114,8 +123,6 @@ const AddCourses = ({ courses, orCourses, update }) => {
                                             preReq={singleCourse.preReq}
                                             lastOffered={singleCourse.lastOffered}
                                             fromUser={singleCourse.inUser}
-                                            add={addCourse}
-                                            remove={removeCourse}
                                             select={selectCourseNow}
                                         />
                                     </div>
@@ -143,8 +150,6 @@ const AddCourses = ({ courses, orCourses, update }) => {
                                                     preReq={singleCourse.preReq}
                                                     lastOffered={singleCourse.lastOffered}
                                                     fromUser={singleCourse.inUser}
-                                                    add={addCourse}
-                                                    remove={removeCourse}
                                                     select={selectCourseNow}
                                                 />
                                             </div>
@@ -170,8 +175,6 @@ const AddCourses = ({ courses, orCourses, update }) => {
                                         preReq={singleCourse.preReq}
                                         lastOffered={singleCourse.lastOffered}
                                         fromUser={singleCourse.inUser}
-                                        add={addCourse}
-                                        remove={removeCourse}
                                         select={selectCourseNow}
                                     />
                                 </div>

@@ -14,7 +14,7 @@ const Login = () => {
 
 
     const cookies = new Cookies(null);
-    // if (cookies.get("user")?.id) window.location.href = '/audit';
+    if (cookies.get("user")?.id) window.location.href = '/audit';
 
     const handleSubmit = async (e) => {
         e.preventDefault()

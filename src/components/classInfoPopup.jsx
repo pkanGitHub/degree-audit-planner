@@ -10,7 +10,7 @@ import { planYears } from '../lib/user';
 //tried tooltip, collision, and set boundaries. none of these seem to keep this inside the page. might just do hard coded margin to se eif that will work
 //contentStyle={{maxWidth: '100vh', width: '30%', overflowX: "scroll", overflowX: 'scroll', maxHeight: '100vh', margin: 'auto'}}
 
-const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, preReq, lastOffered, fromUser, add, remove, select}) => {
+const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, preReq, lastOffered, fromUser, select}) => {
     const [error, setError] = useState(false);
     const [plan, setPlan] = useState([-1, -1]);
     const setPosition = (year, semester) => {
