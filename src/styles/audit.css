@@ -21,13 +21,13 @@
 }
 
 .programDelete{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
 
 }
 .programDelete:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #enrollmentSelection {
@@ -222,36 +222,39 @@ hr{
 }
 
 #exportButton{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
     width: 15%;
+    transition: background-color 0.5s ease;
 }
 
 #exportButton:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #saveButton{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
     width: 15%;
+    transition: background-color 0.5s ease;
 }
 
 #saveButton:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #deleteButton{
-    background-color: #ffdb7f;
+    background-color: white;
     border: 2px solid #F1B82D;
     color: black;
     width: 15%;
+    transition: background-color 0.5s ease;
 }
 
 #deleteButton:hover{
-    background-color: #FFF3D6;
+    background-color: #F1B82D;
 }
 
 #twoSemesterPlan, #threeSemesterPlan, .planTable{
