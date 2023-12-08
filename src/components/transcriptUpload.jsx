@@ -7,6 +7,7 @@ import "../styles/transcriptUpload.css"
 import { getProgramsBySearch } from "../lib/data";
 import TermsCondition from "./termsConditions";
 import { confirmAlert } from "react-confirm-alert";
+import { Link } from 'react-router-dom';
 
 export default function TranscriptUpload({setCatalog, setCourses, hasData}) {    
 
@@ -131,7 +132,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                         </>
                     }
                 </div>
-                <a href="/tutorial#uploading" style={{width: "100%", display: "block"}}>What can I upload?</a>
+                <Link to="/tutorial#uploading" style={{width: "100%", display: "block"}}>What can I upload?</Link>
                 <button type="button" onClick={readFile}>Upload</button>
                 { error ? <p className="error">{ error }</p> : <p>&nbsp;</p> }
                 
