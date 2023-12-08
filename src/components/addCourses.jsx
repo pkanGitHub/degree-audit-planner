@@ -111,7 +111,7 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
 
 
             <div id="popupDiv">
-                {sortedTotalCourses.filter(course => course.name?.match(searchFilter, "g") || course.classId?.match(searchFilter, "g")).map((singleCourse, index) => {
+                {sortedTotalCourses.filter(course => course.name?.match(searchFilter, "gi") || course.classId?.match(searchFilter, "gi")).map((singleCourse, index) => {
                     if ((orCourses.filter(course => course.orId.match(singleCourse.id))).length > 0) {
                         return (
                             <div key={singleCourse.id}>

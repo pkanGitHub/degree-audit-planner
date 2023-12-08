@@ -21,7 +21,7 @@ const ExtraCourses = ({ coursesList, update, userCourses }) => {
         .filter(area => area.area === section)
         .map(selectedArea => selectedArea.courses)
         .flat()
-        .filter(course => course.name.match(searchFilter, "g") || course.courseID.match(searchFilter, "g"))
+        .filter(course => course.name.match(searchFilter, "gi") || course.courseID.match(searchFilter, "gi"))
 
     let sortedTotalCourses = allCourseList.sort(function (a, b) {
         if (a.courseID < b.courseID) {
