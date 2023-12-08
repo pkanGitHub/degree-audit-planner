@@ -24,9 +24,18 @@ const GenEds = () => mongoose.model('GenEds', require('./Models/geneds'));
 const Major = () => mongoose.model('Major', require('./Models/major'));
 const Minor = () => mongoose.model('Minor', require('./Models/minor'));
 
+const cors = {
+    origin: ["https://www.mizzouplanner.com, https://mizzouplanner.com, https://dev.d1vlixywzyk5l.amplifyapp.com"],
+    default: "https://www.mizzouplanner.com"
+  }
+
 // Enable CORS for all methods
 app.use(async (req, res, next)=>{
-    res.setHeader("Access-Control-Allow-Origin","*");
+    //  Checks url agains list of allowed urls
+    const origin = cors.origin.includes(req.header('origin').toLowerCase()) ? req.headers.origin : cors.default;
+
+    // sets allowed origin to that url if it is allowed.
+    res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept"
