@@ -124,7 +124,7 @@
 }
 
 #mfabutton{
-    background-color: #69901D;
+    background-color: black;
     width: 25%;
 }
 #errorMessage{
@@ -139,14 +139,9 @@
 }
 
 #mfaSubmit{
-    background-color: #69901D;
-    color: white;
-}
-#mfaSubmit:hover{
-    background-color: #527115;
-}
-#mfaBack{
-    border: 1px solid black;
+    border: none;
+    background-color: #F1B82D;
+    border-bottom: 2px solid black;
     color: black;
     padding: 10px;
     text-align: center;
@@ -157,9 +152,34 @@
     cursor: pointer;
     border-radius: 1px;
     font-weight: bold;
+    width: 100%;
+    transition: background-color 0.5s ease;
 }
+
+#mfaSubmit:hover{
+    background-color: #F7D88D;
+}
+
+#mfaBack{
+    border: none;
+    background-color: #F1B82D;
+    border-bottom: 2px solid black;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 1px;
+    font-weight: bold;
+    width: 100%;
+    transition: background-color 0.5s ease;
+}
+
 #mfaBack:hover{
-    background-color: rgb(224, 224, 224);
+    background-color: #F7D88D;
 }
 
 a {
@@ -175,3 +195,36 @@ a {
 #signupContainer {
     margin-top: 10px;
 }
+
+#pleaseConfirm {
+    font-size: 20px;
+}
+
+#verifyEmailButton {
+    border: none;
+    background-color: #F1B82D;
+    border-bottom: 2px solid black;
+    color: black;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 1px;
+    font-weight: bold;
+    width: 100%;
+    margin: 0;
+    margin-top: 4px;
+    transition: background-color 0.5s ease;
+}
+
+#verifyEmailButton:hover {
+    background-color: #F7D88D;
+}
+
+
+#weSentEmail {
+    font-size: 20px;
+}
+

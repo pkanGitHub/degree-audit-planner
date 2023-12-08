@@ -42,13 +42,13 @@ const MFA = () => {
         <div className="formSection">
             <div id="formDesign" className="mfa">
                 <h1>2-Step Verification</h1>
-                <h2>Please confirm this is you. We sent a verification code to your email.</h2>
+                <p id="pleaseConfirm">Please confirm this is you. We sent a verification code to your email.</p>
                 {errorMsg && <p style={{ color: 'red' }}>{errorMsg}</p>}
                 <form>
                     <div id="formContent">
                         <label htmlFor="code">Enter Code</label>
                         <input type="text" name="code" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-                        <button onClick={handleVerification}>Verify Email</button>
+                        <button id = "verifyEmailButton" onClick={handleVerification}>Verify Email</button>
                     </div>
                     <br/>
                 </form>
