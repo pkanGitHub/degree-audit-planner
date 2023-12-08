@@ -29,8 +29,8 @@ const ResetPassword = () => {
         console.log(err)
     }
 
-    const [againBorder, setAgain] = useState({border: "2px solid lightgray"})
-    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
+    const [againBorder, setAgain] = useState({border: "1px solid black"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "1px solid black"})
 
     const [error, setError] = useState("");
 
@@ -43,21 +43,21 @@ const ResetPassword = () => {
         if(!data.password)
         {
             setError("You must enter a password")
-            setAgain({border: "2px solid lightgray"})
-            setPasswordBorder({border: "2px solid red"})
+            setAgain({border: "1px solid black"})
+            setPasswordBorder({border: "1px solid red"})
             return
         }
         else if(data.password.length < 9)
         {
             setError("Your password must be longer than 8 characters.")
-            setAgain({border: "2px solid lightgray"})
-            setPasswordBorder({border: "2px solid red"})
+            setAgain({border: "1px solid black"})
+            setPasswordBorder({border: "1px solid red"})
             return
         }
         else if (data.password !== data.passwordAgain) {
             setError("Passwords do not match.");
-            setAgain({border: "2px solid red"})
-            setPasswordBorder({border: "2px solid red"})
+            setAgain({border: "1px solid red"})
+            setPasswordBorder({border: "1px solid red"})
             return
         }
         else {

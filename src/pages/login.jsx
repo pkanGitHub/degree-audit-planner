@@ -12,8 +12,8 @@ const Login = () => {
     const [errorMsg, setErrorMsg] = useState(null)
 
     const navigate = useNavigate();
-    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid black"})
-    const [emailBorder, setEmail] = useState({border: "2px solid black"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "1px solid black"})
+    const [emailBorder, setEmail] = useState({border: "1px solid black"})
 
 
     const cookies = new Cookies(null);
@@ -22,15 +22,15 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-        if(!formData.email){
-          setEmail({border: "2px solid red"})
-          setPasswordBorder({border: "2px solid black"})
+        if(!formData.email || !isValidEmail(formData.email)){
+          setEmail({border: "1px solid red"})
+          setPasswordBorder({border: "1px solid black"})
           setErrorMsg("You must enter an email.")
           return
         }
         else if(!formData.password){
-          setEmail({border: "2px solid black"})
-          setPasswordBorder({border: "2px solid red"})
+          setEmail({border: "1px solid black"})
+          setPasswordBorder({border: "1px solid red"})
           setErrorMsg("You must enter a password.")
           return
         }
@@ -44,8 +44,8 @@ const Login = () => {
             navigate('/loginMFA');
         })
         .catch(error => {
-            setEmail({border: "2px solid red"})
-            setPasswordBorder({border: "2px solid red"})
+            setEmail({border: "1px solid red"})
+            setPasswordBorder({border: "1px solid red"})
             setErrorMsg(error.response.data.message)
             console.log('Login failed on the frontend:', error.response.data.message)
         })
@@ -55,6 +55,11 @@ const Login = () => {
         const { name, value } = e.target
         setFormData({ ...formData, [name]: value })
         setErrorMsg(null)
+      }
+
+      const isValidEmail = (email) => {
+        const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return pattern.test(email);
       }
 
     return (
