@@ -24,6 +24,7 @@
     background-color: white;
     border: 2px solid #F1B82D;
     color: black;
+    transition: background-color 0.5s ease;
 
 }
 .programDelete:hover{
