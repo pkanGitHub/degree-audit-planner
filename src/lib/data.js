@@ -100,7 +100,14 @@ export function getProgramsBySearch(name_segment, year, category = undefined) {
 
 export async function getCourseList(pull) {
     if (pull || Courses === undefined) {
-        return Courses = await getData('courses');
+        return Courses = await getData('courses').then(courses=> courses.map(area => {
+            area.courses.sort((a, b) => {
+                if (a.courseID > b.courseID) return 1;
+                if (a.courseID < b.courseID) return -1;
+                return 0;
+            })
+            return area;    
+        }));
     }
     return Courses;
 }
@@ -183,7 +190,7 @@ function checkCache(type) {
             getRequest.onsuccess = event => {
                 const result = event.target.result;
 
-                if (result) {
+                if (result && result?.value) {
                     const data = result.value;
                     resolve(JSON.parse(data));
                 } else {
@@ -229,7 +236,7 @@ function makeCache(type) {
                 const transaction = db.transaction([storeName], 'readwrite');
                 const objectStore = transaction.objectStore(storeName);
 
-                const addRequest = objectStore.add({ type: type, value: JSON.stringify(data) });
+                const addRequest = objectStore.put({ type: type, value: JSON.stringify(data) });
 
                 addRequest.onsuccess = event => {
                     console.log('Data added successfully');

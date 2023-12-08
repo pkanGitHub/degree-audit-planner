@@ -186,6 +186,7 @@ function AcademicProfile(data, resolve, reject) {
                 }
             }
             s = termVal(text[0]);
+            console.log(`${text[0]} : ${s}`)
 
             term = text[0] + "_" + text[1];
             year = Number(text[1]);
@@ -319,11 +320,11 @@ function termVal(term) {
         case "Fall":
         case "FALL":
             return 0;
-        case "Summer":
-        case "SUM":
-            return 1;
         case "Spring":
         case "SPNG":
+            return 1;
+        case "Summer":
+        case "SUM":
             return 2;
         default:
             return -1;
