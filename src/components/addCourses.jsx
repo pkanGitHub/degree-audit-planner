@@ -7,6 +7,7 @@ import { sortCourses } from "./massSelectCourse";
 import { Course } from "../lib/course"
 const AddCourses = ({ courses, orCourses, update, userCourses }) => {
     // console.log(courses);
+    const [searchFilter, setSearchFilter] = useState("");
 
     // concatCourses([...courses, ...orCourses]);
 
@@ -22,6 +23,10 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
         }
         return 0;
     })
+    .map(course => ({ ...course, inUser: userCourses.find(uCourse => uCourse.id?.toLowerCase() === course.classId?.toLowerCase()) }))
+    .sort(sortCourses)
+
+
     // const [userCourses, setUserCourses] = useState(User.getCourses())
     const [course, setCourse] = useState('');
     const sortedCourses = courses.sort(function (a, b) {
@@ -68,7 +73,7 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
         update();
     }
 
-    const [searchFilter, setSearchFilter] = useState("");
+    
     const handleSearch = event => {
         setSearchFilter(event.target.value);
         // getOptions.filter(course => course.name?.match(searchFilter, "g") || course.courseID?.match(searchFilter, "g"));
@@ -90,7 +95,7 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
         <div id='specifcElective'>
 
 
-            {sortedCourses.filter(course => course.inUser).map((key, index) =>
+            {sortedTotalCourses.filter(course => course.inUser).map((key, index) =>
                 <RequiredChoice
                     key={index}
                     classId={key.classId}
@@ -106,7 +111,7 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
 
 
             <div id="popupDiv">
-                {sortedCourses.map((singleCourse, index) => {
+                {sortedTotalCourses.filter(course => course.name?.match(searchFilter, "gi") || course.classId?.match(searchFilter, "gi")).map((singleCourse, index) => {
                     if ((orCourses.filter(course => course.orId.match(singleCourse.id))).length > 0) {
                         return (
                             <div key={singleCourse.id}>
@@ -194,7 +199,7 @@ const AddCourses = ({ courses, orCourses, update, userCourses }) => {
                 </select>
             </label> */}
 
-            {sortedCourses.length > 10 ?
+            {sortedTotalCourses.length > 10 ?
                 <label>
                     Search:
                     <input type="text" name="searchBox" id="searchBox" onChange={handleSearch} />
