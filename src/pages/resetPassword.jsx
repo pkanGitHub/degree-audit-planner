@@ -65,6 +65,8 @@ const ResetPassword = () => {
             .then(response => {
                 console.log('Server Response:', response);
                 console.log('Password change successful!')
+                cookies.remove("forgotpass")
+                cookies.remove("user")
                 alert("You have successfully changed your password!")
                 navigate('/login');
             })
