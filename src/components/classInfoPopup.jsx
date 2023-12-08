@@ -43,28 +43,6 @@ const ClassInfo = ({ key, className, classTitle, classDescript, creditHours, pre
                     <p><b>Prerequisites:</b> {preReq}</p>
                     <p><b>Last offered:</b> {lastOffered}</p>
                     <p id='notice'>{notice}</p>
-
-                    {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        {!fromUser ?
-                            <button 
-                                className='addButton' 
-                                onClick={() => {
-                                    if (plan[0] === -1 || plan[1] === -1) setError(true);
-                                    else add(className, plan[0], plan[1], creditHours);
-                                }}
-                                style={{height: 50, padding: "0px 30px"}}
-                            >
-                                Add
-                            </button>
-                            :
-                            <button className='removeButton' onClick={() => remove(fromUser)} style={{height: 50, padding: "0px 30px"}}>Remove</button>
-                        }
-                        {
-                            error ? <p style={{ fontSize: 12 }} id='errorMessage'>Must set a semester</p> : null
-                        }
-
-                        <PlanPosition years={planYears()} plan={fromUser?.plan || plan} set={setPosition} />
-                    </div> */}
                 </div>
             }
         </Popup>
