@@ -9,8 +9,8 @@ const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' })
     const [errorMsg, setErrorMsg] = useState(null)
 
-    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid black"})
-    const [emailBorder, setEmail] = useState({border: "2px solid black"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "1px solid black"})
+    const [emailBorder, setEmail] = useState({border: "1px solid black"})
 
 
     const cookies = new Cookies(null);
@@ -20,14 +20,14 @@ const Login = () => {
         e.preventDefault()
         const tomorrow = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
         if(!formData.email){
-          setEmail({border: "2px solid red"})
-          setPasswordBorder({border: "2px solid black"})
+          setEmail({border: "1px solid red"})
+          setPasswordBorder({border: "1px solid black"})
           setErrorMsg("You must enter an email.")
           return
         }
         else if(!formData.password){
-          setEmail({border: "2px solid black"})
-          setPasswordBorder({border: "2px solid red"})
+          setEmail({border: "1px solid black"})
+          setPasswordBorder({border: "1px solid red"})
           setErrorMsg("You must enter a password.")
           return
         }
@@ -52,8 +52,8 @@ const Login = () => {
                 window.location.href = '/loginMFA'
             } else {
                 // show error message on browser or console...
-                setEmail({border: "2px solid red"})
-                setPasswordBorder({border: "2px solid red"})
+                setEmail({border: "1px solid red"})
+                setPasswordBorder({border: "1px solid red"})
                 setErrorMsg(data.message)
                 console.log('Login failed on the frontend:', data.message)
             }

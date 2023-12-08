@@ -82,32 +82,32 @@ const NavBar = () => {
 
   const handleButtonClick = () => {
     // Your logic for handling the button click
-    console.log('Button clicked!');
+    window.location.href = '/resetpassword'
   };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
 
-    // Check if passwords match
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
+  //   // Check if passwords match
+  //   if (formData.password !== formData.confirmPassword) {
+  //     alert("Passwords do not match.");
+  //     return;
+  //   }
 
-    try {
-      const response = await axios.post('http://localhost:4001/signup', formData);
+  //   try {
+  //     const response = await axios.post('http://localhost:4001/signup', formData);
 
-      if (response.status === 201) {
-        console.log('User sign up successfully');
-        window.location.href = '/login';
-      } else {
-        const data = await response.json();
-        console.error(data.message);
-      }
-    } catch (error) {
-      console.error('Error during sign up: ', error);
-    }
-  };
+  //     if (response.status === 201) {
+  //       console.log('User sign up successfully');
+  //       window.location.href = '/login';
+  //     } else {
+  //       const data = await response.json();
+  //       console.error(data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error during sign up: ', error);
+  //   }
+  // };
 
   return (
     <div className='navbar'>
@@ -148,7 +148,7 @@ const NavBar = () => {
                 <CloseOutlined />
               </button>
               
-                  <form onSubmit={handleSubmit}>
+              
                     
                       <label>Email
                         <div id="formContent">
@@ -177,9 +177,9 @@ const NavBar = () => {
                       </label> */}
 
                       <br/>
-                    <button className="editButton" type="submit">Reset Password</button>
+                    <button className="editButton"  onClick={handleButtonClick}>Reset Password</button>
 
-                  </form>
+               
                 </div>
             )}
           </Popup>}

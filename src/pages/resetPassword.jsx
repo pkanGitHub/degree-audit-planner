@@ -13,15 +13,23 @@ const ResetPassword = () => {
     try{
         testAuth = cookies.get("forgotpass")
         if(testAuth === undefined){
-            testAuth = "";
+            try{
+                testAuth = cookies.get("user")
+                if(testAuth === undefined){
+                    testAuth = "";
+                }
+            }
+            catch(err){
+                console.log(err)
+            }
         }
     }
     catch(err){
         console.log(err)
     }
 
-    const [againBorder, setAgain] = useState({border: "2px solid lightgray"})
-    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
+    const [againBorder, setAgain] = useState({border: "1px solid black"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "1px solid black"})
 
     const [error, setError] = useState("")
     const [data, setData] = useState({email: testAuth.email, password: "", passwordAgain: ""})
@@ -31,21 +39,21 @@ const ResetPassword = () => {
         if(!data.password)
         {
             setError("You must enter a password")
-            setAgain({border: "2px solid lightgray"})
-            setPasswordBorder({border: "2px solid red"})
+            setAgain({border: "1px solid black"})
+            setPasswordBorder({border: "1px solid red"})
             return
         }
         else if(data.password.length < 9)
         {
             setError("Your password must be longer than 8 characters.")
-            setAgain({border: "2px solid lightgray"})
-            setPasswordBorder({border: "2px solid red"})
+            setAgain({border: "1px solid black"})
+            setPasswordBorder({border: "1px solid red"})
             return
         }
         else if (data.password !== data.passwordAgain) {
             setError("Passwords do not match.");
-            setAgain({border: "2px solid red"})
-            setPasswordBorder({border: "2px solid red"})
+            setAgain({border: "1px solid red"})
+            setPasswordBorder({border: "1px solid red"})
             return
         }
 
@@ -56,7 +64,18 @@ const ResetPassword = () => {
                 console.log('Password change successful!')
                 cookies.remove("forgotpass")
                 alert("You have successfully changed your password!")
-                window.location.href = '/login'
+                try{
+                    if (cookies.get("user") === undefined){
+                        window.location.href = '/login'
+                    } 
+                    else{
+                        window.location.href = '/audit'
+                    }
+                }
+                catch(err){
+                    console.log(err)
+                }
+                
             } else {
                 setError('Failed to update password. Please try again.');
             }

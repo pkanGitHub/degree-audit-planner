@@ -51,6 +51,7 @@
 }
 
 
+
 #checkboxlabel{
     display: inline-block;
 }
@@ -120,7 +121,7 @@
 
 .mfa h2{
     font-weight: normal;
-    color: #69901D;
+    color: black;
 }
 
 #mfabutton{

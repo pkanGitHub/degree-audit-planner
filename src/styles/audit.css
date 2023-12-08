@@ -437,7 +437,7 @@ hr{
 }
 
 input[type=text], input[type=password] {
-    border: 1px solid black !important;
+    border: 1px solid black;
 }
 
 select {

@@ -13,9 +13,9 @@ const SignUp = () => {
         password: '',
         confirmPassword: '',
     })
-    const [againBorder, setAgain] = useState({border: "2px solid lightgray"})
-    const [passwordBorder, setPasswordBorder] = useState({border: "2px solid lightgray"})
-    const [emailBorder, setEmail] = useState({border: "2px solid lightgray"})
+    const [againBorder, setAgain] = useState({border: "1px solid black"})
+    const [passwordBorder, setPasswordBorder] = useState({border: "1px solid black"})
+    const [emailBorder, setEmail] = useState({border: "1px solid black"})
 
     const handleChange = (event) => {
         const { name, value } = event.target
@@ -36,37 +36,37 @@ const SignUp = () => {
         event.preventDefault()
         if(!formData.email){
             setError("You must enter an email.")
-            setEmail({border: "2px solid red"})
-            setAgain({border: "2px solid lightgray"})
-            setPasswordBorder({border: "2px solid lightgray"})
+            setEmail({border: "1px solid red"})
+            setAgain({border: "1px solid black"})
+            setPasswordBorder({border: "1px solid black"})
             
         }
         else if(!formData.password){
             setError("You must enter a password.")
-            setEmail({border: "2px solid lightgray"})
-            setAgain({border: "2px solid lightgray"})
-            setPasswordBorder({border: "2px solid red"})
+            setEmail({border: "1px solid black"})
+            setAgain({border: "1px solid black"})
+            setPasswordBorder({border: "1px solid red"})
             
         }
         else if(formData.password.length < 9){
             setError("Your password must be longer than 8 characters.")
-            setEmail({border: "2px solid lightgray"})
-            setAgain({border: "2px solid lightgray"})
-            setPasswordBorder({border: "2px solid red"})
+            setEmail({border: "1px solid black"})
+            setAgain({border: "1px solid black"})
+            setPasswordBorder({border: "1px solid red"})
             
         }
         else if(!formData.confirmPassword){
             setError("You must re-enter your password.")
-            setEmail({border: "2px solid lightgray"})
-            setAgain({border: "2px solid red"})
-            setPasswordBorder({border: "2px solid lightgray"})
+            setEmail({border: "1px solid black"})
+            setAgain({border: "1px solid red"})
+            setPasswordBorder({border: "1px solid black"})
             
         }
         else if (formData.password !== formData.confirmPassword) {
             setError("Passwords do not match.");
-            setEmail({border: "2px solid lightgray"})
-            setAgain({border: "2px solid red"})
-            setPasswordBorder({border: "2px solid red"})
+            setEmail({border: "1px solid black"})
+            setAgain({border: "1px solid red"})
+            setPasswordBorder({border: "1px solid red"})
             
         }
         else if(isChecked === false){
