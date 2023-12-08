@@ -33,8 +33,8 @@ export const SemesterPlan = ({ courses, updateParent }) => {
                                     year.semesters.map((semester, index) =>
                                         <td colSpan={2} className="semesterHeading">{
                                             index === 0 ? "Fall" :
-                                                index === 1 ? "Summer" :
-                                                    "Spring"
+                                                index === 1 ? "Spring" :
+                                                    "Summer"
                                         }</td>
                                     )
                                 }
