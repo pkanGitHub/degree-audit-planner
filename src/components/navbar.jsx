@@ -37,7 +37,7 @@ const NavBar = () => {
 
       <div className='rightItems'>
         <Link to="/" className='navbarlink'>Home</Link>
-        <Link to="/audit" className='navbarLink'>Audit</Link>
+        <Link to="/audit" className='navbarlink'>Audit</Link>
         {!loggedIn ? <Link to="/login" className='navbarlink'>Login</Link> : null}
         {!loggedIn ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
         {!loggedIn ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
