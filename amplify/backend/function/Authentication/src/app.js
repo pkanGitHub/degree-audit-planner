@@ -35,7 +35,7 @@ app.use(async (req, res, next)=>{
     const origin = cors.origin.includes(req.header('origin').toLowerCase()) ? req.headers.origin : cors.default;
 
     // sets allowed origin to that url if it is allowed.
-    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader(
         "Access-Control-Allow-Headers",
         "Origin, X-Requested-With, Content-Type, Accept"

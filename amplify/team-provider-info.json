@@ -22,11 +22,11 @@
       "function": {
         "GeneralAPI": {
           "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
-          "s3Key": "amplify-builds/GeneralAPI-37626757574d74466266-build.zip"
+          "s3Key": "amplify-builds/GeneralAPI-61376c49616867712b4c-build.zip"
         },
         "Authentication": {
           "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
-          "s3Key": "amplify-builds/Authentication-46534274776d6c704358-build.zip"
+          "s3Key": "amplify-builds/Authentication-5a30447261337575522f-build.zip"
         },
         "EmailClear": {
           "deploymentBucketName": "amplify-degreeauditplanner-dev-140505-deployment",
