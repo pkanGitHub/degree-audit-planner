@@ -1,6 +1,9 @@
 # Mizzou Planner
 ## By team DevOn/DevOff
 
+The *main* branch is the up to date dev environment capable of running locally. The production code optimized for AWS is housed in branch *amplify*.
+
+
 Planning Materials:
 
 [Figma](https://www.figma.com/file/Zro9A4WgKef0oWpzIvO96a/DevOn%2FDevOff?type=design&node-id=0%3A1&mode=design&t=KfDqJ55nP00wo0nh-1)
