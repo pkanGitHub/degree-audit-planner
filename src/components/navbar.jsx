@@ -95,7 +95,7 @@ const NavBar = () => {
 
       <div className='rightItems'>
         <Link to="/" className='navbarlink'>Home</Link>
-
+        <Link to="/audit" className='navbarLink'>Audit</Link>
         {showLogin ? <Link to="/login" className='navbarlink'>Login</Link> : null}
         {showLogin ? <Link to="/signup" className='navbarlink'>Sign Up</Link> : null}
         {showLogin ? null : <Link to="/" className='navbarlink' onClick={handleSignOut}>Sign Out</Link>}
