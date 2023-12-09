@@ -236,7 +236,7 @@ router.post("/api/user/save", (req, res) => {
             courses: req.body.courses,
             major: req.body.major,
             minor: req.body.minor,
-            certificates: req.body.cert,
+            certificate: req.body.cert,
             generalEducationComplete: req.body.genEd
         }
     )
