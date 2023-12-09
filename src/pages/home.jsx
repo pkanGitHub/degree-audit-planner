@@ -92,9 +92,9 @@ const Home = () => {
                     <div className="cardText">
                         <h3 className="miniTutTitles">Upload Transcript</h3>
                             <p id = "cardParagraph">Download your unofficial transcript from MyZou and upload it here for easy use!</p>
-                            <a class="uploadTranscriptHere" href="/audit">
+                            <Link class="uploadTranscriptHere" to="/audit">
                                 <button class="auto">Upload your transcript here</button>
-                            </a>
+                            </Link>
                     </div>
                 </div>
                 <div className="transcript2">
@@ -102,9 +102,9 @@ const Home = () => {
                     <div className="cardText">
                         <h3 className="miniTutTitles">Do It Yourself</h3>
                             <p id = "cardParagraph">Use this feature when you do not have your unofficial transcript on hand.</p>
-                            <a class="uploadTranscriptHere" href="/audit">
+                            <Link class="uploadTranscriptHere" to="/audit">
                                 <button class="tutorialCardButton">Set up your audit planner here</button>
-                            </a>
+                            </Link>
                     </div>
                 </div>
                 <div className="transcript2">
@@ -112,9 +112,9 @@ const Home = () => {
                     <div className="cardText">
                         <h3 className="miniTutTitles">Still Confused?</h3>
                             <p id = "cardParagraph">Still not sure on how to start? Do not fear - we have several tutorials to get you started!</p>
-                            <a class="uploadTranscriptHere" href="/tutorial">
+                            <Link class="uploadTranscriptHere" to="/tutorial">
                                 <button class="manual">Take me to the tutorial</button>
-                            </a>
+                            </Link>
                     </div>
                 </div>
             </div>
