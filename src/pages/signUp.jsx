@@ -79,7 +79,6 @@ const SignUp = () => {
         else {
             API.post('DatabaseAPI', "/auth/signup", { body: formData })
             .then(response => {
-                console.log(`response: ${response}`);
                 console.log('User sign up successfully');
                 navigate('/mfa');
             })

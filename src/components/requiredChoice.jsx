@@ -40,7 +40,6 @@ const RequiredChoice = ({key, classId, creditHours, preReq, removeCourse, course
     // }
 
     const statusChanged = event => {
-        console.log(event.target.value);
         switch(event.target.value) {
             case "completed": course.completed(); break;
             case "in-progress": course.inProgress(); break;

@@ -92,7 +92,6 @@ const Audit = () => {
     }
 
     const removeCatalog = (category, year, type) => {
-        console.log(`${category} : ${year} : ${type}`)
 
         setUserCatalog([...User.removeProgram(category, year, type)]);
     }
@@ -109,7 +108,6 @@ const Audit = () => {
     }
 
     const updateCatalog = () => {
-        console.log("update catalog")
         setUserCourses([...User.getCourses()]);
         User.print()
     }

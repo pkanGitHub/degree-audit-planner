@@ -185,7 +185,6 @@ function AcademicProfile(data, resolve, reject) {
                 }
             }
             s = termVal(text[0]);
-            console.log(`${text[0]} : ${s}`)
 
             term = text[0] + "_" + text[1];
             year = Number(text[1]);
@@ -296,7 +295,6 @@ function AuditPlan(data, resolve, reject) {
         course.plan[1] = val
     })
 
-    console.log(totalSemesters);
     resolve(userData);
 
 }

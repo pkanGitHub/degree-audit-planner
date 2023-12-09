@@ -12,7 +12,6 @@ const LoginMFA = () => {
 
     const navigate = useNavigate();
     const cookies = new Cookies(null);
-    console.log("at loginMFA")
     // if (cookies.get("user")?.id) navigate('/audit');
     const userEmail = cookies.get("email")?.email
     if (!userEmail) navigate('/login');

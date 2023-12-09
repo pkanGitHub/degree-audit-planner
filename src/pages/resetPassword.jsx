@@ -36,7 +36,7 @@ const ResetPassword = () => {
 
 
     const [data, setData] = useState({email: testAuth.email, password: "", passwordAgain: ""})
-    console.log(data);
+    // console.log(data);
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -63,12 +63,12 @@ const ResetPassword = () => {
         else {
             API.post('DatabaseAPI', "/auth/resetpassword", { body: data })
             .then(response => {
-                console.log('Server Response:', response);
+                // console.log('Server Response:', response);
                 console.log('Password change successful!')
                 cookies.remove("forgotpass")
-                cookies.remove("user")
                 alert("You have successfully changed your password!")
-                navigate('/login');
+                if (cookies.get("user")?.id) navigate('/audit');
+                else navigate('/login');
             })
             .catch(error => {
                 console.error(error)

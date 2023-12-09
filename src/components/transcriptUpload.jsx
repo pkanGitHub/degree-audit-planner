@@ -37,9 +37,7 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
             return;
         };
         GetInfo(uploadedFile).then(data => {
-            console.log(data);
             addPrograms(data.Programs);
-            console.log(data.Courses);
             setCourses(data.Courses);
         })
         .catch(error => {
@@ -65,7 +63,6 @@ export default function TranscriptUpload({setCatalog, setCourses, hasData}) {
                 }
 
                 const search = getProgramsBySearch(newName, program.year, type);
-                console.log(search);
                 return {original: program.title, year: program.year, results: search}
         })
 

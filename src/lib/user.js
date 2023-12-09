@@ -19,7 +19,6 @@ export function userCerts() { return certificates; }
 export function addCourse(course) {
     if (!course?.id) return;
     courses.push(course);
-    console.log(courses);
     updateYears();
 }
 
@@ -30,8 +29,6 @@ export function removeCourse(course) {
     
     courses.splice(index, 1);
     updateYears();
-
-    console.log(courses);
 }
 
 export function concatCourses(courseArr) {
@@ -41,7 +38,6 @@ export function concatCourses(courseArr) {
                     (COURSE.plan[0] !== course.plan[0] &&
                      COURSE.plan[1] !== course.plan[1])
     })))
-    console.log(courses);
     updateYears();
 }
 
@@ -58,7 +54,6 @@ export function setCourses(courseArr) {
 export function addPlan(name, year, type) {
     const program = getProgramsBySearch(name, year, type);
     if (!program) return;
-    console.log(program);
     switch (type.toLowerCase()) {
         case "majors":
         case "major": majors.push({ title: program[0].title, year: year }); break;
@@ -126,7 +121,6 @@ export function addPrograms(title, year, type) {
 }
 
 export function setPrograms(programs) {
-    console.log(programs);
     clearAndFill(majors, [])
     clearAndFill(minors, [])
     clearAndFill(certificates, [])
@@ -178,13 +172,12 @@ export async function read(id) {
         body:{ id: id }
     }) 
     .then(response => {
-        console.log(response);
         new Cookies().set("user", {id: response.id, email: response.email});
         const courseMap = response.courses.map(course => new Course(course.id, course.plan[0], course.plan[1], course.credits).setStatus(course.status));
         clearAndFill(courses, courseMap);
         clearAndFill(majors, response.major);
         clearAndFill(minors, response.minor);
-        clearAndFill(certificates, response.certificates);
+        clearAndFill(certificates, response.certificate);
         return true;
     })
     .catch(error => console.error(error));
