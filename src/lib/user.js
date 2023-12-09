@@ -235,7 +235,7 @@ export function checkStorage() {
         clearAndFill(courses, courseMap);
         clearAndFill(majors, data.major);
         clearAndFill(minors, data.minor);
-        clearAndFill(certificates, data.certificates);
+        clearAndFill(certificates, data.certificate);
         save(user.id);
     }
 

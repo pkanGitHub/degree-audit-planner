@@ -16,9 +16,9 @@ const Home = () => {
                     <h2 id="mizEngineering">Office of the University Registrar</h2>
                     <h2 id="degreePlanner">MIZZOU'S DEGREE PLANNER</h2>
                 </header>
-                <a className="getstarted" href='/audit'>
+                <Link className="getstarted" to='/audit'>
                     <button class="getStart">GET STARTED TODAY</button>
-                </a>
+                </Link>
             </div>
 
             <div className="bodyText">
@@ -41,7 +41,7 @@ const Home = () => {
                                 <Link to="/audit">Degree Planner</Link>
                             </li>
                             <li id="sub-nav-menu-item">
-                                <Link to="/tutorial">Video Tutorials</Link>
+                                <Link to="/tutorial">Tutorial</Link>
                             </li>
                             <li id="sub-nav-menu-item">
                                 <a href="https://registrar.missouri.edu/academic-calendar/" target='_blank' rel='noreferrer'>Academic Calendar</a>
@@ -71,7 +71,7 @@ const Home = () => {
                         You can create your first degree planner by <Link to="/audit">(1) uploading your degree audit so that our tool can auto-populate your credits and progress</Link> OR <Link to="/audit">(2) manually choose your classes and credits based on your major(s) and/or minor(s)</Link>. Please keep in mind that <em>your degree information will not be saved for you to revisit upon leaving this website unless you have an account and are logged in</em>.
                         <br />
                         <br></br>
-                        When you are ready to create your degree plan you will find the necessary links below to redirect you to where you need to go on our website. If you aren't quite sure on how to start, we have video tutorials that provide a general introduction to this tool.
+                        When you are ready to create your degree plan you will find the necessary links below to redirect you to where you need to go on our website. If you aren't quite sure on how to start, we have tutorials that provide a general introduction to this tool.
                     </p>
                 </div>
             </div>
@@ -79,7 +79,7 @@ const Home = () => {
             {/* might need to use columns if possible */}
             <div className="miniTutorial">
                 <div className="transcript1">
-                    <img src={autoCard}></img>
+                    <img src={process.env.PUBLIC_URL + '/imgs/home/upload.jpg'} alt="Upload Transcript"></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Upload Transcript</h3>
                         <p id="cardParagraph">Download your unofficial transcript from MyZou and upload it here for easy use!</p>
@@ -89,7 +89,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="transcript2">
-                    <img src={manualCard}></img>
+                    <img src={process.env.PUBLIC_URL + '/imgs/home/yourself.jpg'} alt="Do It Yourself"></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Do It Yourself</h3>
                         <p id="cardParagraph">Use this feature when you do not have your unofficial transcript on hand.</p>
@@ -99,7 +99,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className="transcript2">
-                    <img src={tutorialCard}></img>
+                    <img src={process.env.PUBLIC_URL + '/imgs/home/confused.jpg'} alt="Still Confused?"></img>
                     <div className="cardText">
                         <h3 className="miniTutTitles">Still Confused?</h3>
                         <p id="cardParagraph">Still not sure on how to start? Do not fear - we have several tutorials to get you started!</p>
