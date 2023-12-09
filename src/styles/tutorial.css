@@ -1,0 +1,48 @@
+.tutorialPage {
+    margin: 0 20%;
+    margin-bottom: 10%;
+    width: 60%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.tutorialPage p, .tutorialPage h4   {
+    width: 100%;
+}
+
+.tutorialImage {
+    max-width: 100%;
+    margin-bottom: 2%;
+}
+
+.link {
+    text-decoration: underline;
+}
+
+.accordion input[type="checkbox"]:checked + #accordionLabel + .accordionContent{
+    max-height: max-content;
+    padding: 10px 10px 20px;
+}
+
+.accordion input[type="checkbox"]:checked + #accordionLabel::before{
+    content: '-';
+}
+
+#accordionLabel::before{
+    content: '+';
+    margin-right: 10px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.accordion .accordionContent{
+    color: black;
+    line-height: 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s, padding 0.5s;
+}
+
+
+
