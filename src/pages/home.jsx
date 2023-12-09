@@ -112,13 +112,13 @@ const Home = () => {
 
             <footer>
                 <div id = "footerContent">
-                <div id = "mizLogoTag">
-                    <img src={mizzouLogo} alt='mizzouLogo' id='mizzouLogo'></img>
-                    <Link to="/" id='uniTitle'>University of Missouri</Link>
-                </div>
-                <div className="terms">
-                    <TermsCondition />
-                </div>
+                    <div id = "mizLogoTag">
+                        <img src={mizzouLogo} alt='mizzouLogo' id='mizzouLogo'></img>
+                        <Link to="/" id='uniTitle'>University of Missouri</Link>
+                    </div>
+                    <div className="terms">
+                        <TermsCondition />
+                    </div>
                 </div>
             </footer>
 

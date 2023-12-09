@@ -22,8 +22,8 @@ import Cookies from "universal-cookie";
 
 const NavBar = () => {
   const [showLogin, setShowLogin] = useState(false)
-  const [password, setPassword] = useState("");
-  const [visible, setVisible] = useState(false);
+  // const [password, setPassword] = useState("");
+  // const [visible, setVisible] = useState(false);
 
   const handleSignOut = () => {
     window.location.href = '/'
@@ -75,39 +75,16 @@ const NavBar = () => {
     confirmPassword: '',
   });
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   setFormData({ ...formData, [name]: value });
+  // };
 
   const handleButtonClick = () => {
     // Your logic for handling the button click
     window.location.href = '/resetpassword'
   };
 
-  // const handleSubmit = async (event) => {
-  //   event.preventDefault();
-
-  //   // Check if passwords match
-  //   if (formData.password !== formData.confirmPassword) {
-  //     alert("Passwords do not match.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axios.post('http://localhost:4001/signup', formData);
-
-  //     if (response.status === 201) {
-  //       console.log('User sign up successfully');
-  //       window.location.href = '/login';
-  //     } else {
-  //       const data = await response.json();
-  //       console.error(data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error during sign up: ', error);
-  //   }
-  // };
 
   return (
     <div className='navbar'>
@@ -149,7 +126,7 @@ const NavBar = () => {
               </button>
               
               
-                    
+
                       <label>Email
                         <div id="formContent">
                           <input className="userInfo"
@@ -163,19 +140,7 @@ const NavBar = () => {
                       
                       <br/>
 
-                      {/* <label>Password
-                        <div className="password-input" id="formContent">
-                          <input className="userInfo"
-                            value={testAuth.password}
-                            type={visible ? "text" : "password"}
-                            readOnly={true}
-                          />
-                          <div className="eye-icon" onClick={() => setVisible(!visible)}>
-                            {visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
-                          </div>
-                        </div>
-                      </label> */}
-
+               
                       <br/>
                     <button className="editButton"  onClick={handleButtonClick}>Reset Password</button>
 
